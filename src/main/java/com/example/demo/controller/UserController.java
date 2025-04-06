@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.User;
+import com.example.demo.exception.IdInvalidException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 
@@ -29,7 +30,10 @@ public class UserController {
 
     // Get one user by id
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUser(@PathVariable("id") long id) {
+    public ResponseEntity<User> getUser(@PathVariable("id") long id) throws IdInvalidException {
+        if (id <= 0) {
+            throw new IdInvalidException("Id must be greater than 0");
+        }
         User findUser = this.userService.getUser(id);
         return ResponseEntity.status(HttpStatus.OK).body(findUser);
     }
