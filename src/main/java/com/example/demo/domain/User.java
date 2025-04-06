@@ -24,7 +24,18 @@ public class User {
         return "User [ id=" + id + ", address=" + address + ", email=" + email + ", fullName=" + fullName + ",name="
                 + username + ", password=" + password + ", phone=" + phone + "]";
     }
+    // Default constructor (required by JPA)
+    public User() {}
 
+    // Custom constructor (useful for creating a user instance manually)
+    public User(String username, String email, String password, String fullName, String address, String phone) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.fullName = fullName;
+        this.address = address;
+        this.phone = phone;
+    }
     public long getId() {
         return id;
     }

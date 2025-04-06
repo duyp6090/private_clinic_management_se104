@@ -1,6 +1,5 @@
 package com.example.demo.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,11 +19,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Find user by id
     Optional<User> findById(long id);
 
-    // Find all users
-    List<User> findAll();
+    // // Find all users
+    // List<User> findAll();
 
-    // Create a new user
-    User save(User user);
+    // // Create a new user
+    // User save(User user);
 
     // Delete user by id
     void deleteById(long id);

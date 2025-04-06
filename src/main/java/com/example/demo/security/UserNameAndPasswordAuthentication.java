@@ -9,35 +9,36 @@ import org.springframework.stereotype.Component;
 
 import com.example.demo.service.UserService;
 
+
 @Component
 public class UserNameAndPasswordAuthentication implements AuthenticationProvider {
 
     private final UserService userService;
     private final jwtUtils jwtUtils;
 
-    // Constructor injection for UserService and jwtUtils
-    public UserNameAndPasswordAuthentication(UserService userService,jwtUtils jwtUtils) {
+    // Constructor injection for UserService and JwtUtils
+    public UserNameAndPasswordAuthentication(UserService userService, jwtUtils jwtUtils) {
         this.userService = userService;
         this.jwtUtils = jwtUtils;
     }
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String username = authentication.getName();
-        String password = (String) authentication.getCredentials();
+        String username = authentication.getName(); 
+        String password = (String) authentication.getCredentials(); 
 
-        // Authenticate the user using the UserService
-        boolean isAuthenticated = userService.authenticate(username, password); // Assuming this method exists
+ 
+        boolean isAuthenticated = userService.authenticate(username, password); 
 
         if (isAuthenticated) {
-            // Generate the JWT token if authentication is successful
-            String token = jwtUtils.generateToken(username);
+           
+            String token = jwtUtils.generateAccessToken(username); 
 
-            // Create an authentication token with user details and token
+
             return new UsernamePasswordAuthenticationToken(
-                    new User(username, password, java.util.Collections.emptyList()), // User object can be enhanced for roles/authorities
-                    token, 
-                    java.util.Collections.emptyList() // Authorities
+                    new User(username, password, java.util.Collections.emptyList()),
+                    token,
+                    java.util.Collections.emptyList() 
             );
         } else {
             throw new AuthenticationException("Invalid username or password") {};
@@ -46,7 +47,6 @@ public class UserNameAndPasswordAuthentication implements AuthenticationProvider
 
     @Override
     public boolean supports(Class<?> authentication) {
-        // Return true if the authentication type is UsernamePasswordAuthenticationToken
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
 }

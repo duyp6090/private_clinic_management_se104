@@ -12,30 +12,39 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.example.demo.security.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // SecurityFilterChain setup
+    private final JwtAuthenticationFilter jwtAuthenticationFilter; 
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        // CORS and CSRF disable for stateless APIs, configure as per your needs
         httpSecurity
-            .csrf(csrf -> csrf.disable())  // Disable CSRF for stateless APIs
+            .csrf(csrf -> csrf.disable()) 
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/users/auth/signup", "/users/auth/signin","/users/home").permitAll()  // Allow signup and signin without authentication
-                .anyRequest().authenticated())  // Any other request requires authentication
+                .requestMatchers("/api/auth/signup", "/api/auth/login","/api/auth/refresh","/api/auth/newaccess","/users/home").permitAll()  
+                .anyRequest().authenticated())  
             .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS));  // Stateless session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))  
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);  
+    
     
         return httpSecurity.build();
     }
-    
-    // CORS Configuration
+
+    // CORS 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -44,20 +53,16 @@ public class SecurityConfig {
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Apply to all paths
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-    // PasswordEncoder Bean - BCrypt implementation
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // BCrypt is a strong hashing algorithm for passwords
+        return new BCryptPasswordEncoder();
     }
 
-    // AuthenticationManager Bean
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        // Create the AuthenticationManager bean explicitly
         return http.getSharedObject(AuthenticationManagerBuilder.class).build();
     }
 }

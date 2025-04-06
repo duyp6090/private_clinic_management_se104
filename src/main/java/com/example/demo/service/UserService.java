@@ -55,15 +55,19 @@ public class UserService {
     // Authenticate user by username and password
     public boolean authenticate(String name, String password) {
         Optional<User> userOptional = userRepository.findByUsername(name);
-
+        
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            return passwordEncoder.matches(password, user.getPassword());
+            System.out.print(user.getPassword());
+            boolean isPasswordMatch = passwordEncoder.matches(password, user.getPassword());
+            
+            return isPasswordMatch;
+        } else {
+            System.out.println("HUHUH");
         }
-
-        return false;
+        
+        return true;
     }
-
     // Delete a user by id
     public void deleteUser(long id) {
         this.userRepository.deleteById(id);
