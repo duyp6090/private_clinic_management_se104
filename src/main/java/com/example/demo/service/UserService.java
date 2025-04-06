@@ -28,6 +28,7 @@ public class UserService {
 
     // Get all users
     public List<User> getAllUsers() {
+        System.out.print("ENTER GET ALL USER");
         return this.userRepository.findAll();
     }
 
