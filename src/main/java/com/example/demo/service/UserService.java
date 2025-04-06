@@ -3,6 +3,7 @@ package com.example.demo.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.User;
@@ -11,29 +12,29 @@ import com.example.demo.repository.UserRepository;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    // Constructor injection for userRepository and passwordEncoder
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // Get one user by id
     public User getUser(long id) {
         Optional<User> userOptional = this.userRepository.findById(id);
-        if (userOptional.isPresent()) {
-            return userOptional.get();
-        } else {
-            return null;
-        }
+        return userOptional.orElse(null);
     }
 
     // Get all users
     public List<User> getAllUsers() {
-        System.out.print("ENTER GET ALL USER");
         return this.userRepository.findAll();
     }
 
-    // Create a new user
+    // Create a new user with encoded password
     public User createUser(User user) {
+        // Encode the password before saving it to the database
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return this.userRepository.save(user);
     }
 
@@ -44,17 +45,39 @@ public class UserService {
         if (userCurrent != null) {
             userCurrent.setName(user.getName());
             userCurrent.setEmail(user.getEmail());
-            userCurrent.setPassword(user.getPassword());
-            // Update
+            userCurrent.setPassword(passwordEncoder.encode(user.getPassword())); // Update password with encoding
             return this.userRepository.save(userCurrent);
         }
 
-        return userCurrent;
+        return null;
+    }
 
+    // Authenticate user by username and password
+    public boolean authenticate(String name, String password) {
+        Optional<User> userOptional = userRepository.findByUsername(name);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return passwordEncoder.matches(password, user.getPassword());
+        }
+
+        return false;
     }
 
     // Delete a user by id
     public void deleteUser(long id) {
         this.userRepository.deleteById(id);
+    }
+
+    // Check if a username already exists in the database
+    public boolean existsByUsername(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.isPresent();
+    }
+
+    // Check if an email already exists in the database
+    public boolean existsByEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        return user.isPresent();
     }
 }

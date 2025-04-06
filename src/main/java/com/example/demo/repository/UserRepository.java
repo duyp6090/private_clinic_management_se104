@@ -10,10 +10,13 @@ import com.example.demo.domain.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByEmail(String email);
+    Optional<User> findByEmail(String email);
 
     User findByEmailAndPassword(String email, String password);
 
+    // Find user by username
+    Optional<User> findByUsername(String username);
+    
     // Find user by id
     Optional<User> findById(long id);
 
