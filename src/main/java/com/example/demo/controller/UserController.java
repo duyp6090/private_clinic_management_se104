@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.User;
+import com.example.demo.exception.IdInvalidException;
 import com.example.demo.security.jwtUtils;
 import com.example.demo.service.UserService;
 
@@ -42,34 +44,43 @@ public class UserController {
     }
 
     // Get one user by ID
+    // Get one user by id
     @GetMapping("/{id}")
-    public User getUser(@PathVariable("id") long id) {
-        return this.userService.getUser(id);
+    public ResponseEntity<User> getUser(@PathVariable("id") long id) throws IdInvalidException {
+        if (id <= 0) {
+            throw new IdInvalidException("Id must be greater than 0");
+        }
+        User findUser = this.userService.getUser(id);
+        return ResponseEntity.status(HttpStatus.OK).body(findUser);
     }
 
     // Get all users
     @GetMapping("/")
-    public List<User> getAllUsers() {
-        return this.userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> listUsers = this.userService.getAllUsers();
+        return ResponseEntity.status(HttpStatus.OK).body(listUsers);
     }
 
     // Create a new user
     @PostMapping("/create")
-    public User createUser(@RequestBody User sendUser) {
-        return this.userService.createUser(sendUser);
+    // Get information from the request body
+    public ResponseEntity<User> createUser(@RequestBody User sendUser) {
+        User newUser = this.userService.createUser(sendUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
-    // Update user by ID
-    @PutMapping("/{id}")
-    public User updateUser(@PathVariable("id") long id, @RequestBody User sendUser) {
-        return this.userService.updateUser(id, sendUser);
+    // Update user by id
+    @PutMapping("/update/{id}")
+    public ResponseEntity<User> updatUser(@PathVariable("id") long id, @RequestBody User sendUser) {
+        User userCurrent = this.userService.getUser(id);
+        return ResponseEntity.status(HttpStatus.OK).body(userCurrent);
     }
 
-    // Delete user by ID
-    @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable("id") long id) {
+    // Delete user by id
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable("id") long id) {
         this.userService.deleteUser(id);
-        return "User deleted successfully";
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User deleted successfully");
     }
 
     // Sign Up endpoint
@@ -100,3 +111,4 @@ public class UserController {
         return ResponseEntity.ok(jwt);
     }
 }
+
