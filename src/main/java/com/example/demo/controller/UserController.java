@@ -46,20 +46,20 @@ public class UserController {
     public User createUser(@RequestBody User sendUser) {
         System.out.print("hihi");
         User newUser = this.userService.createUser(sendUser);
-        return newUser;
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
     // Update user by id
     @PutMapping("/{id}")
     public User updatUser(@PathVariable("id") long id, @RequestBody User sendUser) {
         User userCurrent = this.userService.getUser(id);
-        return userCurrent;
+        return ResponseEntity.status(HttpStatus.OK).body(userCurrent);
     }
 
     // Delete user by id
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable("id") long id) {
         this.userService.deleteUser(id);
-        return "User deleted successfully";
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User deleted successfully");
     }
 }
