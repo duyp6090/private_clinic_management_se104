@@ -21,6 +21,7 @@ import com.example.demo.security.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter; 
@@ -32,17 +33,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-            .csrf(csrf -> csrf.disable()) 
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/auth/signup", "/api/auth/login","/api/auth/refresh","/api/auth/newaccess","/users/home").permitAll()  
-                .anyRequest().authenticated())  
+                .requestMatchers("/api/auth/signup", "/api/auth/login", "/api/auth/refresh", "/api/auth/newaccess")
+                    .permitAll()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/users/home").hasRole("ADMIN")
+                .anyRequest().authenticated()
+            )
             .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))  
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);  
-    
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     
         return httpSecurity.build();
     }
+    
 
     // CORS 
     @Bean

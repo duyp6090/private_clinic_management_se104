@@ -31,6 +31,7 @@ public class AuthenticationController {
     private final UserService userService;
 
     public AuthenticationController(AuthService authService, UserService userService) {
+        System.out.println("Init Authentication");
         this.authService = authService;
         this.userService = userService;
     }
@@ -39,6 +40,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<RestResponse<AuthResponse>> login(@RequestBody SignInRequest request) {
         RestResponse<AuthResponse> response = new RestResponse<>();
+        System.out.println(request);
         try {
             response = authService.login(request.getUsername(), request.getPassword());
             return ResponseEntity.status(response.getStatusCode()).body(response);

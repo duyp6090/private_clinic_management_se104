@@ -5,13 +5,13 @@
 
 package com.example.demo.service;
 
-/**
- *
- * @author iset1enloc
- */
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,38 +19,45 @@ import com.example.demo.domain.RefreshToken;
 import com.example.demo.domain.User;
 import com.example.demo.dto.RestResponse;
 import com.example.demo.dto.response.AuthResponse;
-import com.example.demo.repository.UserRepository;
 import com.example.demo.security.jwtUtils;
 
 
 @Service
 public class AuthService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final jwtUtils jwtTokenProvider;
     private final RefreshTokenService refreshTokenService;
-
+    private final AuthenticationManager authenticationManager;
+    
     public AuthService(
-            UserRepository userRepository,
+            UserService userService,
             PasswordEncoder passwordEncoder,
             jwtUtils jwtTokenProvider,
-            RefreshTokenService refreshTokenService
+            RefreshTokenService refreshTokenService,
+            AuthenticationManager authenticationManager
     ) {
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
         this.refreshTokenService = refreshTokenService;
+        this.authenticationManager = authenticationManager;
     }
 
 
     public RestResponse<AuthResponse> login(String username, String password) {
+        System.out.println(username+password);
         try {
-            User user = authenticateUser(username, password);
-
-            String accessToken = jwtTokenProvider.generateAccessToken(user.getName());
+            //User user = authenticateUser(username, password);
+                        // Map roles to authorities
+            System.out.println(username);
+            List<String> roles = userService.getUserRolesByUserName(username);
+            List<SimpleGrantedAuthority> authorities = roles.stream().map(SimpleGrantedAuthority::new).toList();
+            String accessToken = jwtTokenProvider.generateAccessToken(username, roles);
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(username);
 
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password, authorities));
             AuthResponse authResponse = new AuthResponse(accessToken, refreshToken.getToken());
             return new RestResponse<>(HttpStatus.OK.value(), authResponse);
         } catch (Exception e) {
@@ -59,7 +66,7 @@ public class AuthService {
     }
 
     private User authenticateUser(String username, String password) {
-        Optional<User> userOpt = userRepository.findByUsername(username);
+        Optional<User> userOpt = userService.findByUsername(username);
 
         if (userOpt.isEmpty() || !passwordEncoder.matches(password, userOpt.get().getPassword())) {
             throw new IllegalArgumentException("Invalid username or password");
@@ -73,9 +80,9 @@ public class AuthService {
 
             if (optionalRefreshToken.isPresent()) {
                 RefreshToken refreshToken = optionalRefreshToken.get();
-
+                List<String> roles = userService.getUserRolesByUserName(refreshToken.getUser().getUsername());
                 if (refreshTokenService.isValidToken(oldToken)) {
-                    String newAccessToken = jwtTokenProvider.generateAccessToken(refreshToken.getUser().getName());
+                    String newAccessToken = jwtTokenProvider.generateAccessToken(refreshToken.getUser().getName(),roles);
 
                     AuthResponse authResponse = new AuthResponse(newAccessToken, refreshToken.getToken());
                     return new RestResponse<>(HttpStatus.OK.value(), authResponse);
@@ -91,8 +98,8 @@ public class AuthService {
     public RestResponse<AuthResponse> getNewRefreshToken(String oldToken) {
         try {
             RefreshToken newRefreshToken = refreshTokenService.createRefreshTokenByExistingToken(oldToken);
-
-            String newAccessToken = jwtTokenProvider.generateAccessToken(newRefreshToken.getUser().getName());
+            List<String> roles = userService.getUserRolesByUserName(newRefreshToken.getUser().getUsername());
+            String newAccessToken = jwtTokenProvider.generateAccessToken(newRefreshToken.getUser().getName(),roles);
 
             AuthResponse authResponse = new AuthResponse(newAccessToken, newRefreshToken.getToken());
             return new RestResponse<>(HttpStatus.OK.value(), authResponse);

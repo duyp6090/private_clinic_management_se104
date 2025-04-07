@@ -3,6 +3,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +19,7 @@ import com.example.demo.exception.IdInvalidException;
 import com.example.demo.service.UserService;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/admin")
 public class UserController {
 
     // Dependency Injection (DI)
@@ -28,6 +29,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/home")
     public ResponseEntity<RestResponse<String>> getHomePage() {
         RestResponse<String> response = new RestResponse<>();
@@ -51,6 +53,7 @@ public class UserController {
     }
 
     // Get all users
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> listUsers = this.userService.getAllUsers();
@@ -58,6 +61,7 @@ public class UserController {
     }
 
     // Create a new user
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     // Get information from the request body
     public ResponseEntity<User> createUser(@RequestBody User sendUser) {
@@ -66,13 +70,14 @@ public class UserController {
     }
 
     // Update user by id
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{id}")
     public ResponseEntity<User> updatUser(@PathVariable("id") long id, @RequestBody User sendUser) {
         User userCurrent = this.userService.getUser(id);
         return ResponseEntity.status(HttpStatus.OK).body(userCurrent);
     }
 
-    // Delete user by id
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable("id") long id) {
         this.userService.deleteUser(id);

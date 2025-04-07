@@ -12,30 +12,29 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.RefreshToken;
 import com.example.demo.repository.RefreshTokenRepository;
-import com.example.demo.repository.UserRepository;
 import com.example.demo.security.jwtUtils;
 
 @Service
 public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final jwtUtils jwtProvider;
-    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, UserRepository userRepository,jwtUtils jwtProvider) {
+    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, UserService userService,jwtUtils jwtProvider) {
         this.refreshTokenRepository = refreshTokenRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.jwtProvider = jwtProvider;
     }
 
     public RefreshToken createRefreshToken(String username) {
         RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setToken(jwtProvider.generateRefreshToken(username));
+        refreshToken.setToken(jwtProvider.generateRefreshToken(username,userService.getUserRolesByUserName(username)));
 
         refreshToken.setExpirationDate(LocalDateTime.now().plusDays(7));
         refreshToken.setRevoke(false);
         refreshToken.setExpired(false);
 
-        userRepository.findByUsername(username).ifPresent(user -> refreshToken.setUser(user));
+        userService.findByUsername(username).ifPresent(user -> refreshToken.setUser(user));
 
         return refreshTokenRepository.save(refreshToken);
     }

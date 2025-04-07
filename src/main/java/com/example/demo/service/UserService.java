@@ -84,4 +84,15 @@ public class UserService {
         Optional<User> user = userRepository.findByEmail(email);
         return user.isPresent();
     }
+    public List<String>getUserRolesByUserName(String username){
+        var user_roles = userRepository.findAllRolesByUsername(username);
+        return user_roles;
+    }
+    public List<String>getRolesByUserId(Long user_id){
+        var user_roles = userRepository.findAllRolesByUserId(user_id);
+        return user_roles;
+    }
+    public Optional<User> findByUsername(String username){
+        return userRepository.findByUsername(username);
+    }
 }

@@ -1,23 +1,48 @@
 package com.example.demo.domain;
 
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User  implements UserDetails, Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column(name = "username")
     private String username;
     private String email;
     private String password;
     private String fullName;
     private String address;
     private String phone;
+
+    // @Enumerated(EnumType.STRING)
+    // @Column(name = "type")
+    // private UserType type;
+    
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
 
     @Override
     public String toString() {
@@ -35,6 +60,20 @@ public class User {
         this.fullName = fullName;
         this.address = address;
         this.phone = phone;
+    }
+
+    @OneToMany(mappedBy = "user")
+    private Set<User_Role> userRoles = new HashSet<>();  // Change to User_Role
+
+    // @Override
+    // public Collection<? extends GrantedAuthority> getAuthorities() {
+    //     return roles.stream()
+    //                 .map(userHasRole -> (GrantedAuthority) () -> userHasRole.getRole().getRole_name()) // Assuming Role has a getName() method
+    //                 .collect(Collectors.toList());
+    // }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
     }
     public long getId() {
         return id;
@@ -87,7 +126,9 @@ public class User {
     public String getPhone() {
         return phone;
     }
-
+    // public String getRole() {
+    //     return type.name();
+    // }
     public void setPhone(String phone) {
         this.phone = phone;
     }

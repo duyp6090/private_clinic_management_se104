@@ -1,8 +1,10 @@
 package com.example.demo.security;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -28,11 +30,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        
         var jwt = getJwtFromRequest(request);
+        System.out.println(jwt);
 
         if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
             var username = jwtUtils.getUserNameFromJwtToken(jwt);
-            var authentication = new UsernamePasswordAuthenticationToken(username, null, null);
+            List<GrantedAuthority> authorities = jwtUtils.getAuthoritiesFromToken(jwt);
+            var authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
+            System.out.println("Granted Authorities: " + authorities);
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 

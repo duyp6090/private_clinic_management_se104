@@ -1,4 +1,4 @@
-package com.example.demo.util;
+package com.example.demo.utils;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
