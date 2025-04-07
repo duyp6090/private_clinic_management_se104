@@ -15,7 +15,6 @@ import com.example.demo.domain.Doctor;
  * @author iset1enloc
  */
 @Repository
-
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     // Doctor save(Doctor doctor);
     // Doctor update(Long staffId, Doctor doctor);

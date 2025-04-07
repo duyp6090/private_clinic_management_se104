@@ -8,7 +8,6 @@ import java.util.Set;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,12 +20,12 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
-public abstract class User  implements UserDetails{
+public class User  implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "username")
+
     private String username;
     private String fullName;
     private String email;
@@ -38,6 +37,7 @@ public abstract class User  implements UserDetails{
     // @Column(name = "type")
     // private UserType type;
     
+    @Override
     public String getUsername() {
         return username;
     }
@@ -101,6 +101,7 @@ public abstract class User  implements UserDetails{
         this.email = email;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }

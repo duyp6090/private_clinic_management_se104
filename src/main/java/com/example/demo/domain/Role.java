@@ -61,4 +61,7 @@ public class Role {
     // private Set<Role_Permission> roles = new HashSet<>();
     @OneToMany(mappedBy = "role")
     private Set<User_Role> userRoles = new HashSet<>();
+    
+    @OneToMany(mappedBy = "role")
+    private Set<Role_Permission>  permissionRoles = new HashSet<>();
 }

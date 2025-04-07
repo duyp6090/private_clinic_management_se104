@@ -35,11 +35,15 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<RestResponse<AuthResponse>> login(@RequestBody SignInRequest request) {
         RestResponse<AuthResponse> response = new RestResponse<>();
-        System.out.println(request);
+       
         try {
             response = authService.login(request.getUsername(), request.getPassword());
+            System.out.println(response);
+            System.out.println("CUUU TUI VOI");
+            System.out.println(response);
             return ResponseEntity.status(response.getStatusCode()).body(response);
         } catch (Exception e) {
+        
             response.setStatusCode(HttpStatus.UNAUTHORIZED.value());
             response.setError("Invalid credentials");
             response.setMessage("Error: Invalid username or password");

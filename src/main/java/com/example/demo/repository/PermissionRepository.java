@@ -5,9 +5,15 @@
 
 package com.example.demo.repository;
 
-import java.security.Permission;
+import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import com.example.demo.domain.Permission;
 
 /**
  *
@@ -15,6 +21,21 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public class PermissionRepository extends  JpaRepository<Permission, Long> {
+@EnableJpaRepositories
+public interface PermissionRepository extends JpaRepository<Permission, Integer> {
+    
+    @Query("SELECT r.role_name " +
+    "FROM Role r " +
+    "JOIN Role_Permission rp " +
+    "JOIN rp.permission p " +
+    "WHERE r.role_id = :roleId")
+    List<String> getPermissionsByRoleId(@Param("roleId") int roleId);
+
+    // @Query("SELECT p.permission_name FROM PERMISSION p WHERE p.permission_id =:permissionId")
+    // List<String> findPermissionById(@Param("permissionId") int permissionId);
+
+    // @Query("SELECT '*' FROM PERMISSION p WHERE p.permission_id =:permissionId")
+    // List<String> findPermitById(@Param("permissionId") int permissionId);
+
 
 }

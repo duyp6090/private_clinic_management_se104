@@ -5,15 +5,25 @@
 
 package com.example.demo.repository;
 
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.example.demo.domain.Doctor;
+import com.example.demo.domain.Role;
 
 /**
  *
  * @author iset1enloc
  */
 @Repository
-public class RoleRepository extends JpaRepository<Doctor, Long>{
-
+public interface RoleRepository extends JpaRepository<Role,Integer> {
+    @Query("SELECT r.role_name " +
+    "FROM Role r " +
+    "JOIN Role_Permission rp " +
+    "JOIN rp.permission p " +
+    "WHERE r.role_id = :roleId")
+    List<String> getPermissionsByRoleId(@Param("roleId") int roleId);
 }

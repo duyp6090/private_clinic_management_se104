@@ -11,7 +11,6 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -45,27 +44,52 @@ public class AuthServiceImpl implements  IAuthService{
         this.authenticationManager = authenticationManager;
     }
 
+    // @Override
+    // public RestResponse<AuthResponse> login(String username, String password) {
+    //     System.out.println(username+password);
+    //     try {
+    //         //User user = authenticateUser(username, password);
+    //                     // Map roles to authorities
+    //         System.out.println(username);
+    //         List<String> roles = userService.getUserRolesByUserName(username);
+    //         System.out.println(roles);
+    //         List<SimpleGrantedAuthority> authorities = roles.stream().map(SimpleGrantedAuthority::new).toList();
+    //         System.out.println(authorities);
+    //         String accessToken = jwtTokenProvider.generateAccessToken(username, roles);
+    //         System.out.println(accessToken);
+    //         RefreshToken refreshToken = refreshTokenService.createRefreshToken(username);
+    //         System.out.println(refreshToken);
+    //         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password, authorities));
+    //         AuthResponse authResponse = new AuthResponse(accessToken, refreshToken.getToken());
+    //         return new RestResponse<>(HttpStatus.OK.value(), authResponse);
+    //     } catch (Exception e) {
+    //         System.out.println(e);
+    //         return new RestResponse<>(HttpStatus.UNAUTHORIZED.value(), "Invalid credentials", "Authentication failed");
+    //     }
+    // }
     @Override
     public RestResponse<AuthResponse> login(String username, String password) {
-        System.out.println(username+password);
         try {
-            //User user = authenticateUser(username, password);
-                        // Map roles to authorities
-            System.out.println(username);
+            // 🔐 Authenticate first
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password)
+            );
+    
+            // ✅ Only continue if authentication passed
             List<String> roles = userService.getUserRolesByUserName(username);
-            List<SimpleGrantedAuthority> authorities = roles.stream().map(SimpleGrantedAuthority::new).toList();
+            //List<SimpleGrantedAuthority> authorities = roles.stream().map(SimpleGrantedAuthority::new).toList();
             String accessToken = jwtTokenProvider.generateAccessToken(username, roles);
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(username);
-
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password, authorities));
+            
             AuthResponse authResponse = new AuthResponse(accessToken, refreshToken.getToken());
             return new RestResponse<>(HttpStatus.OK.value(), authResponse);
+    
         } catch (Exception e) {
+            System.out.println("Authentication error: " + e.getMessage());
             return new RestResponse<>(HttpStatus.UNAUTHORIZED.value(), "Invalid credentials", "Authentication failed");
         }
     }
-
-    // @Override
+    
     // private User authenticateUser(String username, String password) {
     //     Optional<User> userOpt = userService.findByUsername(username);
 

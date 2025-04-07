@@ -15,7 +15,7 @@ import com.example.demo.domain.Permission;
  */
 public interface IPermissionService {
     List<Permission> getAllPermissions();
-    Permission getPermissionByRoleId(int id);
+    List<String> getPermissionsByRoleId(int id);
     Permission save(Permission permission);
     Permission updatePermission(int id, Permission permission);
     void delete(int id);

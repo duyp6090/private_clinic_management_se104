@@ -19,4 +19,7 @@ public interface IRoleService {
     Role save(Role role);
     Role updateRoleById(int id, Role role);
     void deleteRoleById(int id);
+
+    Role assignPermissionToRole(int roleId, int permissionId);
+    Role removePermissionFromRole(int roleId, int permissionId);
 }

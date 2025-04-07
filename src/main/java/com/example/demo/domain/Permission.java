@@ -57,5 +57,5 @@ public class Permission {
     }
 
     @OneToMany(mappedBy = "permission")
-    private Set<Role_Permission> permissions = new HashSet<>();
+    private Set<Role_Permission> permissionRoles = new HashSet<>();
 }
