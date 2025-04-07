@@ -13,14 +13,15 @@ import org.springframework.stereotype.Service;
 import com.example.demo.domain.RefreshToken;
 import com.example.demo.repository.RefreshTokenRepository;
 import com.example.demo.security.jwtUtils;
+import com.example.demo.service.service_implementation.UserServiceImpl;
 
 @Service
-public class RefreshTokenService {
+public class IRefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserService userService;
+    private final UserServiceImpl userService;
     private final jwtUtils jwtProvider;
-    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, UserService userService,jwtUtils jwtProvider) {
+    public IRefreshTokenService(RefreshTokenRepository refreshTokenRepository, UserServiceImpl userService,jwtUtils jwtProvider) {
         this.refreshTokenRepository = refreshTokenRepository;
         this.userService = userService;
         this.jwtProvider = jwtProvider;

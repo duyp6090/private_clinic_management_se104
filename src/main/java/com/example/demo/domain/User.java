@@ -1,6 +1,5 @@
 package com.example.demo.domain;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -14,21 +13,24 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class User  implements UserDetails, Serializable{
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class User  implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "username")
     private String username;
+    private String fullName;
     private String email;
     private String password;
-    private String fullName;
     private String address;
     private String phone;
 

@@ -11,17 +11,17 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.service.UserService;
+import com.example.demo.service.service_implementation.UserServiceImpl;
 
 
 @Component
 public class UserNameAndPasswordAuthentication implements AuthenticationProvider {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
     private final jwtUtils jwtUtils;
 
     // Constructor injection for UserService and JwtUtils
-    public UserNameAndPasswordAuthentication(UserService userService, jwtUtils jwtUtils) {
+    public UserNameAndPasswordAuthentication(UserServiceImpl userService, jwtUtils jwtUtils) {
         this.userService = userService;
         this.jwtUtils = jwtUtils;
     }

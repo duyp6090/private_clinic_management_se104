@@ -1,13 +1,9 @@
 package com.example.demo.controller;
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,16 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.domain.User;
 import com.example.demo.dto.RestResponse;
 import com.example.demo.exception.IdInvalidException;
-import com.example.demo.service.UserService;
+import com.example.demo.service.service_implementation.UserServiceImpl;
 
 @RestController
 @RequestMapping("/admin")
 public class UserController {
 
     // Dependency Injection (DI)
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
-    public UserController(UserService userService) {
+    public UserController(UserServiceImpl userService) {
         this.userService = userService;
     }
 
@@ -52,36 +48,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(findUser);
     }
 
-    // Get all users
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> listUsers = this.userService.getAllUsers();
-        return ResponseEntity.status(HttpStatus.OK).body(listUsers);
-    }
-
-    // Create a new user
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/create")
-    // Get information from the request body
-    public ResponseEntity<User> createUser(@RequestBody User sendUser) {
-        User newUser = this.userService.createUser(sendUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
-    }
-
     // Update user by id
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{id}")
     public ResponseEntity<User> updatUser(@PathVariable("id") long id, @RequestBody User sendUser) {
         User userCurrent = this.userService.getUser(id);
         return ResponseEntity.status(HttpStatus.OK).body(userCurrent);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable("id") long id) {
-        this.userService.deleteUser(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User deleted successfully");
     }
 }
 

@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 
-package com.example.demo.service;
+package com.example.demo.service.service_implementation;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,26 +16,27 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.RefreshToken;
-import com.example.demo.domain.User;
 import com.example.demo.dto.RestResponse;
 import com.example.demo.dto.response.AuthResponse;
 import com.example.demo.security.jwtUtils;
+import com.example.demo.service.IAuthService;
+import com.example.demo.service.IRefreshTokenService;
 
 
 @Service
-public class AuthService {
+public class AuthServiceImpl implements  IAuthService{
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
     private final PasswordEncoder passwordEncoder;
     private final jwtUtils jwtTokenProvider;
-    private final RefreshTokenService refreshTokenService;
+    private final IRefreshTokenService refreshTokenService;
     private final AuthenticationManager authenticationManager;
     
-    public AuthService(
-            UserService userService,
+    public AuthServiceImpl(
+            UserServiceImpl userService,
             PasswordEncoder passwordEncoder,
             jwtUtils jwtTokenProvider,
-            RefreshTokenService refreshTokenService,
+            IRefreshTokenService refreshTokenService,
             AuthenticationManager authenticationManager
     ) {
         this.userService = userService;
@@ -45,7 +46,7 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
 
-
+    @Override
     public RestResponse<AuthResponse> login(String username, String password) {
         System.out.println(username+password);
         try {
@@ -65,15 +66,16 @@ public class AuthService {
         }
     }
 
-    private User authenticateUser(String username, String password) {
-        Optional<User> userOpt = userService.findByUsername(username);
+    // @Override
+    // private User authenticateUser(String username, String password) {
+    //     Optional<User> userOpt = userService.findByUsername(username);
 
-        if (userOpt.isEmpty() || !passwordEncoder.matches(password, userOpt.get().getPassword())) {
-            throw new IllegalArgumentException("Invalid username or password");
-        }
-        return userOpt.get();
-    }
-
+    //     if (userOpt.isEmpty() || !passwordEncoder.matches(password, userOpt.get().getPassword())) {
+    //         throw new IllegalArgumentException("Invalid username or password");
+    //     }
+    //     return userOpt.get();
+    // }
+    @Override
     public RestResponse<AuthResponse> regainAccessToken(String oldToken) {
         try {
             Optional<RefreshToken> optionalRefreshToken = refreshTokenService.findByToken(oldToken);
@@ -94,7 +96,7 @@ public class AuthService {
             return new RestResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "An error occurred", "Please try again later");
         }
     }
-
+    @Override
     public RestResponse<AuthResponse> getNewRefreshToken(String oldToken) {
         try {
             RefreshToken newRefreshToken = refreshTokenService.createRefreshTokenByExistingToken(oldToken);
@@ -107,7 +109,7 @@ public class AuthService {
             return new RestResponse<>(HttpStatus.FORBIDDEN.value(), "Invalid or expired refresh token", "Token error");
         }
     }
-
+    @Override
     public RestResponse<Void> logout(String refreshToken) {
         try {
             refreshTokenService.revokeToken(refreshToken);
