@@ -5,13 +5,21 @@
 
 package com.example.demo.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
 /**
  *
  * @author iset1enloc
  */
+@Entity
+@Table(name = "supporter")
 public class Supporter extends User {
     private String title;
 
+    public Supporter(){
+        
+    }
     public String getTitle() {
         return title;
     }
@@ -23,7 +31,7 @@ public class Supporter extends User {
     public Supporter(String title) {
         this.title = title;
     }
-
+    
     public Supporter(String username, String email, String password, String fullName, String address, String phone,
             String title) {
         super(username, email, password, fullName, address, phone);

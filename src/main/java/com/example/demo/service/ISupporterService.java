@@ -14,5 +14,5 @@ import com.example.demo.domain.Supporter;
 public interface ISupporterService {
 
     Supporter save(Supporter supporter);
-    Supporter update(Integer staffId, Supporter supporter);
+
 }

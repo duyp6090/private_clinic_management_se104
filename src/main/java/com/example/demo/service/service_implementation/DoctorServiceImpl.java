@@ -5,6 +5,8 @@
 
 package com.example.demo.service.service_implementation;
 
+import org.springframework.stereotype.Service;
+
 import com.example.demo.domain.Doctor;
 import com.example.demo.repository.DoctorRepository;
 import com.example.demo.service.IDoctorService;
@@ -13,6 +15,7 @@ import com.example.demo.service.IDoctorService;
  *
  * @author iset1enloc
  */
+@Service
 public class DoctorServiceImpl implements IDoctorService{
     private final DoctorRepository doctorRepository;
     
@@ -28,9 +31,9 @@ public class DoctorServiceImpl implements IDoctorService{
         
     }
 
-    @Override
-    public Doctor update(Long staffId, Doctor doctor) {
-        return this.doctorRepository.update(staffId, doctor);
-    }
+    // @Override
+    // public Doctor update(Long staffId, Doctor doctor) {
+    //     return this.doctorRepository.update(staffId, doctor);
+    // }
 
 }

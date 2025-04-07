@@ -5,13 +5,18 @@
 
 package com.example.demo.service;
 
-import com.example.demo.domain.Doctor;
+import java.util.List;
+
+import com.example.demo.domain.Role;
 
 /**
  *
  * @author iset1enloc
  */
-public interface IDoctorService {
-    Doctor save(Doctor doctor);
-
+public interface IRoleService {
+    List<Role> getAllRoles();
+    Role getRoleById(int id);
+    Role save(Role role);
+    Role updateRoleById(int id, Role role);
+    void deleteRoleById(int id);
 }

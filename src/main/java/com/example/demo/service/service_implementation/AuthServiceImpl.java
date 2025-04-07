@@ -20,7 +20,6 @@ import com.example.demo.dto.RestResponse;
 import com.example.demo.dto.response.AuthResponse;
 import com.example.demo.security.jwtUtils;
 import com.example.demo.service.IAuthService;
-import com.example.demo.service.IRefreshTokenService;
 
 
 @Service
@@ -29,14 +28,14 @@ public class AuthServiceImpl implements  IAuthService{
     private final UserServiceImpl userService;
     private final PasswordEncoder passwordEncoder;
     private final jwtUtils jwtTokenProvider;
-    private final IRefreshTokenService refreshTokenService;
+    private final RefreshTokenServiceImpl refreshTokenService;
     private final AuthenticationManager authenticationManager;
     
     public AuthServiceImpl(
             UserServiceImpl userService,
             PasswordEncoder passwordEncoder,
             jwtUtils jwtTokenProvider,
-            IRefreshTokenService refreshTokenService,
+            RefreshTokenServiceImpl refreshTokenService,
             AuthenticationManager authenticationManager
     ) {
         this.userService = userService;

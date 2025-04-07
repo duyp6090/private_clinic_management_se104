@@ -5,6 +5,8 @@
 
 package com.example.demo.service.service_implementation;
 
+import org.springframework.stereotype.Service;
+
 import com.example.demo.domain.Supporter;
 import com.example.demo.repository.SupporterRepository;
 import com.example.demo.service.ISupporterService;
@@ -13,6 +15,7 @@ import com.example.demo.service.ISupporterService;
  *
  * @author iset1enloc
  */
+@Service
 public class SupporterServiceImpl implements ISupporterService {
 
     private final SupporterRepository supporterRepository;
@@ -22,13 +25,7 @@ public class SupporterServiceImpl implements ISupporterService {
     }
     @Override
     public Supporter save(Supporter supporter) {
-        return this.save(supporter);
-    }
-
-    @Override
-    public Supporter update(Integer staffId, Supporter supporter) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        return this.supporterRepository.save(supporter);
     }
 
 }

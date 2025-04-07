@@ -6,19 +6,17 @@
 package com.example.demo.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.domain.Doctor;
-import com.example.demo.domain.User;
 
 /**
  *
  * @author iset1enloc
  */
 @Repository
-@EnableJpaRepositories
-public interface DoctorRepository extends JpaRepository<User, Long> {
-    Doctor save(Doctor doctor);
-    Doctor update(Long staffId, Doctor doctor);
+
+public interface DoctorRepository extends JpaRepository<Doctor, Long> {
+    // Doctor save(Doctor doctor);
+    // Doctor update(Long staffId, Doctor doctor);
 }

@@ -21,9 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.domain.Doctor;
 import com.example.demo.domain.Supporter;
 import com.example.demo.domain.User;
-import com.example.demo.dto.RestResponse;
 import com.example.demo.dto.doctor.registerDoctorRequest;
-import com.example.demo.dto.response.AuthResponse;
 import com.example.demo.dto.supporter.registerSupporterRequest;
 import com.example.demo.service.IDoctorService;
 import com.example.demo.service.ISupporterService;
@@ -49,13 +47,42 @@ public class AdminUserController {
     }
 
     @PostMapping("/register-doctor")
-    public ResponseEntity<RestResponse<Doctor>> registerDoctor(@RequestBody registerDoctorRequest request) {
-        return null;
+    public ResponseEntity<Doctor> registerDoctor(@RequestBody registerDoctorRequest request) {
+        Doctor doctor = new Doctor();
+
+        // populate fields inherited from User (or Staff, depending on your model)
+        doctor.setName(request.staffName);
+        doctor.setFullName(request.fullName);
+        doctor.setEmail(request.email);
+        doctor.setPhone(request.phoneNumber);
+        doctor.setPassword(request.password); // consider encoding before saving!
+
+        // populate Doctor-specific fields
+        doctor.setSpecialization(request.specialization);
+        doctor.setQualification(request.qualification);
+        doctor.setYearsOfExperience(request.yearsOfExperience);
+        Doctor res = doctorService.save(doctor);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(res);
     }   
 
     @PostMapping("/register-supporter")
-    public ResponseEntity<RestResponse<Supporter>> registerSupporter(@RequestBody registerSupporterRequest request) {
-        return null;
+    public ResponseEntity<Supporter> registerSupporter(@RequestBody registerSupporterRequest request) {
+
+        Supporter supporter = new Supporter();
+
+        // populate fields inherited from User (or Staff, depending on your model)
+        supporter.setName(request.staffName);
+        supporter.setFullName(request.fullName);
+        supporter.setEmail(request.email);
+        supporter.setPhone(request.phoneNumber);
+        supporter.setPassword(request.password); // consider encoding before saving!
+
+        // populate Doctor-specific fields
+        supporter.setTitle(request.staffTitle);
+
+        Supporter res = supporterService.save(supporter);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(res);
     }
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
