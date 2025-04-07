@@ -39,4 +39,8 @@ public interface IUserService {
     List<String> getRolesByUserId(Long userId);
     
     Optional<User> findByUsername(String username);
+
+    List<String> findAllRolesByUserName(String username);
+
+    List<String> findAllPermissionsByUserName(String username);
 }

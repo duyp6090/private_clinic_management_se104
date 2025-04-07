@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.Role;
 import com.example.demo.dto.RestResponse;
+import com.example.demo.dto.role.assignPermission;
 import com.example.demo.dto.role.newRoleReq;
 import com.example.demo.service.IRoleService;
 
@@ -64,11 +65,12 @@ public class RoleController {
         roleService.deleteRoleById(id);
         return ResponseEntity.ok(RestResponse.success(200, "Role deleted successfully."));
     }
-    @PutMapping("/{roleId}/assign-permissions")
+    @PostMapping("/{roleId}/assign-permissions")
     public ResponseEntity<RestResponse<Role>> assignPermissionsToRole(
             @PathVariable int roleId,
-            @RequestBody int permission_id) {
-        Role updatedRole = roleService.assignPermissionToRole(roleId, permission_id);
+            @RequestBody assignPermission permission) {
+        System.out.println();
+        Role updatedRole = roleService.assignPermissionToRole(roleId, permission.getPermissionId());
         return ResponseEntity.ok(RestResponse.success(HttpStatus.OK.value(), updatedRole));
     }
 

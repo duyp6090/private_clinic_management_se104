@@ -107,4 +107,13 @@ public class UserServiceImpl implements IUserService {
     public Optional<User> findByUsername(String username){
         return userRepository.findByUsername(username);
     }
+    @Override
+    public List<String> findAllRolesByUserName(String username){
+        return userRepository.findAllRolesByUsername(username);
+    }
+
+    @Override
+    public List<String> findAllPermissionsByUserName(String username) {
+        return userRepository.findAllPermissionsByUserId(username);
+    }
 }
