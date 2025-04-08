@@ -17,16 +17,16 @@ import com.example.demo.dto.request.RefreshTokenRequest;
 import com.example.demo.dto.request.SignInRequest;
 import com.example.demo.dto.request.SignOutRequest;
 import com.example.demo.dto.response.AuthResponse;
-import com.example.demo.service.service_implementation.AuthServiceImpl;
+import com.example.demo.service.IAuthService;
 
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationController {
 
-    private final AuthServiceImpl authService;
+    private final IAuthService authService;
 
-    public AuthenticationController(AuthServiceImpl authService) {
+    public AuthenticationController(IAuthService authService) {
         System.out.println("Init Authentication");
         this.authService = authService;
     }

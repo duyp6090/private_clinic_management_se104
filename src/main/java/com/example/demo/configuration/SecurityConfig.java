@@ -21,7 +21,6 @@ import com.example.demo.security.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter; 

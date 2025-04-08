@@ -17,15 +17,16 @@ import com.example.demo.domain.User;
 import com.example.demo.dto.RestResponse;
 import com.example.demo.dto.user.UserDTO;
 import com.example.demo.exception.IdInvalidException;
-import com.example.demo.service.service_implementation.UserServiceImpl;
+import com.example.demo.service.IUserService;
+
 
 @RestController
 public class UserController {
 
     // Dependency Injection (DI)
-    private final UserServiceImpl userService;
+    private final IUserService userService;
 
-    public UserController(UserServiceImpl userService) {
+    public UserController(IUserService userService) {
         this.userService = userService;
     }
 
