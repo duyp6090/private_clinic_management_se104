@@ -32,6 +32,15 @@ public class Patients {
 
     private String full_name;
 
+    public Patients(String full_name, Gender gender, Date date_of_birth, String address, String phone_number,
+            Date date_exam) {
+        this.full_name = full_name;
+        this.gender = gender;
+        this.date_of_birth = date_of_birth;
+        this.address = address;
+        this.phone_number = phone_number;
+        this.date_exam = date_exam;
+    }
     @Enumerated(EnumType.STRING)
     private Gender gender;
 

@@ -31,8 +31,7 @@ public class Diseases {
     public Diseases(){
 
     }
-    public Diseases(int disease_id, String disease_name, String description) {
-        this.disease_id = disease_id;
+    public Diseases(String disease_name, String description) {
         this.disease_name = disease_name;
         this.description = description;
     }
