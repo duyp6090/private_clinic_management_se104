@@ -5,7 +5,8 @@ public enum ErrorCode {
     INVALID_INPUT(400, "Invalid input"),
     NOT_FOUND(404, "Resource not found"),
     INTERNAL_ERROR(500, "Internal server error"),
-    PassWord_Invalid(400, "Password must be at least 8 characters");
+    PASSWORD_INVALID(400, "Password must be at least 8 characters"),
+    USER_EXISTS(400, "User already exists");
 
     private final int code;
     private final String message;

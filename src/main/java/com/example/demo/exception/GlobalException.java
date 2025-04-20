@@ -6,26 +6,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.example.demo.dto.RestResponse;
+import com.example.demo.dto.response.RestResponse;
 
 @RestControllerAdvice
 public class GlobalException {
-    @ExceptionHandler(value = IdInvalidException.class)
-    public ResponseEntity<RestResponse<Object>> handleIdException(IdInvalidException e) {
-        // init RestResponse
-        RestResponse<Object> restResponse = new RestResponse();
-
-        // Set parameters
-        restResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
-        restResponse.setError("IdInvalidException");
-        restResponse.setMessage(e.getMessage());
-        restResponse.setData(null);
-
-        // Return response
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(restResponse);
-
-    }
-
     @ExceptionHandler(value = RuntimeException.class)
     public ResponseEntity<RestResponse<Object>> handleRuntimeException(RuntimeException e) {
         // init RestResponse
@@ -56,7 +40,7 @@ public class GlobalException {
         restResponse.setData(null);
 
         // Return response
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(restResponse);
+        return ResponseEntity.status(errorCode.getCode()).body(restResponse);
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)

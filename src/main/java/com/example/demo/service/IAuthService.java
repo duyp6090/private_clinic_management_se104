@@ -5,14 +5,13 @@
 
 package com.example.demo.service;
 
-import com.example.demo.dto.RestResponse;
 import com.example.demo.dto.response.AuthResponse;
+import com.example.demo.dto.response.RestResponse;
 
 /**
  *
  * @author iset1enloc
  */
-
 
 public interface IAuthService {
 

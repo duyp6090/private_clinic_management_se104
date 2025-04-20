@@ -1,4 +1,5 @@
 package com.example.demo.controller;
+
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -14,11 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.User;
-import com.example.demo.dto.RestResponse;
+import com.example.demo.dto.response.RestResponse;
 import com.example.demo.dto.user.UserDTO;
-import com.example.demo.exception.IdInvalidException;
 import com.example.demo.service.IUserService;
-
 
 @RestController
 public class UserController {
@@ -37,18 +36,14 @@ public class UserController {
         response.setStatusCode(HttpStatus.OK.value());
         response.setMessage("Welcome to the home page!");
         response.setData("home");
-    
+
         return ResponseEntity.ok(response);
     }
-    
 
     // Get one user by ID
     // Get one user by id
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable("id") long id) throws IdInvalidException {
-        if (id <= 0) {
-            throw new IdInvalidException("Id must be greater than 0");
-        }
+    public ResponseEntity<User> getUser(@PathVariable("id") long id) {
         User findUser = this.userService.getUser(id);
         return ResponseEntity.status(HttpStatus.OK).body(findUser);
     }
@@ -60,6 +55,7 @@ public class UserController {
         User userCurrent = this.userService.getUser(id);
         return ResponseEntity.status(HttpStatus.OK).body(userCurrent);
     }
+
     @GetMapping("/api/current-user")
     public ResponseEntity<UserDTO> getCurrentUser() {
         System.out.println("ENTER USER DTO");
@@ -71,18 +67,16 @@ public class UserController {
         var optionalUser = userService.findByUsername(username);
         User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        List<String>user_roles = userService.findAllRolesByUserName(username);
+        List<String> user_roles = userService.findAllRolesByUserName(username);
         List<String> user_permision = userService.findAllPermissionsByUserName(username);
 
         System.out.println(user_roles);
         System.out.println(user_permision);
         System.out.println(username);
-        
 
         // For demonstration, assume email is the same as username
-        final UserDTO userDTO = new UserDTO(user.getId(),username,user_roles,user_permision);
+        final UserDTO userDTO = new UserDTO(user.getId(), username, user_roles, user_permision);
 
         return ResponseEntity.ok(userDTO);
     }
 }
-

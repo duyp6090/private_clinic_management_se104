@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.Permission;
-import com.example.demo.dto.RestResponse;
 import com.example.demo.dto.permission.newPermission;
+import com.example.demo.dto.response.RestResponse;
 import com.example.demo.service.IPermissionService;
 
 @RestController
@@ -53,7 +53,8 @@ public class PermissionController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RestResponse<Permission>> updatePermission(@PathVariable int id, @RequestBody Permission permission) {
+    public ResponseEntity<RestResponse<Permission>> updatePermission(@PathVariable int id,
+            @RequestBody Permission permission) {
         Permission updated = permissionService.updatePermission(id, permission);
         return ResponseEntity.ok(RestResponse.success(200, updated));
     }
