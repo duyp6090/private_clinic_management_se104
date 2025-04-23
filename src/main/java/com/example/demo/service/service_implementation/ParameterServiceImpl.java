@@ -7,13 +7,12 @@ import com.example.demo.exception.ErrorCode;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.stereotype.Service;
 
 import com.example.demo.repository.ParameterRepository;
 import com.example.demo.service.IParameterService;
 
-import jakarta.validation.Valid;
-
+@Service
 public class ParameterServiceImpl implements IParameterService {
 
     private final ParameterRepository parameterRepository;
@@ -25,14 +24,11 @@ public class ParameterServiceImpl implements IParameterService {
     @Override
     public List<Parameter> getParameter() {
         List<Parameter> parameters = parameterRepository.findAll();
-        if (parameters.isEmpty()) {
-            return null;
-        }
         return parameters;
     }
 
     @Override
-    public Parameter editParameter(@Valid @RequestParam EditParameter parameter) {
+    public Parameter editParameter(EditParameter parameter) {
         // Get parameter
         List<Parameter> parameters = this.getParameter();
         if (parameters == null || parameters.isEmpty()) {
@@ -41,14 +37,14 @@ public class ParameterServiceImpl implements IParameterService {
 
         Parameter firstParameter = parameters.get(0);
 
-        if (parameter.getNumber_patient_max() != null) {
-            firstParameter.setNumber_patient_max(parameter.getNumber_patient_max());
+        if (parameter.getNumberPatientMax() != null) {
+            firstParameter.setNumberPatientMax(parameter.getNumberPatientMax());
         }
-        if (parameter.getExam_fee() != null) {
-            firstParameter.setExam_fee(parameter.getExam_fee());
+        if (parameter.getExamFee() != null) {
+            firstParameter.setExamFee(parameter.getExamFee());
         }
-        if (parameter.getDrug_fee_percent() != null) {
-            firstParameter.setDrug_fee_percent(parameter.getDrug_fee_percent());
+        if (parameter.getDrugFeePercent() != null) {
+            firstParameter.setDrugFeePercent(parameter.getDrugFeePercent());
         }
         // Save parameter
         return this.parameterRepository.save(firstParameter);

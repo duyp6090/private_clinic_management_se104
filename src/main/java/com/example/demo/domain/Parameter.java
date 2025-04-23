@@ -11,41 +11,41 @@ import jakarta.persistence.Table;
 public class Parameter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long param_id;
-    private long number_patient_max;
-    private double exam_fee;
-    private double drug_fee_percent;
+    private long paramId;
+    private long numberPatientMax;
+    private double examFee;
+    private double drugFeePercent;
 
-    public long getParam_id() {
-        return param_id;
+    public long getParamId() {
+        return paramId;
     }
 
-    public void setParam_id(long param_id) {
-        this.param_id = param_id;
+    public void setParamId(long paramId) {
+        this.paramId = paramId;
     }
 
-    public long getNumber_patient_max() {
-        return number_patient_max;
+    public long getNumberPatientMax() {
+        return numberPatientMax;
     }
 
-    public void setNumber_patient_max(long number_patient_max) {
-        this.number_patient_max = number_patient_max;
+    public void setNumberPatientMax(long numberPatientMax) {
+        this.numberPatientMax = numberPatientMax;
     }
 
-    public double getExam_fee() {
-        return exam_fee;
+    public double getExamFee() {
+        return examFee;
     }
 
-    public void setExam_fee(double exam_fee) {
-        this.exam_fee = exam_fee;
+    public void setExamFee(double examFee) {
+        this.examFee = examFee;
     }
 
-    public double getDrug_fee_percent() {
-        return drug_fee_percent;
+    public double getDrugFeePercent() {
+        return drugFeePercent;
     }
 
-    public void setDrug_fee_percent(double drug_fee_percent) {
-        this.drug_fee_percent = drug_fee_percent;
+    public void setDrugFeePercent(double drugFeePercent) {
+        this.drugFeePercent = drugFeePercent;
     }
 
 }

@@ -11,24 +11,24 @@ import jakarta.persistence.Table;
 public class Diseases {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long disease_id;
-    private String disease_name;
+    private long diseaseId;
+    private String diseaseName;
     private String description;
 
-    public long getDisease_id() {
-        return disease_id;
+    public long getDiseaseId() {
+        return diseaseId;
     }
 
-    public void setDisease_id(long disease_id) {
-        this.disease_id = disease_id;
+    public void setDiseaseId(long diseaseId) {
+        this.diseaseId = diseaseId;
     }
 
-    public String getDisease_name() {
-        return disease_name;
+    public String getDiseaseName() {
+        return diseaseName;
     }
 
-    public void setDisease_name(String disease_name) {
-        this.disease_name = disease_name;
+    public void setDiseaseName(String diseaseName) {
+        this.diseaseName = diseaseName;
     }
 
     public String getDescription() {

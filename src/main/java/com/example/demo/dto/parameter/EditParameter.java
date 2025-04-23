@@ -6,35 +6,36 @@ public class EditParameter {
     // validate the number_patient_max is a number and not a string
 
     @Min(value = 0, message = "number_patient_max must be a positive number")
-    private Long number_patient_max;
+    private Long numberPatientMax;
 
     @Min(value = 0, message = "number_patient_min must be a positive number")
-    private Double exam_fee;
+    private Double examFee;
 
     @Min(value = 0, message = "number_patient_min must be a positive number")
-    private Double drug_fee_percent;
+    private Double drugFeePercent;
 
-    public Long getNumber_patient_max() {
-        return number_patient_max;
+    public Long getNumberPatientMax() {
+        return numberPatientMax;
     }
 
-    public void setNumber_patient_max(Long number_patient_max) {
-        this.number_patient_max = number_patient_max;
+    public void setNumberPatientMax(Long numberPatientMax) {
+        this.numberPatientMax = numberPatientMax;
     }
 
-    public Double getExam_fee() {
-        return exam_fee;
+    public Double getExamFee() {
+        return examFee;
     }
 
-    public void setExam_fee(Double exam_fee) {
-        this.exam_fee = exam_fee;
+    public void setExamFee(Double examFee) {
+        this.examFee = examFee;
     }
 
-    public Double getDrug_fee_percent() {
-        return drug_fee_percent;
+    public Double getDrugFeePercent() {
+        return drugFeePercent;
     }
 
-    public void setDrug_fee_percent(Double drug_fee_percent) {
-        this.drug_fee_percent = drug_fee_percent;
+    public void setDrugFeePercent(Double drugFeePercent) {
+        this.drugFeePercent = drugFeePercent;
     }
+
 }

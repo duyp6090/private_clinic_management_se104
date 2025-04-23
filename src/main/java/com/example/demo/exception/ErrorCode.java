@@ -6,7 +6,8 @@ public enum ErrorCode {
     NOT_FOUND(404, "Resource not found"),
     INTERNAL_ERROR(500, "Internal server error"),
     PASSWORD_INVALID(400, "Password must be at least 8 characters"),
-    USER_EXISTS(400, "User already exists");
+    INFORMATION_EXISTS(400, "Information already exists"),
+    INVALID_SORT_FIELD(400, "Invalid sort field");
 
     private final int code;
     private final String message;

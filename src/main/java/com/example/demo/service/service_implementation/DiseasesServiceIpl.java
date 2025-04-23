@@ -1,13 +1,26 @@
 package com.example.demo.service.service_implementation;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
 import com.example.demo.domain.Diseases;
+import com.example.demo.dto.common.PaginationDTO;
+import com.example.demo.dto.common.ResultPaginationDTO;
+import com.example.demo.dto.diseases.GetDiseasesDTO;
 import com.example.demo.exception.AppException;
 import com.example.demo.exception.ErrorCode;
 import com.example.demo.repository.DiseasesRepository;
 import com.example.demo.service.IDiseasesService;
 
+import jakarta.transaction.Transactional;
+
+@Service
 public class DiseasesServiceIpl implements IDiseasesService {
     private final DiseasesRepository diseasesRepository;
 
@@ -17,15 +30,46 @@ public class DiseasesServiceIpl implements IDiseasesService {
 
     // Get all diseases
     @Override
-    public List<Diseases> getDiseases() {
-        List<Diseases> diseases = this.diseasesRepository.findAll();
-        return diseases;
+    public ResultPaginationDTO getDiseases(GetDiseasesDTO getDiseasesDTO) {
+        // Create resultPaginationDTO and PaginationDTO
+        ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
+        PaginationDTO paginationDTO = new PaginationDTO();
+
+        // Pagination, Sorting, Filtering
+        int page = getDiseasesDTO.getPage();
+        int size = getDiseasesDTO.getSize();
+        List<Sort.Order> orders = new ArrayList<>();
+
+        if (getDiseasesDTO.getSort() != null) {
+            String[] sortParams = getDiseasesDTO.getSort().split("\\|");
+            for (String filed : sortParams) {
+                String[] sortParam = filed.split(",");
+                String field = sortParam[0];
+                String typeSort = sortParam[1];
+                Sort.Order order = new Sort.Order(Sort.Direction.fromString(typeSort), field);
+                orders.add(order);
+            }
+        }
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(orders));
+
+        Page<Diseases> diseases = this.diseasesRepository.findAll(getDiseasesDTO, pageable);
+
+        // Set result
+        paginationDTO.setPage(page);
+        paginationDTO.setSize(size);
+        paginationDTO.setTotalPages(diseases.getTotalPages());
+        paginationDTO.setTotalElements((int) diseases.getTotalElements());
+
+        resultPaginationDTO.setPaginationDTO(paginationDTO);
+        resultPaginationDTO.setData(diseases.getContent());
+
+        return resultPaginationDTO;
     }
 
     // Get disease by id
     @Override
-    public Diseases getDiseaseById(Long id) {
-        Diseases disease = this.diseasesRepository.findById(id).orElse(null);
+    public Diseases getDiseaseByDiseaseId(Long id) {
+        Diseases disease = this.diseasesRepository.findByDiseaseId(id).orElse(null);
         if (disease == null) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
@@ -34,8 +78,8 @@ public class DiseasesServiceIpl implements IDiseasesService {
 
     // Check exist disease by another field
     @Override
-    public boolean existById(Long id) {
-        boolean existDiseaseById = this.diseasesRepository.existsById(id);
+    public boolean existByDiseaseId(Long id) {
+        boolean existDiseaseById = this.diseasesRepository.existsByDiseaseId(id);
         if (!existDiseaseById) {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
@@ -47,28 +91,29 @@ public class DiseasesServiceIpl implements IDiseasesService {
     public boolean existByDiseaseName(String diseaseName) {
         boolean existDisease = this.diseasesRepository.existsByDiseaseName(diseaseName);
         if (existDisease) {
-            throw new AppException(ErrorCode.USER_EXISTS);
+            throw new AppException(ErrorCode.INFORMATION_EXISTS);
         }
         return existDisease;
     }
 
     // Create and edit disease
     @Override
-    public Diseases saveDiseases(Diseases disease) {
+    public Diseases saveDisease(Diseases disease) {
         return this.diseasesRepository.save(disease);
     }
 
     // Delete disease
+    @Transactional
     @Override
-    public String deleteDiseases(Long id) {
+    public String deleteDisease(Long id) {
         // Check if disease exists
-        boolean existDisease = this.diseasesRepository.existsById(id);
+        boolean existDisease = this.diseasesRepository.existsByDiseaseId(id);
         if (!existDisease) {
             ErrorCode errorCode = ErrorCode.NOT_FOUND;
             AppException appException = new AppException(errorCode);
             throw appException;
         }
-        this.diseasesRepository.deleteById(id);
+        this.diseasesRepository.deleteByDiseaseId(id);
         return "Delete disease successfully!";
     }
 }

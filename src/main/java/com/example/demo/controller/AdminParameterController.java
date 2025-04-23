@@ -7,9 +7,9 @@ import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.service.service_implementation.ParameterServiceImpl;
@@ -17,8 +17,8 @@ import com.example.demo.service.service_implementation.ParameterServiceImpl;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/admin/parameter")
-@PreAuthorize("hasRole('ADMIN')")
+@RequestMapping("/api/public/parameter")
+// @PreAuthorize("hasRole('ADMIN')")
 public class AdminParameterController {
     private final ParameterServiceImpl parameterService;
 
@@ -27,16 +27,13 @@ public class AdminParameterController {
     }
 
     @GetMapping("/get-parameter")
-    public Parameter getParameter() {
+    public List<Parameter> getParameter() {
         List<Parameter> parameters = parameterService.getParameter();
-        if (parameters.isEmpty()) {
-            return null;
-        }
-        return parameters.get(0);
+        return parameters;
     }
 
-    @PatchMapping("/edit-parameter") // Get infromation from the form
-    public Parameter edParameter(@Valid @RequestParam EditParameter parameter) {
+    @PatchMapping("/edit-parameter") // Get information from the form
+    public Parameter edParameter(@Valid @ModelAttribute EditParameter parameter) {
         // Save parameter
         Parameter newParameter = this.parameterService.editParameter(parameter);
         return newParameter;

@@ -4,18 +4,10 @@ import jakarta.validation.constraints.Size;
 
 public class EditDiseasesDTO {
     @Size(min = 1, max = 50, message = "disease_name must be between 1 and 50 characters")
-    private String disease_name;
+    private String diseaseName;
 
     @Size(min = 1, max = 255, message = "description must be between 1 and 255 characters")
     private String description;
-
-    public String getDisease_name() {
-        return disease_name;
-    }
-
-    public void setDisease_name(String disease_name) {
-        this.disease_name = disease_name;
-    }
 
     public String getDescription() {
         return description;
@@ -23,5 +15,13 @@ public class EditDiseasesDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getDiseaseName() {
+        return diseaseName;
+    }
+
+    public void setDiseaseName(String diseaseName) {
+        this.diseaseName = diseaseName;
     }
 }
