@@ -26,13 +26,13 @@ public class DrugUnits {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "unit_id")
-    private int drug_unit_id;
+    private int unit_id;
 
     private String drug_name;
 
     private String drug_description;
     
-    @OneToMany(mappedBy = "units")
+    @OneToMany(mappedBy = "unit")
     private Set<Drug_Unit>  drugUnits = new HashSet<>();
 
     public DrugUnits(String drug_name, String drug_description) {
@@ -57,11 +57,11 @@ public class DrugUnits {
     }
 
     public int getDrug_unit_id() {
-        return drug_unit_id;
+        return unit_id;
     }
 
     public void setDrug_unit_id(int drug_unit_id) {
-        this.drug_unit_id = drug_unit_id;
+        this.unit_id = drug_unit_id;
     }
 
     
