@@ -50,14 +50,12 @@ public class AdminUserController {
     public ResponseEntity<Doctor> registerDoctor(@RequestBody registerDoctorRequest request) {
         Doctor doctor = new Doctor();
 
-        // populate fields inherited from User (or Staff, depending on your model)
         doctor.setName(request.staffName);
         doctor.setFullName(request.fullName);
         doctor.setEmail(request.email);
         doctor.setPhone(request.phoneNumber);
         doctor.setPassword(request.password); // consider encoding before saving!
 
-        // populate Doctor-specific fields
         doctor.setSpecialization(request.specialization);
         doctor.setQualification(request.qualification);
         doctor.setYearsOfExperience(request.yearsOfExperience);
