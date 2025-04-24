@@ -1,4 +1,4 @@
-package com.example.demo.util;
+package com.example.demo.utils;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -39,7 +39,7 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
         // Case error
         if (status >= 400) {
             restResponse.setError("CALL API FAILED");
-            restResponse.setMessage(body);
+            restResponse.setData(body);
         } else {
             // Case success
             restResponse.setData(body);

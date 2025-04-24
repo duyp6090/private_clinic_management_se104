@@ -1,5 +1,5 @@
 server:
-    port: 8080
+    port: 3000
     servlet:
         context-path: /
 spring:
@@ -15,3 +15,9 @@ spring:
         user:
             name: admin
             password: admin
+jwt:
+  secret: "2D4A614E645267556B58703273357638792F423F4428472B4B6250655368566D2D4A614E645267556B58703273357638792F423F4428472B4B6250655368566D"
+  expiration:
+    access: 3600000 
+    refresh: 86400000 
+
