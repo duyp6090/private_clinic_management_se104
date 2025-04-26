@@ -1,11 +1,5 @@
 package com.example.demo.service;
 
-import java.time.Year;
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
 import com.example.demo.domain.Patients;
 import com.example.demo.dto.common.ResultPaginationDTO;
 import com.example.demo.dto.patients.GetPatientsDTO;

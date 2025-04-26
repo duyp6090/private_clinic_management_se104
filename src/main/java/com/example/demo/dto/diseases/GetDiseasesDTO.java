@@ -1,13 +1,11 @@
 package com.example.demo.dto.diseases;
 
-import java.util.List;
-
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 
 public class GetDiseasesDTO {
     private String diseaseName;
-    @Pattern(regexp = "^[a-zA-Z0-9_]+,(asc|desc)$")
+    @Pattern(regexp = "^([a-zA-Z0-9_]+,(asc|desc))(\\|[a-zA-Z0-9_]+,(asc|desc))*$", message = "Sort must be in the format 'field,order'")
     private String sort;
 
     @Min(value = 1, message = "Page number must be greater than or equal to 1")

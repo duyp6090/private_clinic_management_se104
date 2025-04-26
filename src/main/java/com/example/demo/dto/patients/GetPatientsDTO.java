@@ -8,7 +8,7 @@ public class GetPatientsDTO {
     private Boolean gender;
     private String yearOfBirth;
 
-    @Pattern(regexp = "^([a-zA-Z0-9_]+,(asc|desc))(\\\\|[a-zA-Z0-9_]+,(asc|desc))*$", message = "Sort must be in the format 'field,order'")
+    @Pattern(regexp = "^([a-zA-Z0-9_]+,(asc|desc))(\\|[a-zA-Z0-9_]+,(asc|desc))*$", message = "Sort must be in the format 'field,order'")
     private String sort;
 
     @Min(value = 1, message = "Page must be greater than or equal to 1")

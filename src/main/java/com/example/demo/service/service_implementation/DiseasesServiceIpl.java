@@ -23,6 +23,7 @@ import jakarta.transaction.Transactional;
 @Service
 public class DiseasesServiceIpl implements IDiseasesService {
     private final DiseasesRepository diseasesRepository;
+    private final List<String> VALID_FIELDS_SORT = List.of("diseaseName");
 
     public DiseasesServiceIpl(DiseasesRepository diseasesRepository) {
         this.diseasesRepository = diseasesRepository;
@@ -46,6 +47,9 @@ public class DiseasesServiceIpl implements IDiseasesService {
                 String[] sortParam = filed.split(",");
                 String field = sortParam[0];
                 String typeSort = sortParam[1];
+                if (!VALID_FIELDS_SORT.contains(field)) {
+                    throw new AppException(ErrorCode.INVALID_SORT_FIELD);
+                }
                 Sort.Order order = new Sort.Order(Sort.Direction.fromString(typeSort), field);
                 orders.add(order);
             }
