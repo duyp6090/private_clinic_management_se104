@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package com.example.demo.controller;
 
 import org.springframework.http.HttpStatus;
@@ -11,23 +6,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.demo.dto.request.RefreshTokenRequest;
 import com.example.demo.dto.request.SignInRequest;
 import com.example.demo.dto.request.SignOutRequest;
+import com.example.demo.dto.request.SignUpRequest;
 import com.example.demo.dto.response.AuthResponse;
 import com.example.demo.dto.response.RestResponse;
 import com.example.demo.service.IAuthService;
+import com.example.demo.service.IUserService;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationController {
 
     private final IAuthService authService;
+    private final IUserService userService;
 
-    public AuthenticationController(IAuthService authService) {
+    public AuthenticationController(IAuthService authService,IUserService userservice) {
         System.out.println("Init Authentication");
         this.authService = authService;
+        this.userService=userservice;
     }
 
     // User Login Endpoint
@@ -99,18 +97,41 @@ public class AuthenticationController {
         }
     }
 
-    // // User Registration Endpoint
-    // @PostMapping("/signup")
-    // public ResponseEntity<RestResponse<String>> registerUser(@RequestBody
-    // SignUpRequest user) {
-    // RestResponse<String> response = new RestResponse<>();
-    // try {
-    // if (userService.existsByUsername(user.getUsername())) {
-    // response.setStatusCode(HttpStatus.BAD_REQUEST.value());
-    // response.setError("Username already taken");
-    // response.setMessage("Error: Username is already taken!");
-    // return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-    // }
+    // User Registration Endpoint
+    @PostMapping("/signup")
+    public ResponseEntity<RestResponse<String>> registerUser(@RequestBody SignUpRequest user) {
+        RestResponse<String> response = new RestResponse<>();
+        try {
+            if (userService.existsByUsername(user.getUsername())) {
+                response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                response.setError("Username already taken");
+                response.setMessage("Error: Username is already taken!");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
+            if (userService.existsByEmail(user.getEmail())) {
+                response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                response.setError("Email already in use");
+                response.setMessage("Error: Email is already in use!");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+
+            User usermodel= new User(user.getUsername(), user.getEmail(), user.getPassword(), user.getFullName(), user.getAddress(), user.getPhone());
+
+            // Save the user
+            userService.createUser(usermodel);
+
+            response.setStatusCode(HttpStatus.CREATED.value());
+            response.setMessage("User registered successfully!");
+            response.setData("Success");
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setError("Internal server error");
+            response.setMessage("Error: An unexpected error occurred during user registration");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 
     // if (userService.existsByEmail(user.getEmail())) {
     // response.setStatusCode(HttpStatus.BAD_REQUEST.value());
