@@ -1,104 +1,83 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package com.example.demo.domain;
-
+import java.time.LocalDate;
+package com.example.demo.domain;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-/**
- *
- * @author iset1enloc
- */
 @Entity
-@Table(name = "tbl_drugs")
+@Table(name = "drugs")
 public class Drugs {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "drug_id")
-    private Long drug_id;
-    
-    
-    public Drugs(String drug_name, String description, Long quantity, double imported_price,
-            double selling_price, Date imported_date, Date expiration_date) {
-        this.drug_name = drug_name;
-        this.description = description;
-        this.quantity = quantity;
-        this.imported_price = imported_price;
-        this.selling_price = selling_price;
-        this.imported_date = imported_date;
-        this.expiration_date = expiration_date;
-    }
-    private String drug_name;
+    private long drugId;
+    private String drugName;
     private String description;
-    private Long quantity;
-    private double imported_price;
-    private double selling_price;
-    private Date imported_date;
-    private Date expiration_date;
+    private long quantity;
+    private double importPrice;
+    private LocalDate expirationDate;
 
-    @OneToMany(mappedBy = "drug")
-    private Set<Drug_Unit>  drugUnits = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "unit_id", referencedColumnName = "unitId")
+    private DrugsUnit drugsUnit;
 
-    public Long getDrug_id() {
-        return drug_id;
+    public long getDrugId() {
+        return drugId;
     }
-    public void setDrug_id(Long drug_id) {
-        this.drug_id = drug_id;
+
+    public void setDrugId(long drugId) {
+        this.drugId = drugId;
     }
-    public String getDrug_name() {
-        return drug_name;
+
+    public String getDrugName() {
+        return drugName;
     }
-    public void setDrug_name(String drug_name) {
-        this.drug_name = drug_name;
+
+    public void setDrugName(String drugName) {
+        this.drugName = drugName;
     }
+
     public String getDescription() {
         return description;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
-    public Long getQuantity() {
+
+    public long getQuantity() {
         return quantity;
     }
-    public void setQuantity(Long quantity) {
+
+    public void setQuantity(long quantity) {
         this.quantity = quantity;
     }
-    public double getImported_price() {
-        return imported_price;
-    }
-    public void setImported_price(double imported_price) {
-        this.imported_price = imported_price;
-    }
-    public double getSelling_price() {
-        return selling_price;
-    }
-    public void setSelling_price(double selling_price) {
-        this.selling_price = selling_price;
-    }
-    public Date getImported_date() {
-        return imported_date;
-    }
-    public void setImported_date(Date imported_date) {
-        this.imported_date = imported_date;
-    }
-    public Date getExpiration_date() {
-        return expiration_date;
-    }
-    public void setExpiration_date(Date expiration_date) {
-        this.expiration_date = expiration_date;
-    }
-    
 
+    public double getImportPrice() {
+        return importPrice;
+    }
+
+    public void setImportPrice(double importPrice) {
+        this.importPrice = importPrice;
+    }
+
+    public LocalDate getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(LocalDate expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public DrugsUnit getDrugsUnit() {
+        return drugsUnit;
+    }
+
+    public void setDrugsUnit(DrugsUnit drugsUnit) {
+        this.drugsUnit = drugsUnit;
+    }
 }

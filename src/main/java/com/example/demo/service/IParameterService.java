@@ -1,16 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
-
 package com.example.demo.service;
 
-/**
- *
- * @author iset1enloc
- */
+import java.util.List;
+
+import com.example.demo.domain.Parameter;
+import com.example.demo.dto.parameter.EditParameter;
+
 public interface IParameterService {
-    Boolean isFullDiseaseLimit();
-    Boolean isFullDrugLimit();
-    Boolean isFullPatientRecordPerDay();
+    // Method get parameter
+    public List<Parameter> getParameter();
+
+    // Method edit parameter
+    public Parameter editParameter(EditParameter parameter);
 }

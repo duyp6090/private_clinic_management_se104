@@ -1,14 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package com.example.demo.domain;
-
-/**
- *
- * @author iset1enloc
- */
 
 
 import jakarta.persistence.Column;
@@ -18,66 +8,45 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-
 @Entity
-@Table(name = "parameters")
+@Table(name = "parameter")
 public class Parameter {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long paramId;
+    private long numberPatientMax;
+    private double examFee;
+    private double drugFeePercent;
 
-    @Column(name = "param_type", nullable = false)
-    private String paramType; // ví dụ: GENDER, STATUS
-
-    @Column(name = "param_key", nullable = false)
-    private String paramKey;  // ví dụ: MALE, ACTIVE
-
-    @Column(name = "param_value")
-    private String paramValue; // ví dụ: "Nam", "Hoạt động"
-
-    @Column(name = "is_active")
-    private Boolean isActive = true;
-
-    public Long getId() {
-        return id;
+    public long getParamId() {
+        return paramId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setParamId(long paramId) {
+        this.paramId = paramId;
     }
 
-    public String getParamType() {
-        return paramType;
+    public long getNumberPatientMax() {
+        return numberPatientMax;
     }
 
-    public void setParamType(String paramType) {
-        this.paramType = paramType;
+    public void setNumberPatientMax(long numberPatientMax) {
+        this.numberPatientMax = numberPatientMax;
     }
 
-    public String getParamKey() {
-        return paramKey;
+    public double getExamFee() {
+        return examFee;
     }
 
-    public void setParamKey(String paramKey) {
-        this.paramKey = paramKey;
+    public void setExamFee(double examFee) {
+        this.examFee = examFee;
     }
 
-    public String getParamValue() {
-        return paramValue;
+    public double getDrugFeePercent() {
+        return drugFeePercent;
     }
 
-    public void setParamValue(String paramValue) {
-        this.paramValue = paramValue;
+    public void setDrugFeePercent(double drugFeePercent) {
+        this.drugFeePercent = drugFeePercent;
     }
-
-    public Boolean getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
-
-
 }

@@ -1,24 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package com.example.demo.repository;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+package com.example.demo.repository;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import io.micrometer.common.lang.NonNull;
 
-import com.example.demo.domain.Parameter;
-
-/**
- *
- * @author iset1enloc
- */
 @Repository
+@EnableJpaRepositories
 public interface ParameterRepository extends JpaRepository<Parameter, Long> {
-    List<Parameter> findByParamType(String paramType);
-    Optional<Parameter> findByParamTypeAndParamKey(String paramType, String paramKey);
+    // Get all parameters
+    @NonNull
+    public List<Parameter> findAll();
+
+    // Edit parameter
+    @NonNull
+    public Parameter save(Parameter parameter);
 }

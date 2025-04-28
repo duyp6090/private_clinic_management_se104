@@ -1,23 +1,25 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
-
 package com.example.demo.service;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.example.demo.domain.Patients;
+import com.example.demo.dto.common.ResultPaginationDTO;
+import com.example.demo.dto.patients.GetPatientsDTO;
 
-/**
- *
- * @author iset1enloc
- */
 public interface IPatientService {
-    Patients savePatient(Patients patient);
-    List<Patients> getAllPatients();
-    Optional<Patients> getPatientById(Long id);
-    Patients updatePatient(Long id, Patients patient);
-    void deletePatient(Long id);
+    // Get all patient by full_name, gender, year_of_birth
+    public ResultPaginationDTO getPatients(GetPatientsDTO getPatientsDTO);
+
+    // Get patient by id
+    public Patients getPatientByPatientId(Long id);
+
+    // Find patient by phone_number or residental_identity
+    public Patients findByPhoneNumberOrResidentalIdentity(String phoneNumber, String residentalIdentity);
+
+    // Check exist patient by id
+    public boolean existsByPatientId(Long id);
+
+    // Create and edit patient
+    public Patients savePatient(Patients patient);
+
+    // Delete patient by id
+    public void deletePatientByPatientId(Long id);
 }

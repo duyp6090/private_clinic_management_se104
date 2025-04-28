@@ -14,26 +14,24 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.RefreshToken;
-import com.example.demo.dto.RestResponse;
 import com.example.demo.dto.response.AuthResponse;
+import com.example.demo.dto.response.RestResponse;
 import com.example.demo.security.jwtUtils;
 import com.example.demo.service.IAuthService;
 
-
 @Service
-public class AuthServiceImpl implements  IAuthService{
+public class AuthServiceImpl implements IAuthService {
 
     private final UserServiceImpl userService;
     private final jwtUtils jwtTokenProvider;
     private final RefreshTokenServiceImpl refreshTokenService;
     private final AuthenticationManager authenticationManager;
-    
+
     public AuthServiceImpl(
             UserServiceImpl userService,
             jwtUtils jwtTokenProvider,
             RefreshTokenServiceImpl refreshTokenService,
-            AuthenticationManager authenticationManager
-    ) {
+            AuthenticationManager authenticationManager) {
         this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
         this.refreshTokenService = refreshTokenService;
@@ -45,30 +43,31 @@ public class AuthServiceImpl implements  IAuthService{
         try {
 
             authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password)
-            );
+                    new UsernamePasswordAuthenticationToken(username, password));
 
             List<String> roles = userService.getUserRolesByUserName(username);
-            //List<SimpleGrantedAuthority> authorities = roles.stream().map(SimpleGrantedAuthority::new).toList();
+            // List<SimpleGrantedAuthority> authorities =
+            // roles.stream().map(SimpleGrantedAuthority::new).toList();
             String accessToken = jwtTokenProvider.generateAccessToken(username, roles);
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(username);
-            
+
             AuthResponse authResponse = new AuthResponse(accessToken, refreshToken.getToken());
             return new RestResponse<>(HttpStatus.OK.value(), authResponse);
-    
+
         } catch (Exception e) {
             System.out.println("Authentication error: " + e.getMessage());
             return new RestResponse<>(HttpStatus.UNAUTHORIZED.value(), "Invalid credentials", "Authentication failed");
         }
     }
-    
-    // private User authenticateUser(String username, String password) {
-    //     Optional<User> userOpt = userService.findByUsername(username);
 
-    //     if (userOpt.isEmpty() || !passwordEncoder.matches(password, userOpt.get().getPassword())) {
-    //         throw new IllegalArgumentException("Invalid username or password");
-    //     }
-    //     return userOpt.get();
+    // private User authenticateUser(String username, String password) {
+    // Optional<User> userOpt = userService.findByUsername(username);
+
+    // if (userOpt.isEmpty() || !passwordEncoder.matches(password,
+    // userOpt.get().getPassword())) {
+    // throw new IllegalArgumentException("Invalid username or password");
+    // }
+    // return userOpt.get();
     // }
     @Override
     public RestResponse<AuthResponse> regainAccessToken(String oldToken) {
@@ -79,7 +78,8 @@ public class AuthServiceImpl implements  IAuthService{
                 RefreshToken refreshToken = optionalRefreshToken.get();
                 List<String> roles = userService.getUserRolesByUserName(refreshToken.getUser().getUsername());
                 if (refreshTokenService.isValidToken(oldToken)) {
-                    String newAccessToken = jwtTokenProvider.generateAccessToken(refreshToken.getUser().getName(),roles);
+                    String newAccessToken = jwtTokenProvider.generateAccessToken(refreshToken.getUser().getName(),
+                            roles);
 
                     AuthResponse authResponse = new AuthResponse(newAccessToken, refreshToken.getToken());
                     return new RestResponse<>(HttpStatus.OK.value(), authResponse);
@@ -88,15 +88,17 @@ public class AuthServiceImpl implements  IAuthService{
 
             return new RestResponse<>(HttpStatus.FORBIDDEN.value(), "Invalid or expired refresh token", "Token error");
         } catch (Exception e) {
-            return new RestResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "An error occurred", "Please try again later");
+            return new RestResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "An error occurred",
+                    "Please try again later");
         }
     }
+
     @Override
     public RestResponse<AuthResponse> getNewRefreshToken(String oldToken) {
         try {
             RefreshToken newRefreshToken = refreshTokenService.createRefreshTokenByExistingToken(oldToken);
             List<String> roles = userService.getUserRolesByUserName(newRefreshToken.getUser().getUsername());
-            String newAccessToken = jwtTokenProvider.generateAccessToken(newRefreshToken.getUser().getName(),roles);
+            String newAccessToken = jwtTokenProvider.generateAccessToken(newRefreshToken.getUser().getName(), roles);
 
             AuthResponse authResponse = new AuthResponse(newAccessToken, newRefreshToken.getToken());
             return new RestResponse<>(HttpStatus.OK.value(), authResponse);
@@ -104,13 +106,15 @@ public class AuthServiceImpl implements  IAuthService{
             return new RestResponse<>(HttpStatus.FORBIDDEN.value(), "Invalid or expired refresh token", "Token error");
         }
     }
+
     @Override
     public RestResponse<Void> logout(String refreshToken) {
         try {
             refreshTokenService.revokeToken(refreshToken);
             return new RestResponse<>(HttpStatus.OK.value(), null);
         } catch (Exception e) {
-            return new RestResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "An error occurred", "Please try again later");
+            return new RestResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "An error occurred",
+                    "Please try again later");
         }
     }
 }
