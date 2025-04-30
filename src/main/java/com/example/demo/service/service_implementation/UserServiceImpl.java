@@ -39,6 +39,8 @@ public class UserServiceImpl implements IUserService {
     public User createUser(User user) {
         // Encode the password before saving it to the database
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        System.out.println(user);
+        System.out.println("enter create user");
         return this.userRepository.save(user);
     }
 

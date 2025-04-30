@@ -34,7 +34,7 @@ import com.example.demo.service.service_implementation.UserServiceImpl;
  */
 @RestController
 @RequestMapping("/api/admin")
-@PreAuthorize("hasRole('ADMIN')")
+//@PreAuthorize("hasRole('ADMIN')")
 public class AdminUserController {
     private final IUserService userService;
     private final IDoctorService doctorService;
@@ -89,7 +89,7 @@ public class AdminUserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User deleted successfully");
     }
     // Create a new user
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     // Get information from the request body
     public ResponseEntity<User> createUser(@RequestBody User sendUser) {
