@@ -5,6 +5,7 @@
 
 package com.example.demo.service.service_implementation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.RefreshToken;
 import com.example.demo.dto.response.AuthResponse;
+import com.example.demo.dto.response.LoginResponse;
+import com.example.demo.dto.response.LoginWithPermissionResponse;
 import com.example.demo.dto.response.RestResponse;
 import com.example.demo.security.jwtUtils;
 import com.example.demo.service.IAuthService;
@@ -39,7 +42,7 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public RestResponse<AuthResponse> login(String username, String password) {
+    public RestResponse<LoginResponse> login(String username, String password) {
         try {
 
             authenticationManager.authenticate(
@@ -48,10 +51,11 @@ public class AuthServiceImpl implements IAuthService {
             List<String> roles = userService.getUserRolesByUserName(username);
             // List<SimpleGrantedAuthority> authorities =
             // roles.stream().map(SimpleGrantedAuthority::new).toList();
+            List<String>available_roles = userService.findAllRolesByUserName(username);
             String accessToken = jwtTokenProvider.generateAccessToken(username, roles);
             RefreshToken refreshToken = refreshTokenService.createRefreshToken(username);
 
-            AuthResponse authResponse = new AuthResponse(accessToken, refreshToken.getToken());
+            LoginResponse authResponse = new LoginResponse(accessToken, refreshToken.getToken(),available_roles);
             return new RestResponse<>(HttpStatus.OK.value(), authResponse);
 
         } catch (Exception e) {
@@ -59,7 +63,7 @@ public class AuthServiceImpl implements IAuthService {
             return new RestResponse<>(HttpStatus.UNAUTHORIZED.value(), "Invalid credentials", "Authentication failed");
         }
     }
-
+    
     // private User authenticateUser(String username, String password) {
     // Optional<User> userOpt = userService.findByUsername(username);
 
@@ -116,5 +120,19 @@ public class AuthServiceImpl implements IAuthService {
             return new RestResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "An error occurred",
                     "Please try again later");
         }
+    }
+
+    @Override
+    public RestResponse<LoginWithPermissionResponse> loginWithPermission(String userName, String roleName) {
+        List<String>permissions = userService.findAllPermissionByUserNameAndUserRoleId(userName, 1);
+        List<String>roles = new ArrayList<>();
+        roles.add(roleName);
+        System.out.println(roleName);
+        
+        String accessToken = jwtTokenProvider.generateAccessToken(userName,roles);
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(userName);
+
+        LoginWithPermissionResponse authResponse = new LoginWithPermissionResponse(accessToken, refreshToken.getToken(),roleName,permissions);
+        return new RestResponse<>(HttpStatus.OK.value(), authResponse);
     }
 }

@@ -6,15 +6,12 @@
 package com.example.demo.domain;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
 /**
  *
  * @author iset1enloc
  */
 @Entity
-@Table(name = "doctor")
-
 public class Doctor extends User {
     private String qualification;
     private int yearsOfExperience;

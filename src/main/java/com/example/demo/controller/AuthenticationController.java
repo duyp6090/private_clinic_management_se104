@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.domain.User;
 import com.example.demo.dto.request.RefreshTokenRequest;
 import com.example.demo.dto.request.SignInRequest;
+import com.example.demo.dto.request.SignInRequestPermission;
 import com.example.demo.dto.request.SignOutRequest;
 import com.example.demo.dto.request.SignUpRequest;
 import com.example.demo.dto.response.AuthResponse;
+import com.example.demo.dto.response.LoginResponse;
+import com.example.demo.dto.response.LoginWithPermissionResponse;
 import com.example.demo.dto.response.RestResponse;
 import com.example.demo.service.IAuthService;
 import com.example.demo.service.IUserService;
@@ -32,17 +35,28 @@ public class AuthenticationController {
 
     // User Login Endpoint
     @PostMapping("/login")
-    public ResponseEntity<RestResponse<AuthResponse>> login(@RequestBody SignInRequest request) {
-        RestResponse<AuthResponse> response = new RestResponse<>();
+    public ResponseEntity<RestResponse<LoginResponse>> login(@RequestBody SignInRequest request) {
+        RestResponse<LoginResponse> response = new RestResponse<>();
 
         try {
-            response = authService.login(request.getUsername(), request.getPassword());
-            System.out.println(response);
-            System.out.println("CUUU TUI VOI");
-            System.out.println(response);
-            return ResponseEntity.status(response.getStatusCode()).body(response);
+             response = authService.login(request.getUsername(), request.getPassword());
+             return ResponseEntity.status(response.getStatusCode()).body(response);
         } catch (Exception e) {
+            response.setStatusCode(HttpStatus.UNAUTHORIZED.value());
+            response.setError("Invalid credentials");
+            response.setMessage("Error: Invalid username or password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+    }
+    // User Login Endpoint
+    @PostMapping("/login-with-permission")
+    public ResponseEntity<RestResponse<LoginWithPermissionResponse>> loginWithPermission(@RequestBody SignInRequestPermission request) {
+        RestResponse<LoginWithPermissionResponse> response = new RestResponse<>();
 
+        try {
+             response = authService.loginWithPermission(request.getUsername(), request.getRoleName());
+             return ResponseEntity.status(response.getStatusCode()).body(response);
+        } catch (Exception e) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED.value());
             response.setError("Invalid credentials");
             response.setMessage("Error: Invalid username or password");

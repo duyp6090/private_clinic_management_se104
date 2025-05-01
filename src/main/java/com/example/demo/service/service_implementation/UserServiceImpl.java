@@ -118,4 +118,9 @@ public class UserServiceImpl implements IUserService {
     public List<String> findAllPermissionsByUserName(String username) {
         return userRepository.findAllPermissionsByUserId(username);
     }
+
+    @Override
+    public List<String> findAllPermissionByUserNameAndUserRoleId(String username, int role_id) {
+        return userRepository.findAllPermissionsByUserNameAndUserRole(username, role_id);
+    }
 }

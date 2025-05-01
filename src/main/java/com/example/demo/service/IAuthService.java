@@ -6,6 +6,8 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.response.AuthResponse;
+import com.example.demo.dto.response.LoginResponse;
+import com.example.demo.dto.response.LoginWithPermissionResponse;
 import com.example.demo.dto.response.RestResponse;
 
 /**
@@ -15,7 +17,8 @@ import com.example.demo.dto.response.RestResponse;
 
 public interface IAuthService {
 
-    RestResponse<AuthResponse> login(String username, String password);
+    RestResponse<LoginResponse> login(String username, String password);
+    RestResponse<LoginWithPermissionResponse>loginWithPermission(String userName,String roleName);
 
     RestResponse<AuthResponse> regainAccessToken(String oldToken);
 

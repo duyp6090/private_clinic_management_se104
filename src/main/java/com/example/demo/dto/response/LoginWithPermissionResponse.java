@@ -5,24 +5,39 @@
 
 package com.example.demo.dto.response;
 
+import java.util.List;
+
 /**
  *
  * @author iset1enloc
  */
-
-public class AuthResponse {
+public class LoginWithPermissionResponse {
     private String accessToken;
     private String refreshToken;
+    private String selected_role;
+    private List<String>permissionList;
+
+
+
+    public List<String> getPermissionList() {
+        return permissionList;
+    }
+
+
+    public void setPermissionList(List<String> permissionList) {
+        this.permissionList = permissionList;
+    }
 
 
     // Default constructor
-    public AuthResponse() {}
+    public LoginWithPermissionResponse() {}
 
     // Constructor for initializing the fields
-    public AuthResponse(String accessToken, String refreshToken) {
+    public LoginWithPermissionResponse(String accessToken, String refreshToken,String selected_role,List<String>permissionList) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
-
+        this.selected_role=selected_role;
+        this.permissionList = permissionList;
     }
 
     // Getters and setters
@@ -40,5 +55,15 @@ public class AuthResponse {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+
+    public String getSelected_role() {
+        return selected_role;
+    }
+
+
+    public void setSelected_role(String selected_role) {
+        this.selected_role = selected_role;
     }
 }

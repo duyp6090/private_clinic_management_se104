@@ -5,24 +5,33 @@
 
 package com.example.demo.dto.response;
 
+import java.util.List;
+
 /**
  *
  * @author iset1enloc
  */
-
-public class AuthResponse {
+public class LoginResponse {
     private String accessToken;
     private String refreshToken;
+    private List<String>available_roles;
 
+    public List<String> getAvailable_roles() {
+        return available_roles;
+    }
+
+    public void setAvailable_roles(List<String> available_roles) {
+        this.available_roles = available_roles;
+    }
 
     // Default constructor
-    public AuthResponse() {}
+    public LoginResponse() {}
 
     // Constructor for initializing the fields
-    public AuthResponse(String accessToken, String refreshToken) {
+    public LoginResponse(String accessToken, String refreshToken,List<String>available_roles) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
-
+        this.available_roles = available_roles;
     }
 
     // Getters and setters
