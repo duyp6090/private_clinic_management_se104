@@ -21,7 +21,7 @@ public class RoleServiceImpl implements IRoleService {
 
     private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
-    private Role_PermissionRepository rolePermissionRepository;
+    private final Role_PermissionRepository rolePermissionRepository;
     public RoleServiceImpl(RoleRepository roleRepository,PermissionRepository permissionRepository,Role_PermissionRepository rolePermissionRepository){
         this.roleRepository = roleRepository;
         this.permissionRepository = permissionRepository;
