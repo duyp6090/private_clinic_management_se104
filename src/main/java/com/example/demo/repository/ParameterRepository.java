@@ -7,16 +7,12 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.domain.Parameter;
 
-import io.micrometer.common.lang.NonNull;
-
 @Repository
 @EnableJpaRepositories
 public interface ParameterRepository extends JpaRepository<Parameter, Long> {
     // Get all parameters
-    @NonNull
     public List<Parameter> findAll();
 
     // Edit parameter
-    @NonNull
     public Parameter save(Parameter parameter);
 }
