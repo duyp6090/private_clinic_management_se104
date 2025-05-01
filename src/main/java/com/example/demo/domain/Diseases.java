@@ -27,6 +27,10 @@ public class Diseases {
         return diseaseName;
     }
 
+    public void setDiseaseName(String diseaseName) {
+        this.diseaseName = diseaseName;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -34,4 +38,5 @@ public class Diseases {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }
