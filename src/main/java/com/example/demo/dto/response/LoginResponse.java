@@ -12,6 +12,15 @@ import java.util.List;
  * @author iset1enloc
  */
 public class LoginResponse {
+    private String username;
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     private String accessToken;
     private String refreshToken;
     private List<String>available_roles;
@@ -28,10 +37,11 @@ public class LoginResponse {
     public LoginResponse() {}
 
     // Constructor for initializing the fields
-    public LoginResponse(String accessToken, String refreshToken,List<String>available_roles) {
+    public LoginResponse(String accessToken, String refreshToken,String username,List<String>available_roles) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.available_roles = available_roles;
+        this.username=username;
     }
 
     // Getters and setters

@@ -1,5 +1,6 @@
 package com.example.demo.security;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,17 +29,17 @@ public class jwtUtils {
     private long refreshTokenExpiration;
 
     // Generate Access Token
-    public String generateAccessToken(String username, List<String> roles) {
-        return generateToken(username, roles, accessTokenExpiration);
+    public String generateAccessToken(String username, List<String> role,List<String>permissions) {
+        return generateToken(username, role,permissions, accessTokenExpiration);
     }
 
     // Generate Refresh Token
-    public String generateRefreshToken(String username,List<String> roles) {
-        return generateToken(username, roles, refreshTokenExpiration);
+    public String generateRefreshToken(String username,List<String> role) {
+        return generateToken(username, role ,new ArrayList<>(), refreshTokenExpiration);
     }
 
     // Helper method to generate token
-    private String generateToken(String username, List<String> roles, long expirationTime) {
+    private String generateToken(String username, List<String> roles,List<String>permissions, long expirationTime) {
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + expirationTime);
 
@@ -47,6 +48,7 @@ public class jwtUtils {
                 .setSubject(username)
                 .setIssuedAt(now)
                 .setExpiration(expirationDate)
+                .claim("permissions", permissions)
                 .claim("roles", roles != null ? roles : null) // Add roles to the token
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
@@ -57,13 +59,22 @@ public class jwtUtils {
      * @param token - The JWT token
      * @return List of granted authorities (roles)
      */
-    public List<GrantedAuthority> getAuthoritiesFromToken(String token) {
+    public List<GrantedAuthority> getRoleAuthoritiesFromToken(String token) {
         Claims claims = parseClaimsFromToken(token);
         System.out.println(claims);
         List<String> roles = claims.get("roles", List.class);
         System.out.println(roles);
         return roles.stream()
         .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
+        .collect(Collectors.toList());
+    }
+    public List<GrantedAuthority> getPermissionsAuthoritiesFromToken(String token) {
+        Claims claims = parseClaimsFromToken(token);
+        System.out.println(claims);
+        List<String> roles = claims.get("permissions", List.class);
+        System.out.println(roles);
+        return roles.stream()
+        .map(role -> new SimpleGrantedAuthority("PERMISSION_" + role.toUpperCase()))
         .collect(Collectors.toList());
     }
 

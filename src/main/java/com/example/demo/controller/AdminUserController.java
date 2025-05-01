@@ -49,7 +49,8 @@ public class AdminUserController {
     @PostMapping("/register-doctor")
     public ResponseEntity<Doctor> registerDoctor(@RequestBody registerDoctorRequest request) {
         Doctor doctor = new Doctor();
-
+        System.out.println("ENTER LINE 52");
+        System.out.println(request.qualification);
         doctor.setName(request.staffName);
         doctor.setFullName(request.fullName);
         doctor.setEmail(request.email);
@@ -61,7 +62,7 @@ public class AdminUserController {
         doctor.setYearsOfExperience(request.yearsOfExperience);
         Doctor res = doctorService.save(doctor);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(res);
+        return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }   
 
     @PostMapping("/register-supporter")
@@ -80,7 +81,7 @@ public class AdminUserController {
         supporter.setTitle(request.staffTitle);
 
         Supporter res = supporterService.save(supporter);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(res);
+        return ResponseEntity.status(HttpStatus.CREATED).body(res);
     }
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
@@ -89,7 +90,7 @@ public class AdminUserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("User deleted successfully");
     }
     // Create a new user
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and hasAuthority('CREATE_USER')")
     @PostMapping("/create")
     // Get information from the request body
     public ResponseEntity<User> createUser(@RequestBody User sendUser) {

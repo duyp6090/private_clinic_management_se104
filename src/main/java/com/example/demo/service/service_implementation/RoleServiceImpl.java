@@ -98,6 +98,11 @@ public class RoleServiceImpl implements IRoleService {
             .orElseThrow(() -> new RuntimeException("Role not found"));
     }
 
+    @Override
+    public int getRoleIDByRoleName(String roleName) {
+        return roleRepository.getRoleIdByRoleName(roleName);
+    }
+
     
 
 

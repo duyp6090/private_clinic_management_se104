@@ -30,13 +30,11 @@ public class RefreshTokenServiceImpl implements IRefreshTokenService{
     public RefreshToken createRefreshToken(String username) {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setToken(jwtProvider.generateRefreshToken(username,userService.getUserRolesByUserName(username)));
-
         refreshToken.setExpirationDate(LocalDateTime.now().plusDays(7));
         refreshToken.setRevoke(false);
         refreshToken.setExpired(false);
-
         userService.findByUsername(username).ifPresent(user -> refreshToken.setUser(user));
-
+        refreshTokenRepository.save(refreshToken);
         return refreshTokenRepository.save(refreshToken);
     }
 
@@ -100,7 +98,7 @@ public class RefreshTokenServiceImpl implements IRefreshTokenService{
         if (oldRefreshToken.isExpired() || oldRefreshToken.isRevoke()) {
             throw new IllegalArgumentException("Refresh token is expired or revoked");
         }
-    
+        System.out.println("ENTER LINE 101");
         oldRefreshToken.setRevoke(true);
         refreshTokenRepository.save(oldRefreshToken);
         String username= oldRefreshToken.getUser().getName();

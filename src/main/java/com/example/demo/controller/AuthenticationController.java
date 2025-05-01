@@ -1,7 +1,10 @@
 package com.example.demo.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +20,7 @@ import com.example.demo.dto.response.AuthResponse;
 import com.example.demo.dto.response.LoginResponse;
 import com.example.demo.dto.response.LoginWithPermissionResponse;
 import com.example.demo.dto.response.RestResponse;
+import com.example.demo.security.jwtUtils;
 import com.example.demo.service.IAuthService;
 import com.example.demo.service.IUserService;
 
@@ -26,11 +30,12 @@ public class AuthenticationController {
 
     private final IAuthService authService;
     private final IUserService userService;
-
-    public AuthenticationController(IAuthService authService,IUserService userservice) {
+    private final jwtUtils jwtTokenProvider;
+    public AuthenticationController(IAuthService authService,IUserService userservice,jwtUtils jwtProvider) {
         System.out.println("Init Authentication");
         this.authService = authService;
         this.userService=userservice;
+        this.jwtTokenProvider = jwtProvider;
     }
 
     // User Login Endpoint
@@ -69,8 +74,17 @@ public class AuthenticationController {
     public ResponseEntity<RestResponse<AuthResponse>> regainAccessToken(@RequestBody RefreshTokenRequest request) {
         RestResponse<AuthResponse> response = new RestResponse<>();
         try {
+            System.out.println(request.getRefreshToken());
+            List<GrantedAuthority> user_permissions = jwtTokenProvider.getPermissionsAuthoritiesFromToken(request.getAccess_token());
+            List<String> permissions = user_permissions.stream()
+            .map(GrantedAuthority::getAuthority)
+            .toList();
+            List<GrantedAuthority> user_roles = jwtTokenProvider.getRoleAuthoritiesFromToken(request.getAccess_token());
+            List<String> roles = user_roles.stream()
+            .map(GrantedAuthority::getAuthority)
+            .toList();            
             // AuthService handles refresh and returns a RestResponse
-            response = authService.regainAccessToken(request.getRefreshToken());
+            response = authService.regainAccessToken(request.getRefreshToken(),roles,permissions);
             return ResponseEntity.status(response.getStatusCode()).body(response);
         } catch (Exception e) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED.value());

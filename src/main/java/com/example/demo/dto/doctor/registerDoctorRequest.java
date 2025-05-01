@@ -5,17 +5,35 @@
 
 package com.example.demo.dto.doctor;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  *
  * @author iset1enloc
  */
 public class registerDoctorRequest {
+
+    @JsonProperty("staffName")
     public String staffName;
+
+    @JsonProperty("fullName")
     public String fullName;
+
+    @JsonProperty("email")
     public String email;
+
+    @JsonProperty("phoneNumber")
     public String phoneNumber;
+
+    @JsonProperty("password")
     public String password;
+
+    @JsonProperty("specialization")
     public String specialization;
+
+    @JsonProperty("qualification")
     public String qualification;
+
+    @JsonProperty("yearsOfExperience")
     public int yearsOfExperience;
 }
