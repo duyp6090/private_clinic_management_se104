@@ -7,28 +7,30 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "diseases")
-public class Diseases {
+@Table(name = "drugs_unit")
+public class DrugsUnit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long diseaseId;
-    private String diseaseName;
+    private long unitId;
+    private String unitName;
     private String description;
 
-    public long getDiseaseId() {
-        return diseaseId;
+    public long getUnitId() {
+        return unitId;
     }
 
-    public void setDiseaseId(long diseaseId) {
-        this.diseaseId = diseaseId;
+    public void setUnitId(long unitId) {
+        this.unitId = unitId;
     }
 
-    public String getDiseaseName() {
-        return diseaseName;
+    public String getUnitName() {
+        return unitName;
     }
-    public void setDiseaseName(String diseaseName){
-        this.diseaseName = diseaseName;
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
     }
+
     public String getDescription() {
         return description;
     }
@@ -36,4 +38,5 @@ public class Diseases {
     public void setDescription(String description) {
         this.description = description;
     }
+
 }

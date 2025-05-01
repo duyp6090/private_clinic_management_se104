@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -11,7 +11,8 @@ public class RestResponse<T> {
     private T data;
 
     // Default constructor
-    public RestResponse() {}
+    public RestResponse() {
+    }
 
     // Constructor for success response
     public RestResponse(int statusCode, T data) {
