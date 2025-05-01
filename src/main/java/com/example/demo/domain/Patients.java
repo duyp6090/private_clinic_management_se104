@@ -1,13 +1,12 @@
 package com.example.demo.domain;
-import java.time.Year;
-import jakarta.persistence.Entity;
-import java.util.Date;
-import com.example.demo.utils.Gender;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 
+import java.time.Year;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "patients")
@@ -77,4 +76,5 @@ public class Patients {
     public void setResidentalIdentity(String residentalIdentity) {
         this.residentalIdentity = residentalIdentity;
     }
+
 }
