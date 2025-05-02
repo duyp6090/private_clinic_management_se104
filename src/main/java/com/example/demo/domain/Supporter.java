@@ -6,14 +6,12 @@
 package com.example.demo.domain;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
 /**
  *
  * @author iset1enloc
  */
 @Entity
-@Table(name = "supporter")
 public class Supporter extends User {
     private String title;
 

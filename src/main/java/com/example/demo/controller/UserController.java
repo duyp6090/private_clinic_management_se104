@@ -6,17 +6,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.User;
 import com.example.demo.dto.response.RestResponse;
 import com.example.demo.dto.user.UserDTO;
+import com.example.demo.security.jwtUtils;
 import com.example.demo.service.IUserService;
 
 @RestController
@@ -24,9 +27,10 @@ public class UserController {
 
     // Dependency Injection (DI)
     private final IUserService userService;
-
-    public UserController(IUserService userService) {
+    private final jwtUtils jwtTokenProvider;
+    public UserController(IUserService userService,jwtUtils jwtUtils) {
         this.userService = userService;
+        this.jwtTokenProvider = jwtUtils;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -57,8 +61,9 @@ public class UserController {
     }
 
     @GetMapping("/api/current-user")
-    public ResponseEntity<UserDTO> getCurrentUser() {
+    public ResponseEntity<UserDTO> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
         System.out.println("ENTER USER DTO");
+        String token = authHeader.startsWith("Bearer ") ? authHeader.substring(7) : authHeader;
         // Get the current authenticated user from SecurityContext
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -67,15 +72,14 @@ public class UserController {
         var optionalUser = userService.findByUsername(username);
         User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        List<String> user_roles = userService.findAllRolesByUserName(username);
-        List<String> user_permision = userService.findAllPermissionsByUserName(username);
+        List<String> permissions = jwtTokenProvider.getPermissionsAuthoritiesFromToken(token);
 
-        System.out.println(user_roles);
-        System.out.println(user_permision);
-        System.out.println(username);
+        List<String> user_roles = jwtTokenProvider.getRoleAuthoritiesFromToken(token);
+        String role = user_roles.getFirst().toString().substring(5);
+
 
         // For demonstration, assume email is the same as username
-        final UserDTO userDTO = new UserDTO(user.getId(), username, user_roles, user_permision);
+        final UserDTO userDTO = new UserDTO(user.getId(), username, role, permissions);
 
         return ResponseEntity.ok(userDTO);
     }

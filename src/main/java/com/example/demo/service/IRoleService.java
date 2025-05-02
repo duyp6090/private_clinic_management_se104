@@ -16,6 +16,7 @@ import com.example.demo.domain.Role;
 public interface IRoleService {
     List<Role> getAllRoles();
     Role getRoleById(int id);
+    int getRoleIDByRoleName(String roleName);
     Role save(Role role);
     Role updateRoleById(int id, Role role);
     void deleteRoleById(int id);

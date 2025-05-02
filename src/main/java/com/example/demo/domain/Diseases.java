@@ -26,7 +26,9 @@ public class Diseases {
     public String getDiseaseName() {
         return diseaseName;
     }
-
+    public void setDiseaseName(String diseaseName){
+        this.diseaseName = diseaseName;
+    }
     public String getDescription() {
         return description;
     }
