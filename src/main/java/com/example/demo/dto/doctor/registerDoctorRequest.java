@@ -13,9 +13,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class registerDoctorRequest {
 
-    @JsonProperty("staffName")
-    public String staffName;
-
+    @JsonProperty("username")
+    public String userName;
     @JsonProperty("fullName")
     public String fullName;
 

@@ -12,10 +12,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public class registerSupporterRequest {
-
-    @JsonProperty("staffName")
-    public String staffName;
-
+    @JsonProperty("username")
+    public String userName;
+    
     @JsonProperty("fullName")
     public String fullName;
 
@@ -30,4 +29,8 @@ public class registerSupporterRequest {
 
     @JsonProperty("staffTitle")
     public String staffTitle;
+
+    public String getStaffName() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

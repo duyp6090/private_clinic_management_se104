@@ -3,22 +3,26 @@ package com.example.demo.service.service_implementation;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.User;
+import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.IUserService;
 
 @Service
 public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     // Constructor injection for userRepository and passwordEncoder
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     // Get one user by id
@@ -128,4 +132,23 @@ public class UserServiceImpl implements IUserService {
     public User save(User user) {
         return this.userRepository.save(user);
     }
+
+    @Override
+    public Boolean assignRoleToUser(String username, int roleId) {
+        // Fetch the user by username
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        System.out.println("Assign role to user service impl");
+        if (!optionalUser.isPresent()) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+        User user = optionalUser.get();
+        System.out.println(user.getId());
+        System.out.println(roleId);
+
+        userRepository.assignRoleToUser(user.getId(),roleId);
+
+        System.out.println("ENTER LINE 149");
+        return true;
+    }
+
 }
