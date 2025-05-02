@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.Doctor;
-import com.example.demo.domain.Role;
 import com.example.demo.domain.Supporter;
 import com.example.demo.domain.User;
 import com.example.demo.dto.doctor.registerDoctorRequest;
@@ -58,7 +57,7 @@ public class AdminUserController {
         this.passwordEncoder=passwordEncoder;
         this.roleService =  roleService;
     }
-
+    @PreAuthorize("hasAuthority('PERMISSION_CREATE_USER')")
     @PostMapping("/register-doctor")
     public ResponseEntity<RestResponse<Object>> registerDoctor(@RequestBody registerDoctorRequest request) {
         if (userService.existsByUsername(request.userName)) {
@@ -83,6 +82,7 @@ public class AdminUserController {
             RestResponse.success(HttpStatus.CREATED.value(), res)
         );
     }  
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register-supporter")
     public ResponseEntity<RestResponse<Object>> registerSupporter(@RequestBody registerSupporterRequest request) {
