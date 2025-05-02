@@ -89,16 +89,10 @@ public class RefreshTokenServiceImpl implements IRefreshTokenService{
     @Override
     public RefreshToken createRefreshTokenByExistingToken(String oldToken) {
         Optional<RefreshToken> optionalOldToken = refreshTokenRepository.findByToken(oldToken);
-        
-        if (optionalOldToken.isEmpty()) {
-            throw new IllegalArgumentException("Invalid or expired refresh token");
-        }
-    
         RefreshToken oldRefreshToken = optionalOldToken.get();
-        if (oldRefreshToken.isExpired() || oldRefreshToken.isRevoke()) {
+        if (oldRefreshToken.isExpired()||oldRefreshToken.isRevoke()) {
             throw new IllegalArgumentException("Refresh token is expired or revoked");
         }
-        System.out.println("ENTER LINE 101");
         oldRefreshToken.setRevoke(true);
         refreshTokenRepository.save(oldRefreshToken);
         String username= oldRefreshToken.getUser().getName();

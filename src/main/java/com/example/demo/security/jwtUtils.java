@@ -37,7 +37,24 @@ public class jwtUtils {
     public String generateRefreshToken(String username,List<String> role) {
         return generateToken(username, role ,new ArrayList<>(), refreshTokenExpiration);
     }
+    // Generate Refresh Token
+    public String generateTempToken(String username,List<String> role) {
+        return generateTemporaryToken(username, role , refreshTokenExpiration);
+    }
+    // Helper method to generate token
+    private String generateTemporaryToken(String username, List<String> roles,long expirationTime) {
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() + expirationTime);
 
+        // Add roles to the token if they exist
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(now)
+                .setExpiration(expirationDate)
+                .claim("roles", roles != null ? roles : null) // Add roles to the token
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
     // Helper method to generate token
     private String generateToken(String username, List<String> roles,List<String>permissions, long expirationTime) {
         Date now = new Date();
@@ -59,7 +76,23 @@ public class jwtUtils {
      * @param token - The JWT token
      * @return List of granted authorities (roles)
      */
-    public List<GrantedAuthority> getRoleAuthoritiesFromToken(String token) {
+    public List<String> getRoleAuthoritiesFromToken(String token) {
+        Claims claims = parseClaimsFromToken(token);
+        List<String> roles = claims.get("roles", List.class);
+    
+        return roles.stream()
+            .map(role -> "ROLE_" + role.toUpperCase())
+            .toList();
+    }
+    public List<String> getPermissionsAuthoritiesFromToken(String token) {
+        Claims claims = parseClaimsFromToken(token);
+        List<String> permissions = claims.get("permissions", List.class);
+    
+        return permissions.stream()
+            .map(permission -> "PERMISSION_" + permission.toUpperCase())
+            .toList();
+    }
+    public List<GrantedAuthority> getRoleGrantAuthoritiesFromToken(String token) {
         Claims claims = parseClaimsFromToken(token);
         System.out.println(claims);
         List<String> roles = claims.get("roles", List.class);
@@ -68,15 +101,7 @@ public class jwtUtils {
         .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
         .collect(Collectors.toList());
     }
-    public List<GrantedAuthority> getPermissionsAuthoritiesFromToken(String token) {
-        Claims claims = parseClaimsFromToken(token);
-        System.out.println(claims);
-        List<String> roles = claims.get("permissions", List.class);
-        System.out.println(roles);
-        return roles.stream()
-        .map(role -> new SimpleGrantedAuthority("PERMISSION_" + role.toUpperCase()))
-        .collect(Collectors.toList());
-    }
+    
 
     /**
      * Validate if the JWT token is valid

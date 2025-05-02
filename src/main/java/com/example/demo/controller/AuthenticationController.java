@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,16 +73,9 @@ public class AuthenticationController {
     public ResponseEntity<RestResponse<AuthResponse>> regainAccessToken(@RequestBody RefreshTokenRequest request) {
         RestResponse<AuthResponse> response = new RestResponse<>();
         try {
-            System.out.println(request.getRefreshToken());
-            List<GrantedAuthority> user_permissions = jwtTokenProvider.getPermissionsAuthoritiesFromToken(request.getAccess_token());
-            List<String> permissions = user_permissions.stream()
-            .map(GrantedAuthority::getAuthority)
-            .toList();
-            List<GrantedAuthority> user_roles = jwtTokenProvider.getRoleAuthoritiesFromToken(request.getAccess_token());
-            List<String> roles = user_roles.stream()
-            .map(GrantedAuthority::getAuthority)
-            .toList();            
-            // AuthService handles refresh and returns a RestResponse
+            List<String> permissions = jwtTokenProvider.getPermissionsAuthoritiesFromToken(request.getAccess_token());
+            List<String> roles = jwtTokenProvider.getRoleAuthoritiesFromToken(request.getAccess_token());
+            
             response = authService.regainAccessToken(request.getRefreshToken(),roles,permissions);
             return ResponseEntity.status(response.getStatusCode()).body(response);
         } catch (Exception e) {
@@ -99,8 +91,9 @@ public class AuthenticationController {
     public ResponseEntity<RestResponse<AuthResponse>> refreshToken(@RequestBody RefreshTokenRequest request) {
         RestResponse<AuthResponse> response = new RestResponse<>();
         try {
+            System.out.println(request.getRefresh_token());
             // AuthService handles refresh and returns a RestResponse
-            response = authService.getNewRefreshToken(request.getRefreshToken());
+            response = authService.getNewRefreshToken(request.getRefreshToken(),request.getAccess_token());
             return ResponseEntity.status(response.getStatusCode()).body(response);
         } catch (Exception e) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED.value());

@@ -13,6 +13,8 @@ import java.util.List;
  */
 public class LoginResponse {
     private String username;
+    private String access_token;
+    private List<String>available_roles;
     public String getUsername() {
         return username;
     }
@@ -20,10 +22,6 @@ public class LoginResponse {
     public void setUsername(String username) {
         this.username = username;
     }
-
-    private String accessToken;
-    private String refreshToken;
-    private List<String>available_roles;
 
     public List<String> getAvailable_roles() {
         return available_roles;
@@ -37,27 +35,18 @@ public class LoginResponse {
     public LoginResponse() {}
 
     // Constructor for initializing the fields
-    public LoginResponse(String accessToken, String refreshToken,String username,List<String>available_roles) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
+    public LoginResponse(String access_token,String username,List<String>available_roles) {
+        this.access_token = access_token;
         this.available_roles = available_roles;
         this.username=username;
     }
 
     // Getters and setters
     public String getAccessToken() {
-        return accessToken;
+        return access_token;
     }
 
     public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
+        this.access_token = accessToken;
     }
 }

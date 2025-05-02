@@ -24,7 +24,7 @@ public interface IAuthService {
 
     RestResponse<AuthResponse> regainAccessToken(String oldToken,List<String>roles,List<String>permissions);
 
-    RestResponse<AuthResponse> getNewRefreshToken(String oldToken);
+    RestResponse<AuthResponse> getNewRefreshToken(String oldToken,String accessToken);
 
     RestResponse<Void> logout(String refreshToken);
 }

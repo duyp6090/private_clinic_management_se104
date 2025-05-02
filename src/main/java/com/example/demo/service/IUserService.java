@@ -8,6 +8,7 @@ package com.example.demo.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.demo.domain.Supporter;
 import com.example.demo.domain.User;
 
 /**
@@ -23,6 +24,7 @@ public interface IUserService {
     List<User> getAllUsers();
     
     User createUser(User user);
+    User save(User user);
     
     User updateUser(long id, User user);
     

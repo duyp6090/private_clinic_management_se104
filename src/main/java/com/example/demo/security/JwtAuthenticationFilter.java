@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
             var username = jwtUtils.getUserNameFromJwtToken(jwt);
-            List<GrantedAuthority> authorities = jwtUtils.getRoleAuthoritiesFromToken(jwt);
+            List<GrantedAuthority> authorities = jwtUtils.getRoleGrantAuthoritiesFromToken(jwt);
             var authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
             System.out.println("Granted Authorities: " + authorities);
 

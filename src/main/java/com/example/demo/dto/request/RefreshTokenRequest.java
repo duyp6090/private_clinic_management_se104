@@ -18,29 +18,29 @@ import jakarta.validation.constraints.NotBlank;
 public class RefreshTokenRequest implements Serializable  {
 
     @NotBlank(message = "refreshtoken must be not null")
-    @JsonProperty("refresh_token")
-    private String refresh_token;
+    @JsonProperty("refreshToken")
+    private String refreshToken;
     @NotBlank(message = "access must be not null")
-    @JsonProperty("access_token")
-    private String access_token;
+    @JsonProperty("accessToken")
+    private String accessToken;
 
     public String getRefreshToken(){
-        return refresh_token;
+        return refreshToken;
     }
 
     public String getRefresh_token() {
-        return refresh_token;
+        return refreshToken;
     }
 
     public void setRefresh_token(String refresh_token) {
-        this.refresh_token = refresh_token;
+        this.refreshToken = refresh_token;
     }
 
     public String getAccess_token() {
-        return access_token;
+        return accessToken;
     }
 
     public void setAccess_token(String access_token) {
-        this.access_token = access_token;
+        this.accessToken = access_token;
     }
 }

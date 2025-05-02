@@ -51,14 +51,10 @@ public class AuthServiceImpl implements IAuthService {
 
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password));
-
-            List<String> roles = userService.getUserRolesByUserName(username);
-            List<String> permissions = userService.findAllPermissionsByUserName(username);
             List<String>available_roles = userService.findAllRolesByUserName(username);
-            String accessToken = jwtTokenProvider.generateAccessToken(username, roles,permissions);
-            RefreshToken refreshToken = refreshTokenService.createRefreshToken(username);
+            String access_token = jwtTokenProvider.generateTempToken(username, available_roles);
 
-            LoginResponse authResponse = new LoginResponse(accessToken, refreshToken.getToken(),username,available_roles);
+            LoginResponse authResponse = new LoginResponse(access_token,username,available_roles);
             return new RestResponse<>(HttpStatus.OK.value(), authResponse);
 
         } catch (Exception e) {
@@ -92,18 +88,17 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public RestResponse<AuthResponse> getNewRefreshToken(String oldToken) {
+    public RestResponse<AuthResponse> getNewRefreshToken(String oldToken,String accessToken) {
         try {
-            System.out.println("line 97");
+            System.out.println(oldToken);
             RefreshToken newRefreshToken = refreshTokenService.createRefreshTokenByExistingToken(oldToken);
-            System.out.println("line 98");
-            List<String> roles = userService.getUserRolesByUserName(newRefreshToken.getUser().getUsername());
-            System.out.println("line 100");
-            List<GrantedAuthority> user_roles = jwtTokenProvider.getRoleAuthoritiesFromToken(newRefreshToken.getToken());
-            int role_id = roleService.getRoleIDByRoleName(user_roles.toString().substring(5));
-            List<String> user_permissions = userService.findAllPermissionByUserNameAndUserRoleId(newRefreshToken.getUser().getUsername(), role_id);
-            String newAccessToken = jwtTokenProvider.generateAccessToken(newRefreshToken.getUser().getName(), roles,user_permissions);
 
+            //get user permissions
+            List<String> permissions = jwtTokenProvider.getPermissionsAuthoritiesFromToken(accessToken);
+
+            List<String> roles = jwtTokenProvider.getRoleAuthoritiesFromToken(accessToken);
+
+            String newAccessToken = jwtTokenProvider.generateAccessToken(newRefreshToken.getUser().getName(), roles,permissions);
             AuthResponse authResponse = new AuthResponse(newAccessToken, newRefreshToken.getToken());
             return new RestResponse<>(HttpStatus.OK.value(), authResponse);
         } catch (Exception e) {

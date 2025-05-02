@@ -123,4 +123,9 @@ public class UserServiceImpl implements IUserService {
     public List<String> findAllPermissionByUserNameAndUserRoleId(String username, int role_id) {
         return userRepository.findAllPermissionsByUserNameAndUserRole(username, role_id);
     }
+
+    @Override
+    public User save(User user) {
+        return this.userRepository.save(user);
+    }
 }

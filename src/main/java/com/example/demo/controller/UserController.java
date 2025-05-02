@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.User;
-import com.example.demo.dto.request.AccessTokenRequest;
 import com.example.demo.dto.response.RestResponse;
 import com.example.demo.dto.user.UserDTO;
 import com.example.demo.security.jwtUtils;
@@ -61,8 +61,9 @@ public class UserController {
     }
 
     @GetMapping("/api/current-user")
-    public ResponseEntity<UserDTO> getCurrentUser(@RequestBody AccessTokenRequest accessToken) {
+    public ResponseEntity<UserDTO> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
         System.out.println("ENTER USER DTO");
+        String token = authHeader.startsWith("Bearer ") ? authHeader.substring(7) : authHeader;
         // Get the current authenticated user from SecurityContext
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -71,14 +72,10 @@ public class UserController {
         var optionalUser = userService.findByUsername(username);
         User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        List<GrantedAuthority> user_permissions = jwtTokenProvider.getPermissionsAuthoritiesFromToken(accessToken.getAccessToken());
-        List<String> permissions = user_permissions.stream()
-        .map(GrantedAuthority::getAuthority)
-        .toList();
-        List<GrantedAuthority> user_roles = jwtTokenProvider.getRoleAuthoritiesFromToken(accessToken.getAccessToken());
+        List<String> permissions = jwtTokenProvider.getPermissionsAuthoritiesFromToken(token);
+
+        List<String> user_roles = jwtTokenProvider.getRoleAuthoritiesFromToken(token);
         String role = user_roles.getFirst().toString().substring(5);
-        //Integer roleId = roleService.getRoleIDByRoleName(role);
-        //List<String> user_permision = userService.findAllPermissionByUserNameAndUserRoleId(username, roleId);
 
 
         // For demonstration, assume email is the same as username
