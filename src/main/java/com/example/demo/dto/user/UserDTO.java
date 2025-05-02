@@ -14,14 +14,14 @@ import java.util.List;
 public class UserDTO {
     private Long user_id;
     private String username;
-    private List<String> roles;
+    private String role;
     private List<String>permissions;
-    public List<String> getRoles() {
-        return roles;
+    public String getRoles() {
+        return role;
     }
 
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
+    public void setRoles(String roles) {
+        this.role = role;
     }
 
     public List<String> getPermissions() {
@@ -33,9 +33,9 @@ public class UserDTO {
     }
 
     // Constructors
-    public UserDTO(Long user_id, String username, List<String> roles,List<String>permissions) {
+    public UserDTO(Long user_id, String username, String role,List<String>permissions) {
         this.username = username;
-        this.roles = roles;
+        this.role = role;
         this.permissions = permissions;
         this.user_id = user_id;
     }

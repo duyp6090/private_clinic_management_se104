@@ -45,27 +45,28 @@ CREATE TABLE tbl_user_role (
     FOREIGN KEY (role_id) REFERENCES tbl_role(role_id) ON DELETE CASCADE    -- foreign key for role_id
 );
 
+-------ENTER DOCKER WITH COMMAND:
+command 1: sudo docker exec -it mysql_container bash
+command 2: mysql -u root -p
+password: 12345
+command 3: USE clinic_db
 
 ------MOCK DATA FOR THE ROLE PERMISSION---
 -----CREATE ADMIN-------
 INSERT INTO users (username, email, password, full_name, address, phone)
 VALUES ('admin', 'admin@example.com', 'hashed_password_here', 'Admin User', '123 Admin St.', '123-456-7890');
 
-INSERT INTO roles (role_name, description)
-VALUES ('ADMIN', 'Administrator with full permissions');
 
 INSERT INTO tbl_user_role (user_id, role_id)
 VALUES(3,3);
 
 -------CREATE MANAGER-----------
-
-
 INSERT INTO roles (role_name, description) VALUES
 ('User', 'Regular user with limited access'),
 ('Manager', 'User with management permissions'),
 ('Guest', 'Guest user with read-only access');
 
-INSERT INTO tbl_permission (permission, description) VALUES
+INSERT INTO tbl_permissions (permission, description) VALUES
 ('CREATE_USER', 'Permission to create new users'),
 ('DELETE_USER', 'Permission to delete users'),
 ('UPDATE_USER', 'Permission to update user details'),
@@ -73,8 +74,7 @@ INSERT INTO tbl_permission (permission, description) VALUES
 ('ACCESS_DASHBOARD', 'Permission to access the dashboard'),
 ('MANAGE_ROLES', 'Permission to manage user roles');
 
-
-INSERT INTO tbl_role_has_permission (role_id, permission_id) VALUES
+INSERT INTO tbl_role_permission (role_id, permission_id) VALUES
 (1, 1),  -- Admin has CREATE_USER permission
 (1, 2),  -- Admin has DELETE_USER permission
 (1, 3),  -- Admin has UPDATE_USER permission
@@ -85,12 +85,11 @@ INSERT INTO tbl_role_has_permission (role_id, permission_id) VALUES
 (2, 5),  -- User has ACCESS_DASHBOARD permission
 (3, 4),  -- Manager has VIEW_USER permission
 (3, 5),  -- Manager has ACCESS_DASHBOARD permission
-(3, 6),  -- Manager has MANAGE_ROLES permission
-(4, 4);  -- Guest has VIEW_USER permission
+(3, 6),  -- Manager has MANAGE_ROLES permissionse
 
 
 INSERT INTO tbl_user_role (user_id, role_id) VALUES
-(1, 1),  -- User 1 is Admin
+(1, 1);  -- User 1 is Admin
 (2, 2),  -- User 2 is User
 (3, 3),  -- User 3 is Manager
 (4, 4);  -- User 4 is Guest

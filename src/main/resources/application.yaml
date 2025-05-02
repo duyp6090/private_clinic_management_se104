@@ -1,23 +1,22 @@
 server:
-    port: 3000
-    servlet:
-        context-path: /
+  port: 3000
+  servlet:
+    context-path: /
 spring:
-    datasource:
-        url: jdbc:mysql://localhost:3306/user_db
-        username: root
-        password: 12345
-        driver-class-name: com.mysql.cj.jdbc.Driver
-    jpa:
-        hibernate:
-            ddl-auto: update
-    security:
-        user:
-            name: admin
-            password: admin
+  datasource:
+    url: jdbc:mysql://localhost:3306/user_db
+    username: root
+    password: 12345
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+  security:
+    user:
+      name: admin
+      password: admin
 jwt:
   secret: "2D4A614E645267556B58703273357638792F423F4428472B4B6250655368566D2D4A614E645267556B58703273357638792F423F4428472B4B6250655368566D"
   expiration:
-    access: 3600000 
-    refresh: 86400000 
-
+    access: 3600000
+    refresh: 86400000

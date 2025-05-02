@@ -4,16 +4,33 @@
  */
 
 package com.example.demo.dto.supporter;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  *
  * @author iset1enloc
  */
+
+
 public class registerSupporterRequest {
-    public String staffName;
+    @JsonProperty("username")
+    public String userName;
+    
+    @JsonProperty("fullName")
     public String fullName;
+
+    @JsonProperty("email")
     public String email;
+
+    @JsonProperty("phoneNumber")
     public String phoneNumber;
+
+    @JsonProperty("password")
     public String password;
+
+    @JsonProperty("staffTitle")
     public String staffTitle;
+
+    public String getStaffName() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

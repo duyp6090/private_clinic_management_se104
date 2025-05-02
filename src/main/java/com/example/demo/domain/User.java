@@ -19,7 +19,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class User  implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -67,12 +67,6 @@ public class User  implements UserDetails{
     @OneToMany(mappedBy = "user")
     private Set<User_Role> userRoles = new HashSet<>();  // Change to User_Role
 
-    // @Override
-    // public Collection<? extends GrantedAuthority> getAuthorities() {
-    //     return roles.stream()
-    //                 .map(userHasRole -> (GrantedAuthority) () -> userHasRole.getRole().getRole_name()) // Assuming Role has a getName() method
-    //                 .collect(Collectors.toList());
-    // }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();

@@ -16,9 +16,8 @@ import com.example.demo.service.IDoctorService;
  * @author iset1enloc
  */
 @Service
-public class DoctorServiceImpl implements IDoctorService{
+public class DoctorServiceImpl implements IDoctorService {
     private final DoctorRepository doctorRepository;
-    
 
     // Constructor injection for userRepository and passwordEncoder
     public DoctorServiceImpl(DoctorRepository doctorRepository) {
@@ -28,12 +27,12 @@ public class DoctorServiceImpl implements IDoctorService{
     @Override
     public Doctor save(Doctor doctor) {
         return this.doctorRepository.save(doctor);
-        
+
     }
 
     // @Override
     // public Doctor update(Long staffId, Doctor doctor) {
-    //     return this.doctorRepository.update(staffId, doctor);
+    // return this.doctorRepository.update(staffId, doctor);
     // }
 
 }
