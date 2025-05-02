@@ -1,74 +1,72 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package com.example.demo.domain;
 
 import java.time.Year;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
-/**
- *
- * @author iset1enloc
- */
 @Entity
-@Table(name = "tbl_month_report")
-public class MonthReport {
+@Table(name = "month_report", uniqueConstraints = @UniqueConstraint(name = "unique_month_year", columnNames = { "month",
+        "year" }))
 
+public class MonthReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long monthReportId;
+    private int month;
+    private Year year;
+    private double totalRevenue;
 
-    private int thang; // month
-    private Year nam;  // year
+    @OneToMany(mappedBy = "monthReport")
+    @JsonManagedReference
+    private List<DayReport> dayReports;
 
-    private float totalRevenue;
-
-    public MonthReport() {}
-
-    public MonthReport(int thang, Year nam, float totalRevenue) {
-        this.thang = thang;
-        this.nam = nam;
-        this.totalRevenue = totalRevenue;
+    public long getMonthReportId() {
+        return monthReportId;
     }
 
-    public Long getId() {
-        return id;
+    public void setMonthReportId(long monthReportId) {
+        this.monthReportId = monthReportId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public int getMonth() {
+        return month;
     }
 
-    public int getThang() {
-        return thang;
+    public void setMonth(int month) {
+        this.month = month;
     }
 
-    public void setThang(int thang) {
-        this.thang = thang;
+    public Year getYear() {
+        return year;
     }
 
-    public Year getNam() {
-        return nam;
+    public void setYear(Year year) {
+        this.year = year;
     }
 
-    public void setNam(Year nam) {
-        this.nam = nam;
-    }
-
-    public float getTotalRevenue() {
+    public double getTotalRevenue() {
         return totalRevenue;
     }
 
-    public void setTotalRevenue(float totalRevenue) {
+    public void setTotalRevenue(double totalRevenue) {
         this.totalRevenue = totalRevenue;
     }
 
-    
+    public List<DayReport> getDayReports() {
+        return dayReports;
+    }
+
+    public void setDayReports(List<DayReport> dayReports) {
+        this.dayReports = dayReports;
+    }
+
 }

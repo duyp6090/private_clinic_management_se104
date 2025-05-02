@@ -1,105 +1,82 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package com.example.demo.domain;
 
-import java.time.Year;
+import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
-/**
- *
- * @author iset1enloc
- */
 @Entity
-@Table(name = "tbl_day_report")
+@Table(name = "day_report", uniqueConstraints = @UniqueConstraint(name = "unique_day_month_year", columnNames = {
+        "date", "month_report_id" }))
 public class DayReport {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long dayReportId;
 
-    private int ngay;
-    private int thang;
-    private Year nam;
+    @ManyToOne
+    @JoinColumn(name = "month_report_id", referencedColumnName = "monthReportId")
+    @JsonBackReference
+    private MonthReport monthReport;
+    private LocalDate date;
+    private int numberOfPatients;
+    private double revenue;
+    private double ratio;
 
-    private float number_of_patients;
-    private float revenue;
-    private float ratio;
-
-    public DayReport() {}
-
-    public DayReport(int ngay, int thang, Year nam, float number_of_patients, float revenue, float ratio) {
-        this.ngay = ngay;
-        this.thang = thang;
-        this.nam = nam;
-        this.number_of_patients = number_of_patients;
-        this.revenue = revenue;
-        this.ratio = ratio;
+    public long getDayReportId() {
+        return dayReportId;
     }
 
-    public Long getId() {
-        return id;
+    public void setDayReportId(long dayReportId) {
+        this.dayReportId = dayReportId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public MonthReport getMonthReport() {
+        return monthReport;
     }
 
-    public int getNgay() {
-        return ngay;
+    public void setMonthReport(MonthReport monthReport) {
+        this.monthReport = monthReport;
     }
 
-    public void setNgay(int ngay) {
-        this.ngay = ngay;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public int getThang() {
-        return thang;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public void setThang(int thang) {
-        this.thang = thang;
+    public int getNumberOfPatients() {
+        return numberOfPatients;
     }
 
-    public Year getNam() {
-        return nam;
+    public void setNumberOfPatients(int numberOfPatients) {
+        this.numberOfPatients = numberOfPatients;
     }
 
-    public void setNam(Year nam) {
-        this.nam = nam;
-    }
-
-    public float getNumber_of_patients() {
-        return number_of_patients;
-    }
-
-    public void setNumber_of_patients(float number_of_patients) {
-        this.number_of_patients = number_of_patients;
-    }
-
-    public float getRevenue() {
+    public double getRevenue() {
         return revenue;
     }
 
-    public void setRevenue(float revenue) {
+    public void setRevenue(double revenue) {
         this.revenue = revenue;
     }
 
-    public float getRatio() {
+    public double getRatio() {
         return ratio;
     }
 
-    public void setRatio(float ratio) {
+    public void setRatio(double ratio) {
         this.ratio = ratio;
     }
 
-    
 }
 
