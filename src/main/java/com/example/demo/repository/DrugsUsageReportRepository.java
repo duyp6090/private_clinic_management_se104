@@ -1,11 +1,15 @@
 package com.example.demo.repository;
 
+import java.time.Year;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.example.demo.domain.Drugs;
 import com.example.demo.domain.DrugsUsageReport;
 import com.example.demo.dto.reportUsedDrugs.GetUsageReport;
 
@@ -20,4 +24,7 @@ public interface DrugsUsageReportRepository extends JpaRepository<DrugsUsageRepo
                 AND (:#{#filter.unitId} IS NULL OR r.drug.drugsUnit.unitId = :#{#filter.unitId})
             """)
     Page<DrugsUsageReport> findAll(@Param("filter") GetUsageReport filter, Pageable pageable);
+
+    // Find by drug and month and year
+    Optional<DrugsUsageReport> findByDrugAndMonthAndYear(Drugs drug, int month, Year year);
 }

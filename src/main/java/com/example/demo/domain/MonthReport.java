@@ -3,7 +3,11 @@ package com.example.demo.domain;
 import java.time.Year;
 import java.util.List;
 
+import org.hibernate.query.sqm.CastType;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,7 +29,7 @@ public class MonthReport {
     private Year year;
     private double totalRevenue;
 
-    @OneToMany(mappedBy = "monthReport")
+    @OneToMany(mappedBy = "monthReport", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<DayReport> dayReports;
 
