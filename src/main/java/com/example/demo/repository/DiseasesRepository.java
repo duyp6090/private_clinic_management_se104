@@ -1,6 +1,5 @@
 package com.example.demo.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -27,9 +26,6 @@ public interface DiseasesRepository extends JpaRepository<Diseases, Long> {
     public boolean existsByDiseaseId(Long id);
 
     public boolean existsByDiseaseName(String diseaseName);
-
-    // Create and edit disease
-    public Diseases save(Diseases disease);
 
     // Delete disease
     public void deleteByDiseaseId(Long id);

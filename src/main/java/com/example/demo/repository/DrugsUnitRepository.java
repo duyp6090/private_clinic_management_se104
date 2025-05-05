@@ -23,14 +23,10 @@ public interface DrugsUnitRepository extends JpaRepository<DrugsUnit, Long> {
             """)
     public Page<DrugsUnit> findAll(@Param("filter") GetUnitDrug getUnitDrug, Pageable pageable);
 
-    public Optional<DrugsUnit> findById(Long id);
-
     // Create and update drugsUnit
     public boolean existsByUnitName(String unitName);
 
     public boolean existsById(Long id);
-
-    public DrugsUnit save(DrugsUnit drugsUnit);
 
     // Delete drugsUnit
     public void deleteById(Long id);

@@ -32,9 +32,6 @@ public interface PatientsRepository extends JpaRepository<Patients, Long> {
         public Optional<Patients> findByPhoneNumberOrResidentalIdentity(@Param("phoneNumber") String phoneNumber,
                         @Param("residentalIdentity") String residentalIdentity);
 
-        // Create and edit patient
-        public Patients save(Patients patient);
-
         // Check exist patient by id
         public boolean existsByPatientId(Long id);
 

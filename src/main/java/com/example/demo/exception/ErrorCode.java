@@ -8,6 +8,8 @@ public enum ErrorCode {
     INFORMATION_EXISTS(400, "Information already exists"),
     INVALID_SORT_FIELD(400, "Invalid sort field"),
     EXPIRED_TOKEN(401, "Expired token"),
+    PATIENT_MAX(400, "Maximum number of patients reached"),
+    NOT_ENOUGH_QUANTITY(400, "Not enough quantity"),
 
     // AUTHENTICATION
     AUTH_INVALID_CREDENTIALS(401, "Invalid username or password"),

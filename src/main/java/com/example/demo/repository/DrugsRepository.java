@@ -24,16 +24,13 @@ public interface DrugsRepository extends JpaRepository<Drugs, Long> {
                     AND (:#{#filter.maxExpirationDate} IS NULL OR d.expirationDate <= :#{#filter.maxExpirationDate})
                     AND (:#{#filter.unitId} IS NULL OR d.drugsUnit.unitId = :#{#filter.unitId})
             """)
-    public Page<Drugs> findAll(@Param("filter") GetDrugs getDrugs, Pageable pageable);
+    public Page<Drugs> findAllDrugs(@Param("filter") GetDrugs getDrugs, Pageable pageable);
 
     // Get drug by drugId
     public Optional<Drugs> findByDrugId(long drugId);
 
     // Get drug by drugName
     public Drugs findByDrugName(String drugName);
-
-    // Save drug
-    public Drugs save(Drugs drugs);
 
     public boolean existsByDrugName(String drugName);
 
