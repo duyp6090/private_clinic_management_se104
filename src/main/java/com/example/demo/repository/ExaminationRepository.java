@@ -54,7 +54,18 @@ public interface ExaminationRepository extends JpaRepository<Examination, Long> 
     // Get examination by id
     Optional<Examination> findByExaminationId(Long examinationId);
 
+    // Get all examination by examinationDate
+    List<Examination> findByExaminationDate(LocalDate examinationDate);
+
     // Get examination by isExam and examinationDate
     List<Examination> findByIsExamAndExaminationDate(boolean isExam, LocalDate examinationDate);
+
+    // Count examination by examinationDate
+    @Query("SELECT COUNT(e) FROM Examination e WHERE e.examinationDate = :examinationDate")
+    int countByExaminationDate(@Param("examinationDate") LocalDate examinationDate);
+
+    // Sum revenue by examinationDate
+    @Query("SELECT SUM(e.examFee + e.drugsFee) FROM Examination e WHERE e.examinationDate = :examinationDate")
+    Double sumRevenueByExaminationDate(@Param("examinationDate") LocalDate examinationDate);
 
 }

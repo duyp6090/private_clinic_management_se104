@@ -1,5 +1,8 @@
 package com.example.demo.repository;
 
+import java.time.Year;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,5 +21,8 @@ public interface MonthReportRepository extends JpaRepository<MonthReport, Long> 
                AND (:#{#filter.year} IS NULL OR m.year = :#{#filter.year})
             """)
     Page<MonthReport> findAll(@Param("filter") GetMonthReport filter, Pageable pageable);
+
+    // Get month report by month and year
+    Optional<MonthReport> findByMonthAndYear(int month, Year year);
 
 }

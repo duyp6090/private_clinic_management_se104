@@ -1,5 +1,7 @@
 package com.example.demo.domain;
 
+import java.time.Year;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,9 +24,9 @@ public class DrugsUsageReport {
     private Drugs drug;
 
     private int month;
-    private int year;
+    private Year year;
 
-    private long usageNumber;
+    private long usageNumber = 0;
 
     public long getReportUsageId() {
         return reportUsageId;
@@ -50,11 +52,11 @@ public class DrugsUsageReport {
         this.month = month;
     }
 
-    public int getYear() {
+    public Year getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(Year year) {
         this.year = year;
     }
 
