@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +27,8 @@ public class UserController {
     // Dependency Injection (DI)
     private final IUserService userService;
     private final jwtUtils jwtTokenProvider;
-    public UserController(IUserService userService,jwtUtils jwtUtils) {
+
+    public UserController(IUserService userService, jwtUtils jwtUtils) {
         this.userService = userService;
         this.jwtTokenProvider = jwtUtils;
     }
@@ -76,7 +76,6 @@ public class UserController {
 
         List<String> user_roles = jwtTokenProvider.getRoleAuthoritiesFromToken(token);
         String role = user_roles.getFirst().toString().substring(5);
-
 
         // For demonstration, assume email is the same as username
         final UserDTO userDTO = new UserDTO(user.getId(), username, role, permissions);

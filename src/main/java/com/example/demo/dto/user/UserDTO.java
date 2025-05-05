@@ -15,13 +15,14 @@ public class UserDTO {
     private Long user_id;
     private String username;
     private String role;
-    private List<String>permissions;
+    private List<String> permissions;
+
     public String getRoles() {
         return role;
     }
 
     public void setRoles(String roles) {
-        this.role = role;
+        this.role = roles;
     }
 
     public List<String> getPermissions() {
@@ -33,7 +34,7 @@ public class UserDTO {
     }
 
     // Constructors
-    public UserDTO(Long user_id, String username, String role,List<String>permissions) {
+    public UserDTO(Long user_id, String username, String role, List<String> permissions) {
         this.username = username;
         this.role = role;
         this.permissions = permissions;
