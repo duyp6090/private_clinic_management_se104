@@ -59,7 +59,7 @@ public class DrugsServiceImpl implements IDrugsService {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(orders));
 
         // Get and return data
-        Page<Drugs> listDrugs = this.drugsRepository.findAll(getDrugs, pageable);
+        Page<Drugs> listDrugs = this.drugsRepository.findAllDrugs(getDrugs, pageable);
 
         paginationDTO.setPage(page);
         paginationDTO.setSize(size);

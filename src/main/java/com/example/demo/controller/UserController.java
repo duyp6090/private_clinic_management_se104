@@ -27,7 +27,8 @@ public class UserController {
     // Dependency Injection (DI)
     private final IUserService userService;
     private final jwtUtils jwtTokenProvider;
-    public UserController(IUserService userService,jwtUtils jwtUtils) {
+
+    public UserController(IUserService userService, jwtUtils jwtUtils) {
         this.userService = userService;
         this.jwtTokenProvider = jwtUtils;
     }
@@ -75,7 +76,6 @@ public class UserController {
 
         List<String> user_roles = jwtTokenProvider.getRoleAuthoritiesFromToken(token);
         String role = user_roles.getFirst().toString().substring(5);
-
 
         // For demonstration, assume email is the same as username
         final UserDTO userDTO = new UserDTO(user.getId(), username, role, permissions);

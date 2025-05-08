@@ -1,5 +1,8 @@
 package com.example.demo.controller;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,12 +13,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.domain.Examination;
+import com.example.demo.domain.Parameter;
 import com.example.demo.domain.Patients;
 import com.example.demo.dto.common.ResultPaginationDTO;
 import com.example.demo.dto.patients.CreatePatientDTO;
 import com.example.demo.dto.patients.EditPatientDTO;
 import com.example.demo.dto.patients.GetPatientsDTO;
 import com.example.demo.dto.response.RestResponse;
+import com.example.demo.exception.AppException;
+import com.example.demo.exception.ErrorCode;
+import com.example.demo.repository.ExaminationRepository;
+import com.example.demo.service.service_implementation.ExaminationImpl;
+import com.example.demo.service.service_implementation.ParameterServiceImpl;
 import com.example.demo.service.service_implementation.PatientServiceIml;
 
 import jakarta.validation.Valid;
@@ -24,9 +34,16 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/public/patients")
 public class PatientsController {
     private final PatientServiceIml patientServiceIml;
+    private final ExaminationImpl examinationImpl;
+    private final ExaminationRepository examinationRepository;
+    private final ParameterServiceImpl parameterServiceImpl;
 
-    public PatientsController(PatientServiceIml patientServiceIml) {
+    public PatientsController(PatientServiceIml patientServiceIml, ExaminationImpl examinationImpl,
+            ParameterServiceImpl parameterServiceImpl, ExaminationRepository examinationRepository) {
         this.patientServiceIml = patientServiceIml;
+        this.examinationImpl = examinationImpl;
+        this.parameterServiceImpl = parameterServiceImpl;
+        this.examinationRepository = examinationRepository;
     }
 
     @GetMapping("/get-patients")
@@ -43,6 +60,19 @@ public class PatientsController {
 
     @PostMapping("/add-patient")
     public Patients addPatient(@Valid @ModelAttribute CreatePatientDTO patient) {
+        // Get number max of patients
+        Parameter parameter = this.parameterServiceImpl.getParameter().get(0);
+        long maxPatientEachDay = parameter.getNumberPatientMax();
+        double examFee = parameter.getExamFee();
+
+        LocalDate today = LocalDate.now();
+        List<Examination> examinations = this.examinationImpl.getExaminationByIsExamAndExaminationDate(true, today);
+        if (examinations.size() == maxPatientEachDay) {
+            throw new AppException(ErrorCode.PATIENT_MAX);
+        }
+
+        System.out.println("Max patient each day: " + examinations.size());
+
         // Check if patient already exists
         this.patientServiceIml
                 .findByPhoneNumberOrResidentalIdentity(patient.getPhoneNumber(), patient.getResidentalIdentity());
@@ -56,7 +86,15 @@ public class PatientsController {
         newPatient.setPhoneNumber(patient.getPhoneNumber());
         newPatient.setResidentalIdentity(patient.getResidentalIdentity());
 
-        return this.patientServiceIml.savePatient(newPatient);
+        Patients savedPatient = this.patientServiceIml.savePatient(newPatient);
+
+        // Create new Examination
+        Examination newExamination = new Examination();
+        newExamination.setPatient(savedPatient);
+        newExamination.setExamFee(examFee);
+        this.examinationRepository.save(newExamination);
+
+        return savedPatient;
     }
 
     @PatchMapping("/edit-patient/{id}")
