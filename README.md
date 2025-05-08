@@ -2,7 +2,7 @@
 
 **Project:** Private Clinical Hospital Management System  
 **Tech Stack:** Java Spring Boot, MySQL, Docker Compose  
-
+![Private Clinic Management](media/clinic.jpeg)
 ### 🎯 Objectives
 - Centralize and streamline patient, examination and reporting workflows.  
 - Enforce Role-Based Access Control (RBAC) for Admin, Doctor & Staff.  
@@ -66,12 +66,12 @@ hospital-management/
 ### 1. 📦 Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/hospital-management.git
+git clone https://github.com/duyp6090/private_clinic_management_se104.git
 
 ```
 
 ```
-cd hospital-management
+cd private_clinic_management_se104
 
 ```
 ### 2. Docker set up
@@ -105,5 +105,5 @@ For issues or feature requests, please open an issue on GitHub or reach out to t
 
 - GitHub: [Private hotel management](https://github.com/duyp6090/private_clinic_management_se104)  
 - Email Loc Nguyen: `locnvt.it@gmail.com`
-- Email Duy Pham: `22520341@gm.uit.edu.vn`
+- Email Duy Pham: `duyp6090@gmail.com`
 
