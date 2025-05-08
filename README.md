@@ -3,32 +3,36 @@
 **Project:** Private Clinical Hospital Management System  
 **Tech Stack:** Java Spring Boot, MySQL, Docker Compose  
 ![Private Clinic Management](media/clinic.jpeg)
+
 ### 🎯 Objectives
-- Centralize and streamline patient, examination and reporting workflows.  
-- Enforce Role-Based Access Control (RBAC) for Admin, Doctor & Staff.  
-- Generate timely monthly performance and utilization reports.  
+- Centralize and streamline patient, examination, and reporting workflows.
+- Enforce Role-Based Access Control (RBAC) for Admin, Doctor, and Staff.
+- Automate and simplify the generation of monthly performance and utilization reports.
+- Ensure data security, privacy, and compliance with healthcare regulations (e.g., HIPAA).
+- Provide a user-friendly interface for managing patient information and healthcare operations.
 
 ### 👥 Stakeholders
 - **Hospital Administrator:**  
-  - Oversees system configuration, user management, high-level metrics.  
-- **Doctors:**  
-  - Create and update patient examination records, review historical data.  
-- **Staff (Nurses / Reception):**  
-  - Register new patients, schedule appointments, manage basic demographics.  
+  - Responsible for overseeing the entire system's configuration, user management, and high-level operational metrics.
+  - Can view and manage hospital-wide data and generate reports.
+  - Manages user permissions and can assign roles to ensure the right level of access for each role (Admin, Doctor, Staff).
 
-### 🔑 Key Features & User Stories
-1. **RBAC**  
-   - As an **Admin**, I can create/assign roles and manage users to ensure data security.  
-   - As a **Doctor**, I can only access my patients’ records and write examination notes.
-   - As a **Staff**, I can only access help in receptionist and money bill process  
-2. **Patient Management**  
-   - As Staff, I can register new patients, update contact info, and look up existing profiles.  
-3. **Examination Record Management**  
-   - As a Doctor, I can log vitals, diagnosis, prescriptions, and follow-up recommendations.  
-4. **Monthly Report Generation**  
-   - As an Admin, I can generate PDF/CSV summaries of patient visits, revenue, and bed occupancy.  
+- **Doctors:**  
+  - Can access and manage the medical records of their assigned patients.
+  - Document examinations, diagnose conditions, prescribe treatments, and track patient progress over time.
+  - Review historical data to ensure continuity of care for patients.
+
+- **Staff (Nurses / Receptionists):**  
+  - Handles patient registration, scheduling appointments, and updating basic patient demographic information.
+  - Manages the creation of invoices and payment processing.
+  - Ensures patient records are updated and accurate.
+
+- **Patients:**  
+  - Not a direct user of the system, but their data is the central point for all hospital workflows.
+  - Will benefit from accurate records, timely care, and the ability to schedule and track appointments.
 
 ---
+
 
 ## 📁 Project Structure
 
