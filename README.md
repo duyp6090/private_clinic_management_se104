@@ -64,7 +64,7 @@ hospital-management/
 ├── .gitignore
 ├── README.md                       # This file
 └── pom.xml                         # Maven project definition
-
+```
 ## 🚀 Installation & Local Setup
 
 ### 1. 📦 Clone the Repository
