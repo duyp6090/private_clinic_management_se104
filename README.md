@@ -79,7 +79,10 @@ cd private_clinic_management_se104
 
 ```
 ### 2. Docker set up
-Docker compose up -d
+```
+docker-compose up -d
+
+```
 
 ### 3. Run the project
 ## ⚙️ Usage
