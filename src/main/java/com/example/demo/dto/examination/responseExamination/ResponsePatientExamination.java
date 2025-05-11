@@ -3,16 +3,19 @@ package com.example.demo.dto.examination.responseExamination;
 import java.time.LocalDate;
 
 public class ResponsePatientExamination {
+    private long examId;
     private String fullName;
     private LocalDate examinationDate;
     private String nameDisease;
     private String symptoms;
 
     public ResponsePatientExamination(
+            long examId,
             String fullName,
             LocalDate examinationDate,
             String nameDisease,
             String symptoms) {
+        this.examId = examId;
         this.fullName = fullName;
         this.examinationDate = examinationDate;
         this.nameDisease = nameDisease;
@@ -49,6 +52,14 @@ public class ResponsePatientExamination {
 
     public void setSymptoms(String symptoms) {
         this.symptoms = symptoms;
+    }
+
+    public long getExamId() {
+        return examId;
+    }
+
+    public void setExamId(long examId) {
+        this.examId = examId;
     }
 
 }

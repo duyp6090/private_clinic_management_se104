@@ -22,6 +22,7 @@ import com.example.demo.domain.User;
 import com.example.demo.dto.common.PaginationDTO;
 import com.example.demo.dto.common.ResultPaginationDTO;
 import com.example.demo.dto.examination.requestExamination.UpdateListDrugsRecord;
+import com.example.demo.dto.examination.requestExamination.GetBillExamination;
 import com.example.demo.dto.examination.requestExamination.GetPatientExamination;
 import com.example.demo.dto.examination.requestExamination.GetWaitingExamination;
 import com.example.demo.dto.examination.requestExamination.UpdateExamination;
@@ -136,18 +137,27 @@ public class ExaminationImpl implements IExamination {
     }
 
     @Override
-    public ResponseBill getExaminationBill(Long id) {
-        Examination examination = this.examinationRepository.findByExaminationId(id).orElse(null);
-        if (examination == null) {
-            throw new AppException(ErrorCode.NOT_FOUND);
-        }
-        ResponseBill responseBill = new ResponseBill(
-                examination.getPatient().getFullName(),
-                examination.getExaminationDate(),
-                examination.getDrugsFee(),
-                examination.getExamFee());
+    public List<ResponseBill> getExaminationBill(GetBillExamination getBillExamination) {
+        // Get examination
+        List<Examination> listExamination = this.examinationRepository
+                .findAllBills(getBillExamination.getStartDate(), getBillExamination.getEndDate(),
+                        getBillExamination.getFullName());
 
-        return responseBill;
+        // Create list response bill
+        List<ResponseBill> listResponseBill = new ArrayList<>();
+        for (Examination examination : listExamination) {
+            ResponseBill responseBill = new ResponseBill(
+                    examination.getExaminationId(),
+                    examination.getPatient().getFullName(),
+                    examination.getExaminationDate(),
+                    examination.getDrugsFee(),
+                    examination.getExamFee());
+            listResponseBill.add(responseBill);
+        }
+
+        // Return result
+        return listResponseBill;
+
     }
 
     @Override
@@ -182,6 +192,8 @@ public class ExaminationImpl implements IExamination {
                     () -> new AppException(ErrorCode.NOT_FOUND));
             examination.setDisease(disease);
         }
+
+        examination.setExam(updateExamination.isExam() ? true : false);
 
         // Save examination record
         this.examinationRepository.save(examination);
@@ -218,6 +230,7 @@ public class ExaminationImpl implements IExamination {
 
         // Create response examination record
         ResponseExaminationRecord responseExaminationRecord = new ResponseExaminationRecord(
+                examinationId,
                 fullName,
                 examinationDate,
                 symptoms,

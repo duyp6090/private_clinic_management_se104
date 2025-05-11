@@ -4,6 +4,7 @@ public class UpdateExamination {
     private Long staffId;
     private Long diseaseId;
     private String symptoms;
+    private boolean isExam = true;
 
     public Long getStaffId() {
         return staffId;
@@ -27,6 +28,14 @@ public class UpdateExamination {
 
     public void setSymptoms(String symptoms) {
         this.symptoms = symptoms;
+    }
+
+    public boolean isExam() {
+        return isExam;
+    }
+
+    public void setExam(boolean isExam) {
+        this.isExam = isExam;
     }
 
 }

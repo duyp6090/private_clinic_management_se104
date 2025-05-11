@@ -59,7 +59,8 @@ public class PatientsController {
     }
 
     @PostMapping("/add-patient")
-    public Patients addPatient(@Valid @ModelAttribute CreatePatientDTO patient) {
+    public Patients addPatient(
+            @Valid @ModelAttribute CreatePatientDTO patient) {
         // Get number max of patients
         Parameter parameter = this.parameterServiceImpl.getParameter().get(0);
         long maxPatientEachDay = parameter.getNumberPatientMax();
@@ -74,17 +75,19 @@ public class PatientsController {
         System.out.println("Max patient each day: " + examinations.size());
 
         // Check if patient already exists
-        this.patientServiceIml
+        Patients newPatient = this.patientServiceIml
                 .findByPhoneNumberOrResidentalIdentity(patient.getPhoneNumber(), patient.getResidentalIdentity());
 
-        // Create new patient
-        Patients newPatient = new Patients();
-        newPatient.setFullName(patient.getFullName());
-        newPatient.setGender(patient.isGender());
-        newPatient.setAddress(patient.getAddress());
-        newPatient.setYearOfBirth(patient.getYearOfBirth());
-        newPatient.setPhoneNumber(patient.getPhoneNumber());
-        newPatient.setResidentalIdentity(patient.getResidentalIdentity());
+        if (newPatient == null) {
+            // Create new patient
+            newPatient = new Patients();
+            newPatient.setFullName(patient.getFullName());
+            newPatient.setGender(patient.isGender());
+            newPatient.setAddress(patient.getAddress());
+            newPatient.setYearOfBirth(patient.getYearOfBirth());
+            newPatient.setPhoneNumber(patient.getPhoneNumber());
+            newPatient.setResidentalIdentity(patient.getResidentalIdentity());
+        }
 
         Patients savedPatient = this.patientServiceIml.savePatient(newPatient);
 

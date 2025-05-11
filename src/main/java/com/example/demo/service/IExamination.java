@@ -6,6 +6,7 @@ import java.util.List;
 import com.example.demo.domain.Examination;
 import com.example.demo.dto.common.ResultPaginationDTO;
 import com.example.demo.dto.examination.requestExamination.UpdateListDrugsRecord;
+import com.example.demo.dto.examination.requestExamination.GetBillExamination;
 import com.example.demo.dto.examination.requestExamination.GetPatientExamination;
 import com.example.demo.dto.examination.requestExamination.GetWaitingExamination;
 import com.example.demo.dto.examination.requestExamination.UpdateExamination;
@@ -20,7 +21,7 @@ public interface IExamination {
     ResultPaginationDTO getPatientsExamination(GetPatientExamination getPatientExamination);
 
     // Get bill by id
-    ResponseBill getExaminationBill(Long id);
+    List<ResponseBill> getExaminationBill(GetBillExamination getBillExamination);
 
     List<Examination> getExaminationByIsExamAndExaminationDate(boolean isExam,
             LocalDate examinationDate);

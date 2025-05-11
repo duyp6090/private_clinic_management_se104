@@ -3,12 +3,14 @@ package com.example.demo.dto.examination.responseExamination;
 import java.time.LocalDate;
 
 public class ResponseBill {
+    private long examId;
     private String fullName;
     private LocalDate examinationDate;
     private double drugsFee;
     private double examFee;
 
-    public ResponseBill(String fullName, LocalDate examinationDate, double drugsFee, double examFee) {
+    public ResponseBill(long examId, String fullName, LocalDate examinationDate, double drugsFee, double examFee) {
+        this.examId = examId;
         this.fullName = fullName;
         this.examinationDate = examinationDate;
         this.drugsFee = drugsFee;
@@ -45,6 +47,14 @@ public class ResponseBill {
 
     public void setExamFee(double examFee) {
         this.examFee = examFee;
+    }
+
+    public long getExamId() {
+        return examId;
+    }
+
+    public void setExamId(long examId) {
+        this.examId = examId;
     }
 
 }

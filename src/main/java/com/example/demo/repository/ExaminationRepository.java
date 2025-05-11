@@ -20,6 +20,7 @@ public interface ExaminationRepository extends JpaRepository<Examination, Long> 
     // Get person to patient
     @Query("""
                 SELECT new com.example.demo.dto.examination.responseExamination.ResponseWaitingExamination(
+                    e.examinationId,
                     e.patient.fullName,
                     e.patient.gender,
                     e.patient.yearOfBirth,
@@ -35,6 +36,7 @@ public interface ExaminationRepository extends JpaRepository<Examination, Long> 
     // Get patient
     @Query("""
                 SELECT new com.example.demo.dto.examination.responseExamination.ResponsePatientExamination(
+                    e.examinationId,
                     e.patient.fullName,
                     e.examinationDate,
                     d.diseaseName,
@@ -53,6 +55,19 @@ public interface ExaminationRepository extends JpaRepository<Examination, Long> 
 
     // Get examination by id
     Optional<Examination> findByExaminationId(Long examinationId);
+
+    // Get examinations by filter bill
+    @Query("""
+            SELECT e
+            FROM Examination e
+            WHERE (:startDate IS NULL OR e.examinationDate >= :startDate)
+            AND (:endDate IS NULL OR e.examinationDate <= :endDate)
+            AND (:fullName IS NULL OR LOWER(e.patient.fullName) LIKE LOWER(CONCAT('%', :fullName, '%')))
+            """)
+    List<Examination> findAllBills(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("fullName") String fullName);
 
     // Get all examination by examinationDate
     List<Examination> findByExaminationDate(LocalDate examinationDate);

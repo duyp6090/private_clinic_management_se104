@@ -3,8 +3,6 @@ package com.example.demo.domain;
 import java.time.Year;
 import java.util.List;
 
-import org.hibernate.query.sqm.CastType;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;

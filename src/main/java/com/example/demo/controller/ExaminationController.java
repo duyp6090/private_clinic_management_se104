@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.common.ResultPaginationDTO;
+import com.example.demo.dto.examination.requestExamination.GetBillExamination;
 import com.example.demo.dto.examination.requestExamination.GetPatientExamination;
 import com.example.demo.dto.examination.requestExamination.GetWaitingExamination;
 import com.example.demo.dto.examination.requestExamination.UpdateExamination;
@@ -46,10 +47,10 @@ public class ExaminationController {
         return result;
     }
 
-    @GetMapping("/bill/{id}")
-    public ResponseBill getBill(
-            @PathVariable(name = "id") Long id) {
-        ResponseBill result = examinationImpl.getExaminationBill(id);
+    @GetMapping("/getAll-bill")
+    public List<ResponseBill> getBill(
+            @Valid @ModelAttribute GetBillExamination getBillExamination) {
+        List<ResponseBill> result = this.examinationImpl.getExaminationBill(getBillExamination);
         return result;
     }
 

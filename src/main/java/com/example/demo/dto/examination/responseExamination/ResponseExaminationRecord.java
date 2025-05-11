@@ -4,14 +4,17 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class ResponseExaminationRecord {
+    private long examId;
     private String fullName;
     private LocalDate examinationDate;
     private String symptoms;
     private String diseaseName;
     private List<ResponseDrugsRecord> examinationDetails;
 
-    public ResponseExaminationRecord(String fullName, LocalDate examinationDate, String symptoms, String diseaseName,
+    public ResponseExaminationRecord(long examId, String fullName, LocalDate examinationDate, String symptoms,
+            String diseaseName,
             List<ResponseDrugsRecord> examinationDetails) {
+        this.examId = examId;
         this.fullName = fullName;
         this.examinationDate = examinationDate;
         this.symptoms = symptoms;
@@ -57,6 +60,14 @@ public class ResponseExaminationRecord {
 
     public void setExaminationDetails(List<ResponseDrugsRecord> examinationDetails) {
         this.examinationDetails = examinationDetails;
+    }
+
+    public long getExamId() {
+        return examId;
+    }
+
+    public void setExamId(long examId) {
+        this.examId = examId;
     }
 
 }
