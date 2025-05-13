@@ -76,7 +76,7 @@ public class UserController {
 
         List<String> user_roles = jwtTokenProvider.getRoleAuthoritiesFromToken(token);
         String role = user_roles.getFirst().toString().substring(5);
-
+        System.out.println("Enter line 80");
         // For demonstration, assume email is the same as username
         final UserDTO userDTO = new UserDTO(user.getId(), username, role, permissions);
 

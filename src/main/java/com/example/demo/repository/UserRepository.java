@@ -55,14 +55,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
 
     @Query(value = """
-        SELECT p.permission 
+        SELECT p.permission_id,p.permission,rp.can_create,rp.can_read, rp.can_update,rp.can_delete 
         FROM users u
         JOIN tbl_user_role ur ON u.id = ur.user_id
         JOIN tbl_role_permission rp ON ur.role_id = rp.role_id
         JOIN tbl_permissions p ON rp.permission_id = p.permission_id
         WHERE u.username = :userName AND ur.role_id = :role_id
         """, nativeQuery = true)
-    List<String> findAllPermissionsByUserNameAndUserRole(@Param("userName") String userName,@Param("role_id")int userRoleId);
+    List<Object[]> findAllPermissionsByUserNameAndUserRole(@Param("userName") String userName,@Param("role_id")int userRoleId);
 
     @Modifying
     @Transactional

@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.User;
+import com.example.demo.dto.response.ScreenPermission;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.IUserService;
@@ -124,7 +125,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public List<String> findAllPermissionByUserNameAndUserRoleId(String username, int role_id) {
+    public List<Object[]> findAllPermissionByUserNameAndUserRoleId(String username, int role_id) {
         return userRepository.findAllPermissionsByUserNameAndUserRole(username, role_id);
     }
 

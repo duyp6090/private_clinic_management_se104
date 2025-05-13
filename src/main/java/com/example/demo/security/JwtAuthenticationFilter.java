@@ -1,12 +1,10 @@
 package com.example.demo.security;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -36,24 +34,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         var jwt = getJwtFromRequest(request);
         System.out.println(jwt);
         String path = request.getRequestURI();
-
+        System.out.println("Print line 39");
         if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
             String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
             // Get user roles (already as GrantedAuthority list)
             List<GrantedAuthority> authorities = jwtUtils.getRoleGrantAuthoritiesFromToken(jwt);
 
-            if (!path.equals("/api/auth/login-with-permission")) {
-                //Get user permissions (raw strings)
-                List<String> permissions = jwtUtils.getPermissionsAuthoritiesFromToken(jwt);
-                if (permissions == null) {
-                    permissions = new ArrayList<>(); // safely default to empty
-                }
-                // Add permissions as authorities
-                for (String permission : permissions) {
-                    authorities.add(new SimpleGrantedAuthority(permission));
-                }
-            }
+            // if (!path.equals("/api/auth/login-with-permission")) {
+            //     //Get user permissions (raw strings)
+            //     List<String> permissions = jwtUtils.getPermissionsAuthoritiesFromToken(jwt);
+            //     if (permissions == null) {
+            //         permissions = new ArrayList<>(); // safely default to empty
+            //     }
+            //     // Add permissions as authorities
+            //     for (String permission : permissions) {
+            //         authorities.add(new SimpleGrantedAuthority(permission));
+            //     }
+            // }
 
             System.out.println("Granted Authorities: " + authorities);
 

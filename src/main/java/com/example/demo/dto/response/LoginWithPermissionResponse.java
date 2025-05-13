@@ -15,16 +15,16 @@ public class LoginWithPermissionResponse {
     private String accessToken;
     private String refreshToken;
     private String selected_role;
-    private List<String>permissionList;
+    private List<ScreenPermission>permissionList;
 
 
 
-    public List<String> getPermissionList() {
+    public List<ScreenPermission> getPermissionList() {
         return permissionList;
     }
 
 
-    public void setPermissionList(List<String> permissionList) {
+    public void setPermissionList(List<ScreenPermission> permissionList) {
         this.permissionList = permissionList;
     }
 
@@ -33,7 +33,7 @@ public class LoginWithPermissionResponse {
     public LoginWithPermissionResponse() {}
 
     // Constructor for initializing the fields
-    public LoginWithPermissionResponse(String accessToken, String refreshToken,String selected_role,List<String>permissionList) {
+    public LoginWithPermissionResponse(String accessToken, String refreshToken,String selected_role,List<ScreenPermission>permissionList) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.selected_role=selected_role;

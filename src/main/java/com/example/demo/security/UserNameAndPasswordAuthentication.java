@@ -1,6 +1,5 @@
 package com.example.demo.security;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,13 +38,13 @@ public class UserNameAndPasswordAuthentication implements AuthenticationProvider
             // Retrieve user roles (authorities) from UserService or Database
             List<String> roles = userService.getUserRolesByUserName(username);
             // Generate the JWT token with roles included as claims
-            String token = jwtUtils.generateAccessToken(username, roles,new ArrayList<>());  // Updated method signature to include roles
+            String token = jwtUtils.generateAccessToken(username, roles);  // Updated method signature to include roles
 
             // Map roles to authorities for authentication context
             var authorities = roles.stream()
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
-
+            System.out.println(authorities);
             return new UsernamePasswordAuthenticationToken(
                     new User(username, password, authorities), // Attach authorities here
                     token,

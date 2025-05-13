@@ -12,7 +12,6 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.RefreshToken;
@@ -20,6 +19,7 @@ import com.example.demo.dto.response.AuthResponse;
 import com.example.demo.dto.response.LoginResponse;
 import com.example.demo.dto.response.LoginWithPermissionResponse;
 import com.example.demo.dto.response.RestResponse;
+import com.example.demo.dto.response.ScreenPermission;
 import com.example.demo.security.jwtUtils;
 import com.example.demo.service.IAuthService;
 
@@ -73,7 +73,7 @@ public class AuthServiceImpl implements IAuthService {
                 RefreshToken refreshToken = optionalRefreshToken.get();
                 if (refreshTokenService.isValidToken(oldToken)) {
                     String newAccessToken = jwtTokenProvider.generateAccessToken(refreshToken.getUser().getName(),
-                            roles,permissions);
+                            roles);
 
                     AuthResponse authResponse = new AuthResponse(newAccessToken, refreshToken.getToken());
                     return new RestResponse<>(HttpStatus.OK.value(), authResponse);
@@ -98,7 +98,7 @@ public class AuthServiceImpl implements IAuthService {
 
             List<String> roles = jwtTokenProvider.getRoleAuthoritiesFromToken(accessToken);
 
-            String newAccessToken = jwtTokenProvider.generateAccessToken(newRefreshToken.getUser().getName(), roles,permissions);
+            String newAccessToken = jwtTokenProvider.generateAccessToken(newRefreshToken.getUser().getName(), roles);
             AuthResponse authResponse = new AuthResponse(newAccessToken, newRefreshToken.getToken());
             return new RestResponse<>(HttpStatus.OK.value(), authResponse);
         } catch (Exception e) {
@@ -120,12 +120,17 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public RestResponse<LoginWithPermissionResponse> loginWithPermission(String userName, String roleName) {
         int roleId = roleService.getRoleIDByRoleName(roleName);
-        List<String>permissions = userService.findAllPermissionByUserNameAndUserRoleId(userName, roleId);
+        System.out.println("Enter line 123");
+        List<Object[]>rows = userService.findAllPermissionByUserNameAndUserRoleId(userName, roleId);
+        List<ScreenPermission> permissions = new ArrayList<>();
+        for (Object[] row : rows) {
+            permissions.add(ScreenPermission.fromRow(row));
+        }
         ArrayList<String>roles = new ArrayList<>();
         roles.add(roleName);
-        String accessToken = jwtTokenProvider.generateAccessToken(userName,roles,permissions);
+        String accessToken = jwtTokenProvider.generateAccessToken(userName,roles);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userName);
-
+        System.out.println("line 128 login with permission");
         LoginWithPermissionResponse authResponse = new LoginWithPermissionResponse(accessToken, refreshToken.getToken(),roleName,permissions);
         return new RestResponse<>(HttpStatus.OK.value(), authResponse);
     }
