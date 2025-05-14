@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.Role;
 import com.example.demo.dto.response.RestResponse;
+import com.example.demo.dto.response.ScreenPermission;
 import com.example.demo.dto.role.assignPermission;
 import com.example.demo.dto.role.newRoleReq;
 import com.example.demo.service.IRoleService;
@@ -70,7 +71,7 @@ public class RoleController {
     public ResponseEntity<RestResponse<Role>> assignPermissionsToRole(
             @PathVariable int roleId,
             @RequestBody assignPermission permission) {
-        System.out.println();
+        System.out.println(permission);
         Role updatedRole = roleService.assignPermissionToRole(roleId, permission.getPermissionId());
         return ResponseEntity.ok(RestResponse.success(HttpStatus.OK.value(), updatedRole));
     }
@@ -82,5 +83,11 @@ public class RoleController {
         Role updatedRole = roleService.removePermissionFromRole(roleId, permissionId);
         return ResponseEntity.ok(RestResponse.success(HttpStatus.OK.value(), updatedRole));
     }
-
+    @PutMapping("/update-role-privilegde")
+    public ResponseEntity<RestResponse<ScreenPermission>> updateRolePriviledge(
+            @RequestBody ScreenPermission screenPermissions) {
+        roleService.updateRolePermissionAbilability(screenPermissions);
+        
+        return ResponseEntity.ok(RestResponse.success(HttpStatus.OK.value(), screenPermissions));
+    }
 }

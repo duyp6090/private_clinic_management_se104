@@ -7,6 +7,8 @@ package com.example.demo.dto.user;
 
 import java.util.List;
 
+import com.example.demo.dto.response.ScreenPermission;
+
 /**
  *
  * @author iset1enloc
@@ -15,7 +17,7 @@ public class UserDTO {
     private Long user_id;
     private String username;
     private String role;
-    private List<String> permissions;
+    private List<ScreenPermission> permissions;
 
     public String getRoles() {
         return role;
@@ -25,16 +27,16 @@ public class UserDTO {
         this.role = roles;
     }
 
-    public List<String> getPermissions() {
+    public List<ScreenPermission> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(List<String> permissions) {
+    public void setPermissions(List<ScreenPermission> permissions) {
         this.permissions = permissions;
     }
 
     // Constructors
-    public UserDTO(Long user_id, String username, String role, List<String> permissions) {
+    public UserDTO(Long user_id, String username, String role, List<ScreenPermission> permissions) {
         this.username = username;
         this.role = role;
         this.permissions = permissions;

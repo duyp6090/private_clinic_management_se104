@@ -1,6 +1,5 @@
 package com.example.demo.security;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,13 +28,13 @@ public class jwtUtils {
     private long refreshTokenExpiration;
 
     // Generate Access Token
-    public String generateAccessToken(String username, List<String> role,List<String>permissions) {
-        return generateToken(username, role,permissions, accessTokenExpiration);
+    public String generateAccessToken(String username, List<String> role) {
+        return generateToken(username, role, accessTokenExpiration);
     }
 
     // Generate Refresh Token
     public String generateRefreshToken(String username,List<String> role) {
-        return generateToken(username, role ,new ArrayList<>(), refreshTokenExpiration);
+        return generateToken(username, role, refreshTokenExpiration);
     }
     // Generate Refresh Token
     public String generateTempToken(String username,List<String> role) {
@@ -56,7 +55,7 @@ public class jwtUtils {
                 .compact();
     }
     // Helper method to generate token
-    private String generateToken(String username, List<String> roles,List<String>permissions, long expirationTime) {
+    private String generateToken(String username, List<String> roles, long expirationTime) {
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + expirationTime);
 
@@ -65,7 +64,6 @@ public class jwtUtils {
                 .setSubject(username)
                 .setIssuedAt(now)
                 .setExpiration(expirationDate)
-                .claim("permissions", permissions)
                 .claim("roles", roles != null ? roles : null) // Add roles to the token
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();

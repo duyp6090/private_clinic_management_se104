@@ -44,31 +44,34 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<String> findAllRolesByUsername(@Param("username") String username);
 
     @Query(value = """
-        SELECT p.permission 
+        SELECT p.permission_id,p.permission,rp.can_create,rp.can_read, rp.can_update,rp.can_delete 
         FROM users u
         JOIN tbl_user_role ur ON u.id = ur.user_id
         JOIN tbl_role_permission rp ON ur.role_id = rp.role_id
         JOIN tbl_permissions p ON rp.permission_id = p.permission_id
         WHERE u.username = :userName
         """, nativeQuery = true)
-    List<String> findAllPermissionsByUserId(@Param("userName") String userName);
+    List<Object[]> findAllPermissionsByUserId(@Param("userName") String userName);
     
 
     @Query(value = """
-        SELECT p.permission 
+        SELECT p.permission_id,p.permission,rp.can_create,rp.can_read, rp.can_update,rp.can_delete 
         FROM users u
         JOIN tbl_user_role ur ON u.id = ur.user_id
         JOIN tbl_role_permission rp ON ur.role_id = rp.role_id
         JOIN tbl_permissions p ON rp.permission_id = p.permission_id
         WHERE u.username = :userName AND ur.role_id = :role_id
         """, nativeQuery = true)
-    List<String> findAllPermissionsByUserNameAndUserRole(@Param("userName") String userName,@Param("role_id")int userRoleId);
+    List<Object[]> findAllPermissionsByUserNameAndUserRole(@Param("userName") String userName,@Param("role_id")int userRoleId);
 
     @Modifying
     @Transactional
     @Query(value = "INSERT INTO tbl_user_role (user_id, role_id) VALUES (:userId, :roleId)", nativeQuery = true)
     void assignRoleToUser(@Param("userId") Long userId, @Param("roleId") int roleId);
     
-    
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM tbl_user_role ur WHERE ur.role_id = :roleId AND ur.user_id = :userId", nativeQuery = true)
+    void revokeRoleFromUser(@Param("userId") Long userId, @Param("roleId") int roleId);    
     
 }

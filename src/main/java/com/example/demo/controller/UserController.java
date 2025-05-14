@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.User;
 import com.example.demo.dto.response.RestResponse;
+import com.example.demo.dto.response.ScreenPermission;
 import com.example.demo.dto.user.UserDTO;
 import com.example.demo.security.jwtUtils;
 import com.example.demo.service.IUserService;
@@ -72,11 +74,18 @@ public class UserController {
         var optionalUser = userService.findByUsername(username);
         User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        List<String> permissions = jwtTokenProvider.getPermissionsAuthoritiesFromToken(token);
+        
 
         List<String> user_roles = jwtTokenProvider.getRoleAuthoritiesFromToken(token);
+        
         String role = user_roles.getFirst().toString().substring(5);
-
+        int roleId = userService.getRole_id(role);
+        List<Object[]> rows = userService.findAllPermissionByUserNameAndUserRoleId(user.getUsername(), roleId);
+        List<ScreenPermission>permissions= new ArrayList<>();
+        for(Object[] row:rows){
+            permissions.add(ScreenPermission.fromRow(row));
+        }
+        System.out.println("Enter line 80");
         // For demonstration, assume email is the same as username
         final UserDTO userDTO = new UserDTO(user.getId(), username, role, permissions);
 

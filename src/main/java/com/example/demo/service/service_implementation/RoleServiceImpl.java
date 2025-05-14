@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.domain.Permission;
 import com.example.demo.domain.Role;
 import com.example.demo.domain.Role_Permission;
+import com.example.demo.dto.response.ScreenPermission;
 import com.example.demo.repository.PermissionRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.Role_PermissionRepository;
@@ -102,8 +104,32 @@ public class RoleServiceImpl implements IRoleService {
     public int getRoleIDByRoleName(String roleName) {
         return roleRepository.getRoleIdByRoleName(roleName);
     }
-
+    @Transactional
+    @Override
+    public Boolean updateRolePermissionAbilability(ScreenPermission permission) {
+  
+        try {
+            System.out.println(permission);
+            System.out.println("ENTER LINE 110");
+            int id =roleRepository.getRoleIdByRoleName(permission.getRole());
+            return roleRepository.updateRolePermissionAbility(
+                        id, 
+                        permission.getPermission_id(),
+                        permission.getCanCreate(),
+                        permission.getCanRead(),
+                        permission.getCanUpdate(),
+                        permission.getCanDelete()
+                   ) > 0;
     
+        } catch (Exception e) {
+            System.out.printf("Error updating role permission ability for role_id={}, permission_id={}: {}", 
+                         permission != null ? permission.getRole() : "null",
+                         permission != null ? permission.getPermission_id() : "null",
+                         e.getMessage(), e);
+            System.out.println(e);
+            return false;
+        }
+    }
 
 
 }
