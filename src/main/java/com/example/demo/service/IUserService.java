@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.demo.domain.User;
+import com.example.demo.dto.user.UserRoleDTO;
 
 /**
  *
@@ -20,7 +21,7 @@ public interface IUserService {
     
     User getUser(long id);
     
-    List<User> getAllUsers();
+    List<UserRoleDTO> getAllUsers();
     
     User createUser(User user);
     User save(User user);
@@ -48,4 +49,6 @@ public interface IUserService {
     List<Object[]> findAllPermissionByUserNameAndUserRoleId(String username,int role_id);
 
     Boolean assignRoleToUser(String username,int roleId );
+    Boolean revokeRoleFromUser(String username,int roleId );
+    int getRole_id(String rolename);
 }

@@ -31,6 +31,7 @@ import com.example.demo.dto.request.AssignRoleRequest;
 import com.example.demo.dto.request.ChangePasswordRequest;
 import com.example.demo.dto.response.RestResponse;
 import com.example.demo.dto.supporter.registerSupporterRequest;
+import com.example.demo.dto.user.UserRoleDTO;
 import com.example.demo.service.IDoctorService;
 import com.example.demo.service.IRoleService;
 import com.example.demo.service.ISupporterService;
@@ -145,7 +146,35 @@ public class AdminUserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+    @PostMapping("/revoke-role")
+    public ResponseEntity<RestResponse<String>> revokeRoleFromUser(@RequestBody AssignRoleRequest request) {
+        RestResponse<String> response = new RestResponse<>();
 
+        // Fetch the role ID based on the role name
+        int roleId = roleService.getRoleIDByRoleName(request.getRolename());
+
+        if (roleId == -1) { // Assuming -1 means role not found
+            response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            response.setError("Role not found");
+            response.setMessage("Error: Role does not exist");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        // Assign the role to the user
+        try {
+            userService.revokeRoleFromUser(request.getUsername(), roleId);
+            response.setStatusCode(HttpStatus.CREATED.value());
+            response.setMessage("Role revoked successfully");
+            return ResponseEntity.status(HttpStatus.OK.value())
+                    .body(RestResponse.success(HttpStatus.OK.value(), "Role revoked successfully"));
+        } catch (Exception e) {
+            // Handle any unexpected errors
+            response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setError("Server error");
+            response.setMessage("An error occurred while assigning the role.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/change-password")
     public ResponseEntity<RestResponse<Object>> changePassword(@RequestBody ChangePasswordRequest changePassword) {
@@ -196,9 +225,9 @@ public class AdminUserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
-    @GetMapping("/")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> listUsers = this.userService.getAllUsers();
+    @GetMapping("/all-users")
+    public ResponseEntity<List<UserRoleDTO>> getAllUsers() {
+        List<UserRoleDTO> listUsers = this.userService.getAllUsers();
         return ResponseEntity.status(HttpStatus.OK).body(listUsers);
     }
 }

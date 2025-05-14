@@ -8,6 +8,7 @@ package com.example.demo.service;
 import java.util.List;
 
 import com.example.demo.domain.Role;
+import com.example.demo.dto.response.ScreenPermission;
 
 /**
  *
@@ -23,4 +24,5 @@ public interface IRoleService {
 
     Role assignPermissionToRole(int roleId, int permissionId);
     Role removePermissionFromRole(int roleId, int permissionId);
+    Boolean updateRolePermissionAbilability(ScreenPermission permission);
 }

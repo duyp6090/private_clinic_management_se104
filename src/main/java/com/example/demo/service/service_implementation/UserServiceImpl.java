@@ -1,5 +1,6 @@
 package com.example.demo.service.service_implementation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.User;
-import com.example.demo.dto.response.ScreenPermission;
+import com.example.demo.dto.user.UserRoleDTO;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.IUserService;
@@ -35,8 +36,16 @@ public class UserServiceImpl implements IUserService {
 
     // Get all users
     @Override
-    public List<User> getAllUsers() {
-        return this.userRepository.findAll();
+    public List<UserRoleDTO> getAllUsers() {
+        List<UserRoleDTO> res = new ArrayList<>();
+        List<User> users = this.userRepository.findAll();
+        for(User user:users){
+           List<String>roles =  userRepository.findAllRolesByUsername(user.getUsername());
+           res.add(new UserRoleDTO(user.getId(), user.getUsername(), roles));
+        }
+        
+        System.out.println("Enter line 55");
+        return res;
     }
 
     // Create a new user with encoded password
@@ -119,10 +128,10 @@ public class UserServiceImpl implements IUserService {
         return userRepository.findAllRolesByUsername(username);
     }
 
-    @Override
-    public List<String> findAllPermissionsByUserName(String username) {
-        return userRepository.findAllPermissionsByUserId(username);
-    }
+    // @Override
+    // public List<String> findAllPermissionsByUserName(String username) {
+    //     return userRepository.findAllPermissionsByUserId(username);
+    // }
 
     @Override
     public List<Object[]> findAllPermissionByUserNameAndUserRoleId(String username, int role_id) {
@@ -151,5 +160,31 @@ public class UserServiceImpl implements IUserService {
         System.out.println("ENTER LINE 149");
         return true;
     }
+
+    @Override
+    public int getRole_id(String rolename) {
+        return roleRepository.getRoleIdByRoleName(rolename);
+    }
+
+    @Override
+    public List<String> findAllPermissionsByUserName(String username) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findAllPermissionsByUserName'");
+    }
+
+    @Override
+    public Boolean revokeRoleFromUser(String username, int roleId) { 
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        System.out.println("Assign role to user service impl");
+        if (!optionalUser.isPresent()) {
+            throw new UsernameNotFoundException("User not found with username: " + username);
+        }
+        User user = optionalUser.get();
+        System.out.println(user.getId());
+        System.out.println(roleId);
+        userRepository.revokeRoleFromUser(user.getId(), roleId);
+        return true;
+    }
+    
 
 }
