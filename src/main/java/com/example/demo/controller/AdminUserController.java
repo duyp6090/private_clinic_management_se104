@@ -5,6 +5,8 @@
 
 package com.example.demo.controller;
 
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,12 +26,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.Doctor;
+import com.example.demo.domain.Role;
 import com.example.demo.domain.Supporter;
 import com.example.demo.domain.User;
 import com.example.demo.dto.doctor.registerDoctorRequest;
 import com.example.demo.dto.request.AssignRoleRequest;
 import com.example.demo.dto.request.ChangePasswordRequest;
 import com.example.demo.dto.response.RestResponse;
+import com.example.demo.dto.response.ScreenPermission;
+import com.example.demo.dto.role.RoleWithPermissionDTO;
 import com.example.demo.dto.supporter.registerSupporterRequest;
 import com.example.demo.dto.user.UserRoleDTO;
 import com.example.demo.service.IDoctorService;
@@ -230,4 +235,30 @@ public class AdminUserController {
         List<UserRoleDTO> listUsers = this.userService.getAllUsers();
         return ResponseEntity.status(HttpStatus.OK).body(listUsers);
     }
-}
+    @GetMapping("/role-with-permissions/{roleName}")
+    public ResponseEntity<RoleWithPermissionDTO> getRoleWithPermissions(@PathVariable String roleName, Principal principal) {
+        // Get current username from authenticated principal
+        String username = principal.getName();
+        // Get roleId from roleName
+        int roleId = userService.getRole_id(roleName);
+
+        // Fetch permissions
+        List<Object[]> rows = userService.findAllPermissionByUserNameAndUserRoleId(username, roleId);
+        List<ScreenPermission> permissions = new ArrayList<>();
+        for (Object[] row : rows) {
+            permissions.add(ScreenPermission.fromRow(row));
+        }
+
+        System.out.println("Enter line 80");
+
+        // Build UserDTO
+        RoleWithPermissionDTO userDTO = new RoleWithPermissionDTO(roleName, permissions);
+
+        return ResponseEntity.ok(userDTO);
+    }
+    @GetMapping("/all-roles")
+    public ResponseEntity<List<Role>> getAllRoles() {
+        List<Role> listUsers = this.roleService.getAllRoles();
+        return ResponseEntity.status(HttpStatus.OK).body(listUsers);
+    } 
+}   
