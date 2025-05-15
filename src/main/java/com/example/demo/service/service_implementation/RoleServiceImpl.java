@@ -40,11 +40,26 @@ public class RoleServiceImpl implements IRoleService {
         Optional<Role> optionalRole = roleRepository.findById(id);
         return optionalRole.orElse(null); // Or throw a custom NotFoundException
     }
-
+    @Transactional
     @Override
     public Role save(Role role) {
         System.out.println(role);
-        return roleRepository.save(role);
+        Role savedRole = roleRepository.save(role);
+        System.out.println("Saved Role ID: " + savedRole.getRole_id());
+
+        
+        List<Permission> permissions = permissionRepository.findAll();
+        System.out.print("Enter line 50");
+        for(Permission permission:permissions){
+            System.out.println(savedRole.getRole_id());
+            System.out.println("Permission id: "+permission.getPermission_id());
+                    // Save the relationship
+            Role_Permission rolePermission = new Role_Permission(role, permission);
+            rolePermissionRepository.save(rolePermission);
+            roleRepository.updateRolePermissionAbility(savedRole.getRole_id(), permission.getPermission_id(),
+                                                        false,false,false,false);
+        }
+        return savedRole;
     }
 
     @Override
