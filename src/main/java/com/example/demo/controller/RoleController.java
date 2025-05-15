@@ -50,8 +50,8 @@ public class RoleController {
         System.out.println(role.rolename);
         newRole.setRole_name(role.rolename);
         newRole.setDescription(role.description);
-        System.out.println(role);
         Role savedRole = roleService.save(newRole);
+        
         return ResponseEntity.ok(RestResponse.success(201, savedRole));
     }
 
