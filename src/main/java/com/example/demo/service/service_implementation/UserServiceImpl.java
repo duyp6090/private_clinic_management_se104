@@ -185,6 +185,11 @@ public class UserServiceImpl implements IUserService {
         userRepository.revokeRoleFromUser(user.getId(), roleId);
         return true;
     }
+
+    @Override
+    public List<Object[]> findAllPermissionsByRoleId(Integer roleId) {
+        return userRepository.findAllPermissionsByRoleId(roleId);
+    }
     
 
 }

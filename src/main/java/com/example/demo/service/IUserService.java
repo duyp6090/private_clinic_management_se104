@@ -45,6 +45,7 @@ public interface IUserService {
     List<String> findAllRolesByUserName(String username);
 
     List<String> findAllPermissionsByUserName(String username);
+    List<Object[]> findAllPermissionsByRoleId(Integer roleId);
     
     List<Object[]> findAllPermissionByUserNameAndUserRoleId(String username,int role_id);
 

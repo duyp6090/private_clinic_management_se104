@@ -65,6 +65,7 @@ public class AdminUserController {
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
     }
+
     @PreAuthorize("hasAuthority('PERMISSION_CREATE_USER')")
     @PostMapping("/register-doctor")
     public ResponseEntity<RestResponse<Object>> registerDoctor(@RequestBody registerDoctorRequest request) {
@@ -87,9 +88,8 @@ public class AdminUserController {
         var res = doctorService.save(doctor);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
-            RestResponse.success(HttpStatus.CREATED.value(), res)
-        );
-    }  
+                RestResponse.success(HttpStatus.CREATED.value(), res));
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register-supporter")
@@ -151,6 +151,7 @@ public class AdminUserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
     @PostMapping("/revoke-role")
     public ResponseEntity<RestResponse<String>> revokeRoleFromUser(@RequestBody AssignRoleRequest request) {
         RestResponse<String> response = new RestResponse<>();
@@ -180,6 +181,7 @@ public class AdminUserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/change-password")
     public ResponseEntity<RestResponse<Object>> changePassword(@RequestBody ChangePasswordRequest changePassword) {
@@ -235,15 +237,17 @@ public class AdminUserController {
         List<UserRoleDTO> listUsers = this.userService.getAllUsers();
         return ResponseEntity.status(HttpStatus.OK).body(listUsers);
     }
+
     @GetMapping("/role-with-permissions/{roleName}")
-    public ResponseEntity<RoleWithPermissionDTO> getRoleWithPermissions(@PathVariable String roleName, Principal principal) {
+    public ResponseEntity<RoleWithPermissionDTO> getRoleWithPermissions(@PathVariable String roleName,
+            Principal principal) {
         // Get current username from authenticated principal
         String username = principal.getName();
         // Get roleId from roleName
         int roleId = userService.getRole_id(roleName);
 
         // Fetch permissions
-        List<Object[]> rows = userService.findAllPermissionByUserNameAndUserRoleId(username, roleId);
+        List<Object[]> rows = userService.findAllPermissionsByRoleId(roleId);
         List<ScreenPermission> permissions = new ArrayList<>();
         for (Object[] row : rows) {
             permissions.add(ScreenPermission.fromRow(row));
@@ -256,9 +260,22 @@ public class AdminUserController {
 
         return ResponseEntity.ok(userDTO);
     }
+
     @GetMapping("/all-roles")
     public ResponseEntity<List<Role>> getAllRoles() {
         List<Role> listUsers = this.roleService.getAllRoles();
         return ResponseEntity.status(HttpStatus.OK).body(listUsers);
-    } 
-}   
+    }
+
+    @GetMapping("/all-supporters")
+    public ResponseEntity<List<registerSupporterRequest>> getAllSupporters() {
+        List<registerSupporterRequest> listUsers = this.supporterService.getAllSupporter();
+        return ResponseEntity.status(HttpStatus.OK).body(listUsers);
+    }
+
+    @GetMapping("/all-doctors")
+    public ResponseEntity<List<registerDoctorRequest>> getAllDoctors() {
+        List<registerDoctorRequest> listUsers = this.doctorService.getAllDoctors();
+        return ResponseEntity.status(HttpStatus.OK).body(listUsers);
+    }
+}

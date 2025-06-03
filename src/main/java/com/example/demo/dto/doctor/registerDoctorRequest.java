@@ -5,12 +5,22 @@
 
 package com.example.demo.dto.doctor;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  *
  * @author iset1enloc
  */
+
+ @Getter
+ @NoArgsConstructor
+ @AllArgsConstructor
 public class registerDoctorRequest {
 
     @JsonProperty("username")
@@ -35,4 +45,6 @@ public class registerDoctorRequest {
 
     @JsonProperty("yearsOfExperience")
     public int yearsOfExperience;
+
+    private List<String> role;
 }

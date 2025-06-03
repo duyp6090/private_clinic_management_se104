@@ -5,7 +5,10 @@
 
 package com.example.demo.service;
 
+import java.util.List;
+
 import com.example.demo.domain.Doctor;
+import com.example.demo.dto.doctor.registerDoctorRequest;
 
 /**
  *
@@ -13,5 +16,6 @@ import com.example.demo.domain.Doctor;
  */
 public interface IDoctorService {
     Doctor save(Doctor doctor);
+    List<registerDoctorRequest> getAllDoctors();
 
 }
