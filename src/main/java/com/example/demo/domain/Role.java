@@ -4,6 +4,7 @@
  */
 
 package com.example.demo.domain;
+import jakarta.persistence.CascadeType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -59,7 +60,7 @@ public class Role {
 
     // @OneToMany(mappedBy = "role")
     // private Set<Role_Permission> roles = new HashSet<>();
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<User_Role> userRoles = new HashSet<>();
     
     @OneToMany(mappedBy = "role")

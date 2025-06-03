@@ -5,6 +5,8 @@
 
 package com.example.demo.dto.request;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -14,11 +16,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AssignRoleRequest {
     @JsonProperty("username")
     private String username;
-    @JsonProperty("rolename")
-    private String rolename;
-    public AssignRoleRequest(String username, String rolename) {
+
+    @JsonProperty("roleIdList")
+    private List<Integer> roleIdList;
+    
+    public AssignRoleRequest(String username, List<Integer> roleIdList) {
         this.username = username;
-        this.rolename = rolename;
+        this.roleIdList=roleIdList;
     }
     public String getUsername() {
         return username;
@@ -26,10 +30,12 @@ public class AssignRoleRequest {
     public void setUsername(String username) {
         this.username = username;
     }
-    public String getRolename() {
-        return rolename;
+
+    public List<Integer> getRoleIdList() {
+        return roleIdList;
     }
-    public void setRolename(String rolename) {
-        this.rolename = rolename;
+    public void setRoleIdList(List<Integer> roleIdList) {
+        this.roleIdList = roleIdList;
     }
+   
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.example.demo.domain.User;
+import com.example.demo.dto.user.UserInformationDTO;
 import com.example.demo.dto.user.UserRoleDTO;
 
 /**
@@ -49,7 +50,9 @@ public interface IUserService {
     
     List<Object[]> findAllPermissionByUserNameAndUserRoleId(String username,int role_id);
 
-    Boolean assignRoleToUser(String username,int roleId );
+    Boolean assignRoleToUser(String username, List<Integer>roleIdList);
     Boolean revokeRoleFromUser(String username,int roleId );
     int getRole_id(String rolename);
+
+    Boolean updateUserInfo(int id,UserInformationDTO requestUserInfo);
 }

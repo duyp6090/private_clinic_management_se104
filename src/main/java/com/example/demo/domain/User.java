@@ -4,9 +4,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import jakarta.persistence.CascadeType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -64,8 +66,14 @@ public class User  implements UserDetails{
         this.phone = phone;
     }
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<User_Role> userRoles = new HashSet<>();  // Change to User_Role
+
+    public Set<Role> getRoles() {
+        return userRoles.stream()
+                .map(User_Role::getRole)
+                .collect(Collectors.toSet());
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -129,4 +137,12 @@ public class User  implements UserDetails{
     public void setPhone(String phone) {
         this.phone = phone;
     }
+    public Set<User_Role> getUserRoles() {
+        return userRoles;
+    }
+    public void setUserRoles(Set<User_Role> userRoles) {
+        this.userRoles = userRoles;
+    }
+    
+    
 }
