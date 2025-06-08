@@ -39,7 +39,8 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/auth/signup","/api/public/**", "/api/auth/login", "/api/auth/refresh", "/api/auth/newaccess")
+                .requestMatchers("/api/auth/signup","/api/public/**", "/api/auth/login", "/api/auth/refresh", "/api/auth/newaccess"
+                                            ,"/api/user-update-info/**")
                     .permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/users/home").hasRole("ADMIN")

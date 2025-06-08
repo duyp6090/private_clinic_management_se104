@@ -5,6 +5,8 @@
 
 package com.example.demo.domain;
 
+import java.util.Objects;
+
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -66,5 +68,18 @@ public class User_Role {
         this.user = user;
         this.id = new User_Role_Id(user.getId(), role.getRole_id());
     }
-
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User_Role that = (User_Role) o;
+        return Objects.equals(user.getId(), that.user.getId()) &&
+               Objects.equals(role.getRole_id(), that.role.getRole_id());
+    }
+    
+    @Override
+    public int hashCode() {
+        return Objects.hash(user.getId(), role.getRole_id());
+    }
+    
 }

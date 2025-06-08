@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -10,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,8 +22,11 @@ import com.example.demo.domain.User;
 import com.example.demo.dto.response.RestResponse;
 import com.example.demo.dto.response.ScreenPermission;
 import com.example.demo.dto.user.UserDTO;
+import com.example.demo.dto.user.UserInformationDTO;
 import com.example.demo.security.jwtUtils;
 import com.example.demo.service.IUserService;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 public class UserController {
@@ -90,5 +95,13 @@ public class UserController {
         final UserDTO userDTO = new UserDTO(user.getId(), username, role, permissions);
 
         return ResponseEntity.ok(userDTO);
+    }
+
+    @PatchMapping("/api/user-update-info/{id}")
+    public ResponseEntity<UserInformationDTO> updateUserInfomation(@PathVariable int id, @RequestBody UserInformationDTO request) {
+        request.setId(id);
+        userService.updateUserInfo(id, request);
+        return ResponseEntity.ok(request);
+
     }
 }

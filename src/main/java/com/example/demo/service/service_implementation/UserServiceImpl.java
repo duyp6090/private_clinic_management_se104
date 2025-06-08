@@ -4,27 +4,42 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.coyote.RequestInfo;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.domain.Doctor;
+import com.example.demo.domain.Role;
+import com.example.demo.domain.Supporter;
 import com.example.demo.domain.User;
+import com.example.demo.domain.User_Role;
+import com.example.demo.dto.user.UserInformationDTO;
 import com.example.demo.dto.user.UserRoleDTO;
+import com.example.demo.repository.DoctorRepository;
 import com.example.demo.repository.RoleRepository;
+import com.example.demo.repository.SupporterRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.IUserService;
+
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final DoctorRepository doctorRepository;
+    private final SupporterRepository supporterRepository;
     private final PasswordEncoder passwordEncoder;
 
     // Constructor injection for userRepository and passwordEncoder
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,RoleRepository roleRepository, DoctorRepository doctorRepository,SupporterRepository supporterRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.doctorRepository = doctorRepository;
+        this.supporterRepository=supporterRepository;
     }
 
     // Get one user by id
@@ -144,7 +159,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Boolean assignRoleToUser(String username, int roleId) {
+    public Boolean assignRoleToUser(String username,List<Integer>roleIdList) {
         // Fetch the user by username
         Optional<User> optionalUser = userRepository.findByUsername(username);
         System.out.println("Assign role to user service impl");
@@ -152,12 +167,16 @@ public class UserServiceImpl implements IUserService {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
         User user = optionalUser.get();
-        System.out.println(user.getId());
-        System.out.println(roleId);
 
-        userRepository.assignRoleToUser(user.getId(),roleId);
+        user.getRoles().clear(); 
+        for (Integer roleId : roleIdList) {
+            Role role = roleRepository.findById(roleId)
+                            .orElseThrow(() -> new RuntimeException("Role not found: "+roleId));
+            User_Role newLink = new User_Role(user, role);
+            user.getUserRoles().add(newLink);
+        }
 
-        System.out.println("ENTER LINE 149");
+        userRepository.save(user); // will cascade insert/update/delete for User_Role
         return true;
     }
 
@@ -185,6 +204,51 @@ public class UserServiceImpl implements IUserService {
         userRepository.revokeRoleFromUser(user.getId(), roleId);
         return true;
     }
-    
+
+    @Override
+    public List<Object[]> findAllPermissionsByRoleId(Integer roleId) {
+        return userRepository.findAllPermissionsByRoleId(roleId);
+    }
+
+    @Override
+    @Transactional
+    public Boolean updateUserInfo(int id, UserInformationDTO requestUserInfo) {
+        Optional<User> optionalUser = userRepository.findById((long) id);
+        if (optionalUser.isEmpty()) {
+            throw new EntityNotFoundException("User not found with ID: " + id);
+        }
+
+        User existingUser = optionalUser.get();
+
+        // Update common fields
+        existingUser.setUsername(requestUserInfo.getUsername());
+        existingUser.setEmail(requestUserInfo.getEmail());
+        existingUser.setFullName(requestUserInfo.getFullName());
+        existingUser.setAddress(requestUserInfo.getAddress());
+        existingUser.setPhone(requestUserInfo.getPhone());
+
+        if (requestUserInfo.getTitle() == null || requestUserInfo.getTitle().isBlank()) {
+            // Update as Doctor
+            if (existingUser instanceof Doctor doctor) {
+                doctor.setQualification(requestUserInfo.getQualification());
+                doctor.setYearsOfExperience(requestUserInfo.getYearsOfExperience());
+                doctor.setSpecialization(requestUserInfo.getSpecialization());
+                doctorRepository.save(doctor);
+            } else {
+                throw new IllegalArgumentException("User is not a doctor.");
+            }
+        } else {
+            // Update as Supporter
+            if (existingUser instanceof Supporter supporter) {
+                supporter.setTitle(requestUserInfo.getTitle());
+                supporterRepository.save(supporter);
+            } else {
+                throw new IllegalArgumentException("User is not a supporter.");
+            }
+        }
+
+        return true;
+    }
+
 
 }

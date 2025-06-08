@@ -4,17 +4,27 @@
  */
 
 package com.example.demo.dto.supporter;
+
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 /**
  *
  * @author iset1enloc
  */
-
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 public class registerSupporterRequest {
     @JsonProperty("username")
     public String userName;
-    
+
     @JsonProperty("fullName")
     public String fullName;
 
@@ -30,7 +40,12 @@ public class registerSupporterRequest {
     @JsonProperty("staffTitle")
     public String staffTitle;
 
+    @JsonIgnore
     public String getStaffName() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    private List<String> roles;
+
+    
 }

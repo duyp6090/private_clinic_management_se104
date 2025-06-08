@@ -65,6 +65,7 @@ public class AdminUserController {
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
     }
+
     @PreAuthorize("hasAuthority('PERMISSION_CREATE_USER')")
     @PostMapping("/register-doctor")
     public ResponseEntity<RestResponse<Object>> registerDoctor(@RequestBody registerDoctorRequest request) {
@@ -87,9 +88,8 @@ public class AdminUserController {
         var res = doctorService.save(doctor);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
-            RestResponse.success(HttpStatus.CREATED.value(), res)
-        );
-    }  
+                RestResponse.success(HttpStatus.CREATED.value(), res));
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register-supporter")
@@ -122,23 +122,13 @@ public class AdminUserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/assign-role")
+    @PostMapping("/add-role-user")
     public ResponseEntity<RestResponse<String>> assignRoleToUser(@RequestBody AssignRoleRequest request) {
         RestResponse<String> response = new RestResponse<>();
 
-        // Fetch the role ID based on the role name
-        int roleId = roleService.getRoleIDByRoleName(request.getRolename());
-
-        if (roleId == -1) { // Assuming -1 means role not found
-            response.setStatusCode(HttpStatus.BAD_REQUEST.value());
-            response.setError("Role not found");
-            response.setMessage("Error: Role does not exist");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-
         // Assign the role to the user
         try {
-            userService.assignRoleToUser(request.getUsername(), roleId);
+            userService.assignRoleToUser(request.getUsername(), request.getRoleIdList());
             response.setStatusCode(HttpStatus.CREATED.value());
             response.setMessage("Role assigned successfully");
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -146,40 +136,42 @@ public class AdminUserController {
         } catch (Exception e) {
             // Handle any unexpected errors
             response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setError("Server error");
+            response.setError(e.toString());
             response.setMessage("An error occurred while assigning the role.");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
-    @PostMapping("/revoke-role")
-    public ResponseEntity<RestResponse<String>> revokeRoleFromUser(@RequestBody AssignRoleRequest request) {
-        RestResponse<String> response = new RestResponse<>();
 
-        // Fetch the role ID based on the role name
-        int roleId = roleService.getRoleIDByRoleName(request.getRolename());
+    // @PostMapping("/revoke-role")
+    // public ResponseEntity<RestResponse<String>> revokeRoleFromUser(@RequestBody AssignRoleRequest request) {
+    //     RestResponse<String> response = new RestResponse<>();
 
-        if (roleId == -1) { // Assuming -1 means role not found
-            response.setStatusCode(HttpStatus.BAD_REQUEST.value());
-            response.setError("Role not found");
-            response.setMessage("Error: Role does not exist");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
+    //     // Fetch the role ID based on the role name
+    //     int roleId = roleService.getRoleIDByRoleName(request.getRolename());
 
-        // Assign the role to the user
-        try {
-            userService.revokeRoleFromUser(request.getUsername(), roleId);
-            response.setStatusCode(HttpStatus.CREATED.value());
-            response.setMessage("Role revoked successfully");
-            return ResponseEntity.status(HttpStatus.OK.value())
-                    .body(RestResponse.success(HttpStatus.OK.value(), "Role revoked successfully"));
-        } catch (Exception e) {
-            // Handle any unexpected errors
-            response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setError("Server error");
-            response.setMessage("An error occurred while assigning the role.");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
+    //     if (roleId == -1) { // Assuming -1 means role not found
+    //         response.setStatusCode(HttpStatus.BAD_REQUEST.value());
+    //         response.setError("Role not found");
+    //         response.setMessage("Error: Role does not exist");
+    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    //     }
+
+    //     // Assign the role to the user
+    //     try {
+    //         userService.revokeRoleFromUser(request.getUsername(), roleId);
+    //         response.setStatusCode(HttpStatus.CREATED.value());
+    //         response.setMessage("Role revoked successfully");
+    //         return ResponseEntity.status(HttpStatus.OK.value())
+    //                 .body(RestResponse.success(HttpStatus.OK.value(), "Role revoked successfully"));
+    //     } catch (Exception e) {
+    //         // Handle any unexpected errors
+    //         response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    //         response.setError("Server error");
+    //         response.setMessage("An error occurred while assigning the role.");
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    //     }
+    // }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/change-password")
     public ResponseEntity<RestResponse<Object>> changePassword(@RequestBody ChangePasswordRequest changePassword) {
@@ -235,15 +227,17 @@ public class AdminUserController {
         List<UserRoleDTO> listUsers = this.userService.getAllUsers();
         return ResponseEntity.status(HttpStatus.OK).body(listUsers);
     }
+
     @GetMapping("/role-with-permissions/{roleName}")
-    public ResponseEntity<RoleWithPermissionDTO> getRoleWithPermissions(@PathVariable String roleName, Principal principal) {
+    public ResponseEntity<RoleWithPermissionDTO> getRoleWithPermissions(@PathVariable String roleName,
+            Principal principal) {
         // Get current username from authenticated principal
         String username = principal.getName();
         // Get roleId from roleName
         int roleId = userService.getRole_id(roleName);
 
         // Fetch permissions
-        List<Object[]> rows = userService.findAllPermissionByUserNameAndUserRoleId(username, roleId);
+        List<Object[]> rows = userService.findAllPermissionsByRoleId(roleId);
         List<ScreenPermission> permissions = new ArrayList<>();
         for (Object[] row : rows) {
             permissions.add(ScreenPermission.fromRow(row));
@@ -256,9 +250,22 @@ public class AdminUserController {
 
         return ResponseEntity.ok(userDTO);
     }
+
     @GetMapping("/all-roles")
     public ResponseEntity<List<Role>> getAllRoles() {
         List<Role> listUsers = this.roleService.getAllRoles();
         return ResponseEntity.status(HttpStatus.OK).body(listUsers);
-    } 
-}   
+    }
+
+    @GetMapping("/all-supporters")
+    public ResponseEntity<List<registerSupporterRequest>> getAllSupporters() {
+        List<registerSupporterRequest> listUsers = this.supporterService.getAllSupporter();
+        return ResponseEntity.status(HttpStatus.OK).body(listUsers);
+    }
+
+    @GetMapping("/all-doctors")
+    public ResponseEntity<List<registerDoctorRequest>> getAllDoctors() {
+        List<registerDoctorRequest> listUsers = this.doctorService.getAllDoctors();
+        return ResponseEntity.status(HttpStatus.OK).body(listUsers);
+    }
+}
