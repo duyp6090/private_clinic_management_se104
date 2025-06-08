@@ -22,6 +22,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 public class registerSupporterRequest {
+
+    private Long supporterId;
+
     @JsonProperty("username")
     public String userName;
 

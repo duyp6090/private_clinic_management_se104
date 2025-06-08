@@ -47,12 +47,11 @@ public class SupporterServiceImpl implements ISupporterService {
                     .flatMap(r -> r.getRole().stream())
                     .collect(Collectors.toList());
 
-            registerSupporterRequest requestSP = new registerSupporterRequest(sp.getUsername(), sp.getFullName(),
+            registerSupporterRequest requestSP = new registerSupporterRequest(sp.getId(), sp.getUsername(), sp.getFullName(),
                     sp.getEmail(),
                     sp.getPhone(), sp.getPassword(), sp.getTitle(), roles);
             listSP.add(requestSP);
         }
         return listSP;
     }
-
 }

@@ -17,12 +17,12 @@ public class AssignRoleRequest {
     @JsonProperty("username")
     private String username;
 
-    @JsonProperty("roleIdList")
-    private List<Integer> roleIdList;
+    @JsonProperty("roleNameList")
+    private List<String> roleNameList;
     
-    public AssignRoleRequest(String username, List<Integer> roleIdList) {
+    public AssignRoleRequest(String username, List<String> roleNameList) {
         this.username = username;
-        this.roleIdList=roleIdList;
+        this.roleNameList=roleNameList;
     }
     public String getUsername() {
         return username;
@@ -31,11 +31,11 @@ public class AssignRoleRequest {
         this.username = username;
     }
 
-    public List<Integer> getRoleIdList() {
-        return roleIdList;
+    public List<String> getRoleNameList() {
+        return roleNameList;
     }
-    public void setRoleIdList(List<Integer> roleIdList) {
-        this.roleIdList = roleIdList;
+    public void setRoleNameList(List<String> roleNameList) {
+        this.roleNameList = roleNameList;
     }
    
 }

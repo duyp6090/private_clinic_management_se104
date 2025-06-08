@@ -50,7 +50,7 @@ public interface IUserService {
     
     List<Object[]> findAllPermissionByUserNameAndUserRoleId(String username,int role_id);
 
-    Boolean assignRoleToUser(String username, List<Integer>roleIdList);
+    Boolean assignRoleToUser(String username, List<String>roleNameList);
     Boolean revokeRoleFromUser(String username,int roleId );
     int getRole_id(String rolename);
 
