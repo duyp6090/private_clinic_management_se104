@@ -45,6 +45,44 @@ CREATE TABLE tbl_user_role (
     FOREIGN KEY (role_id) REFERENCES tbl_role(role_id) ON DELETE CASCADE    -- foreign key for role_id
 );
 
+create table Laboratory (
+    bloodId int AUTO_INCREMENT PRIMARY KEY,
+    labName VARCHAR(200),
+    result float,
+    unit VARCHAR(200),
+);
+
+create table questionaire (
+    naire_id int AUTO_INCREMENT PRIMARY KEY,
+    question VARCHAR(200),
+    smoke int,
+    milk int
+);
+
+ALTER TABLE patients
+ADD COLUMN race INT;
+
+ALTER TABLE patients
+ADD COLUMN BMI float;
+ALTER TABLE patients
+ADD COLUMN PIR float;
+
+ALTER TABLE Laboratory ADD COLUMN patient_id BIGINT;
+ALTER TABLE Laboratory ADD CONSTRAINT fk_lab_patient FOREIGN KEY (patient_id) REFERENCES patients(patient_id);
+
+
+ALTER TABLE questionaire ADD COLUMN patient_id BIGINT;
+ALTER TABLE questionaire ADD CONSTRAINT fk_naire_patient FOREIGN KEY (patient_id) REFERENCES patients(patient_id);
+
+INSERT INTO laboratory (patient_id, lab_name, result, unit) VALUES (10,'MeanCellVolumn', 83.2, 'fL');
+INSERT INTO laboratory (patient_id, lab_name, result, unit) VALUES (10,'fastingGlucose', 95, 'mg/dL');
+INSERT INTO laboratory (patient_id, lab_name, result, unit) VALUES (10,'RedCellDistributionWidth', 13.1, '%');
+INSERT INTO laboratory (patient_id, lab_name, result, unit) VALUES (10,'Hemoglobin', 15.4, 'mg/dL');
+INSERT INTO laboratory (patient_id, lab_name, result, unit) VALUES (10,'Tryglycerides', 77, 'mg/dL');
+INSERT INTO laboratory (patient_id, lab_name, result, unit) VALUES (10,'Creatinine', 0.73, 'mg/dL');
+INSERT INTO laboratory (patient_id, lab_name, result, unit) VALUES (10,'HDLCholesterol', 48, 'mg/dL');
+
+
 -------ENTER DOCKER WITH COMMAND:
 command 1: sudo docker exec -it mysql_container bash
 command 2: mysql -u root -p

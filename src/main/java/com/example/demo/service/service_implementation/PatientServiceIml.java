@@ -122,4 +122,13 @@ public class PatientServiceIml implements IPatientService {
         }
         this.patientsRepository.deleteByPatientId(id);
     }
+
+    @Override
+    public void updatePatientLab(Double BMI, Double PIR, Integer race, Long patientId) {
+        Patients patient = getPatientByPatientId(patientId);
+        patient.setBMI(BMI);
+        patient.setPIR(PIR);
+        patient.setRace(race);
+        patientsRepository.save(patient);
+    }
 }
