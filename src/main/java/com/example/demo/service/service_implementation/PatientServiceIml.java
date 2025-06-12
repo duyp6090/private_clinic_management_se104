@@ -101,7 +101,16 @@ public class PatientServiceIml implements IPatientService {
                 .findByPhoneNumberOrResidentalIdentity(phoneNumber, residentalIdentity)
                 .orElse(null);
         if (patient != null) {
-            throw new AppException(ErrorCode.INFORMATION_EXISTS);
+            String phoneNumberPatient = patient.getPhoneNumber();
+            String residentalIdentityPatient = patient.getResidentalIdentity();
+
+            if (phoneNumberPatient.equals(phoneNumber)) {
+                throw new AppException(ErrorCode.PHONE_NUMBER_EXISTS);
+            }
+
+            if (residentalIdentityPatient.equals(residentalIdentity)) {
+                throw new AppException(ErrorCode.RESIDENTAL_IDENTITY_EXISTS);
+            }
         }
         return patient;
     }

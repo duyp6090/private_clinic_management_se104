@@ -27,7 +27,21 @@ public enum ErrorCode {
     PERMISSION_UPDATE_FAILED(500, "Failed to update permission"),
     PERMISSION_DELETE_FAILED(500, "Failed to delete permission"),
     PERMISSION_INVALID_ROLE_ID(400, "Invalid role ID"),
-    PERMISSION_ALREADY_EXISTS(400, "Permission already exists");
+    PERMISSION_ALREADY_EXISTS(400, "Permission already exists"),
+
+    // PATIENTS
+    PHONE_NUMBER_EXISTS(409, "Phone number already exists"),
+    PHONE_NUMBER_NOT_BLANK(400, "Phone number cannot be blank"),
+    PHONE_NUMBER_NOT_NULL(400, "Phone number cannot be null"),
+    RESIDENTAL_IDENTITY_EXISTS(409, "Residental identity already exists"),
+    RESIDENTAL_IDENTITY_NOT_BLANK(400, "Residental identity cannot be blank"),
+    RESIDENTAL_IDENTITY_NOT_NULL(400, "Residental identity cannot be null"),
+    FULL_NAME_NOT_BLANK(400, "fullName cannot be blank"),
+    FULL_NAME_NOT_NULL(400, "fullName cannot be null"),
+    GENDER_NOT_NULL(400, "gender cannot be null"),
+    ADDRESS_NOT_BLANK(400, "address cannot be blank"),
+    ADDRESS_NOT_NULL(400, "address cannot be null"),
+    YEAR_OF_BIRTH_NOT_NULL(400, "yearOfBirth cannot be null"),;
 
     private final int code;
     private final String message;
