@@ -9,23 +9,27 @@ import jakarta.validation.constraints.Size;
 
 public class CreatePatientDTO {
     @Size(min = 1, max = 50, message = "full_name must be between 1 and 50 characters")
-    @NotBlank(message = "full_name cannot be blank")
+    @NotBlank(message = "FULL_NAME_NOT_BLANK")
+    @NotNull(message = "FULL_NAME_NOT_NULL")
     private String fullName;
 
-    @NotNull(message = "gender cannot be null")
-    private boolean gender;
+    @NotNull(message = "GENDER_NOT_NULL")
+    private Boolean gender;
 
-    @NotBlank(message = "address cannot be blank")
+    @NotBlank(message = "ADDRESS_NOT_BLANK")
+    @NotNull(message = "ADDRESS_NOT_NULL")
     private String address;
 
-    @NotNull(message = "year_of_birth cannot be null")
+    @NotNull(message = "YEAR_OF_BIRTH_NOT_NULL")
     private Year yearOfBirth;
 
-    @NotBlank(message = "phone_number cannot be blank")
+    @NotBlank(message = "PHONE_NUMBER_NOT_BLANK")
+    @NotNull(message = "PHONE_NUMBER_NOT_NULL")
     @Pattern(regexp = "^0[0-9]{9}$", message = "Invalid Vietnamese phone number format")
     private String phoneNumber;
 
-    @NotBlank(message = "Identity number cannot be blank")
+    @NotBlank(message = "RESIDENTAL_IDENTITY_NOT_BLANK")
+    @NotNull(message = "RESIDENTAL_IDENTITY_NOT_NULL")
     @Pattern(regexp = "^[0-9]{12}$", message = "Identity number must be exactly 12 digits")
     private String residentalIdentity;
 
@@ -37,11 +41,11 @@ public class CreatePatientDTO {
         this.fullName = fullName;
     }
 
-    public boolean isGender() {
+    public Boolean isGender() {
         return gender;
     }
 
-    public void setGender(boolean gender) {
+    public void setGender(Boolean gender) {
         this.gender = gender;
     }
 

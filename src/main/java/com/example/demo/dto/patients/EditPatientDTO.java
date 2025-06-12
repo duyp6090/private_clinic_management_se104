@@ -2,20 +2,27 @@ package com.example.demo.dto.patients;
 
 import java.time.Year;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class EditPatientDTO {
     @Size(min = 1, max = 50, message = "full_name must be between 1 and 50 characters")
+    @NotBlank(message = "FULL_NAME_NOT_BLANK")
     private String fullName;
 
     private Boolean gender;
+
+    @NotBlank(message = "ADDRESS_NOT_BLANK")
     private String address;
+
     private Year yearOfBirth;
 
+    @NotBlank(message = "PHONE_NUMBER_NOT_BLANK")
     @Pattern(regexp = "^0[0-9]{9}$", message = "Invalid Vietnamese phone number format")
     private String phoneNumber;
 
+    @NotBlank(message = "RESIDENTAL_IDENTITY_NOT_BLANK")
     @Pattern(regexp = "^[0-9]{12}$", message = "Identity number must be exactly 12 digits")
     private String residentalIdentity;
 

@@ -18,6 +18,7 @@ import com.example.demo.domain.Examination;
 import com.example.demo.domain.ExaminationDetail;
 import com.example.demo.domain.ExaminationKey;
 import com.example.demo.domain.Parameter;
+import com.example.demo.domain.Patients;
 import com.example.demo.domain.User;
 import com.example.demo.dto.common.PaginationDTO;
 import com.example.demo.dto.common.ResultPaginationDTO;
@@ -36,6 +37,8 @@ import com.example.demo.exception.ErrorCode;
 import com.example.demo.repository.DiseasesRepository;
 import com.example.demo.repository.DrugsRepository;
 import com.example.demo.repository.ExaminationRepository;
+import com.example.demo.repository.ParameterRepository;
+import com.example.demo.repository.PatientsRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.IExamination;
 
@@ -43,19 +46,21 @@ import com.example.demo.service.IExamination;
 public class ExaminationImpl implements IExamination {
     private final ExaminationRepository examinationRepository;
     private final DrugsRepository drugsRepository;
-    private final ParameterServiceImpl parameterServiceImpl;
+    private final ParameterRepository parameterRepository;
     private final UserRepository userRepository;
     private final DiseasesRepository diseasesRepository;
+    private final PatientsRepository patientsRepository;
     private final List<String> VALID_SORT_FIELDS = List.of("fullName");
 
     public ExaminationImpl(ExaminationRepository examinationRepository, DrugsRepository drugsRepository,
-            ParameterServiceImpl parameterServiceImpl, UserRepository userRepository,
-            DiseasesRepository diseasesRepository) {
+            ParameterRepository parameterRepository, UserRepository userRepository,
+            DiseasesRepository diseasesRepository, PatientsRepository patientsRepository) {
         this.diseasesRepository = diseasesRepository;
         this.userRepository = userRepository;
-        this.parameterServiceImpl = parameterServiceImpl;
+        this.parameterRepository = parameterRepository;
         this.examinationRepository = examinationRepository;
         this.drugsRepository = drugsRepository;
+        this.patientsRepository = patientsRepository;
     }
 
     @Override
@@ -161,11 +166,6 @@ public class ExaminationImpl implements IExamination {
     }
 
     @Override
-    public Examination createExamination(Examination examination) {
-        return this.examinationRepository.save(examination);
-    }
-
-    @Override
     public List<Examination> getExaminationByIsExamAndExaminationDate(
             boolean isExam,
             LocalDate examinationDate) {
@@ -242,7 +242,7 @@ public class ExaminationImpl implements IExamination {
     @Override
     public String updateDrugRecordExamination(List<UpdateListDrugsRecord> updateListDrugsRecord, Long examinationId) {
         // Get parameter
-        Parameter parameter = this.parameterServiceImpl.getParameter().get(0);
+        Parameter parameter = this.parameterRepository.findAll().get(0);
         double drugFeePercent = parameter.getDrugFeePercent();
 
         // Get examination by id
@@ -373,4 +373,22 @@ public class ExaminationImpl implements IExamination {
         return "Update successfully!";
     }
 
+    @Override
+    public Examination createExamination(Long patientId) {
+        // Get parameter
+        Parameter parameter = this.parameterRepository.findAll().get(0);
+        double examFee = parameter.getExamFee();
+
+        // Get patient by id
+        Patients savedPatient = this.patientsRepository.findById(patientId).orElseThrow(
+                () -> new AppException(ErrorCode.NOT_FOUND));
+
+        Examination examination = new Examination();
+        examination.setPatient(savedPatient);
+        examination.setExamFee(examFee);
+        this.examinationRepository.save(examination);
+
+        // Save examination record
+        return this.examinationRepository.save(examination);
+    }
 }

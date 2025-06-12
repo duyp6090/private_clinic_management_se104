@@ -35,7 +35,6 @@ import jakarta.validation.Valid;
 public class PatientsController {
     private final PatientServiceIml patientServiceIml;
     private final ExaminationImpl examinationImpl;
-    private final ExaminationRepository examinationRepository;
     private final ParameterServiceImpl parameterServiceImpl;
 
     public PatientsController(PatientServiceIml patientServiceIml, ExaminationImpl examinationImpl,
@@ -43,7 +42,6 @@ public class PatientsController {
         this.patientServiceIml = patientServiceIml;
         this.examinationImpl = examinationImpl;
         this.parameterServiceImpl = parameterServiceImpl;
-        this.examinationRepository = examinationRepository;
     }
 
     @GetMapping("/get-patients")
@@ -64,7 +62,6 @@ public class PatientsController {
         // Get number max of patients
         Parameter parameter = this.parameterServiceImpl.getParameter().get(0);
         long maxPatientEachDay = parameter.getNumberPatientMax();
-        double examFee = parameter.getExamFee();
 
         LocalDate today = LocalDate.now();
         List<Examination> examinations = this.examinationImpl.getExaminationByIsExamAndExaminationDate(true, today);
@@ -78,24 +75,16 @@ public class PatientsController {
         Patients newPatient = this.patientServiceIml
                 .findByPhoneNumberOrResidentalIdentity(patient.getPhoneNumber(), patient.getResidentalIdentity());
 
-        if (newPatient == null) {
-            // Create new patient
-            newPatient = new Patients();
-            newPatient.setFullName(patient.getFullName());
-            newPatient.setGender(patient.isGender());
-            newPatient.setAddress(patient.getAddress());
-            newPatient.setYearOfBirth(patient.getYearOfBirth());
-            newPatient.setPhoneNumber(patient.getPhoneNumber());
-            newPatient.setResidentalIdentity(patient.getResidentalIdentity());
-        }
+        // Create new patient
+        newPatient = new Patients();
+        newPatient.setFullName(patient.getFullName());
+        newPatient.setGender(patient.isGender());
+        newPatient.setAddress(patient.getAddress());
+        newPatient.setYearOfBirth(patient.getYearOfBirth());
+        newPatient.setPhoneNumber(patient.getPhoneNumber());
+        newPatient.setResidentalIdentity(patient.getResidentalIdentity());
 
         Patients savedPatient = this.patientServiceIml.savePatient(newPatient);
-
-        // Create new Examination
-        Examination newExamination = new Examination();
-        newExamination.setPatient(savedPatient);
-        newExamination.setExamFee(examFee);
-        this.examinationRepository.save(newExamination);
 
         return savedPatient;
     }
@@ -118,6 +107,11 @@ public class PatientsController {
         if (editPatientDTO.getYearOfBirth() != null) {
             patient.setYearOfBirth(editPatientDTO.getYearOfBirth());
         }
+
+        // Validate phone number and residental identity
+        this.patientServiceIml.findByPhoneNumberOrResidentalIdentity(editPatientDTO.getPhoneNumber(),
+                editPatientDTO.getResidentalIdentity());
+
         if (editPatientDTO.getPhoneNumber() != null) {
             patient.setPhoneNumber(editPatientDTO.getPhoneNumber());
         }
