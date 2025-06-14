@@ -73,10 +73,9 @@ public class AuthenticationController {
     public ResponseEntity<RestResponse<AuthResponse>> regainAccessToken(@RequestBody RefreshTokenRequest request) {
         RestResponse<AuthResponse> response = new RestResponse<>();
         try {
-            List<String> permissions = jwtTokenProvider.getPermissionsAuthoritiesFromToken(request.getAccess_token());
             List<String> roles = jwtTokenProvider.getRoleAuthoritiesFromToken(request.getAccess_token());
-            
-            response = authService.regainAccessToken(request.getRefreshToken(),roles,permissions);
+            System.out.print(roles);
+            response = authService.regainAccessToken(request.getRefreshToken(),roles);
             return ResponseEntity.status(response.getStatusCode()).body(response);
         } catch (Exception e) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED.value());
