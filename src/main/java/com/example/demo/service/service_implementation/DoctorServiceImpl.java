@@ -51,6 +51,7 @@ public class DoctorServiceImpl implements IDoctorService {
                     .collect(Collectors.toList());
 
             registerDoctorRequest regisDr = new registerDoctorRequest(
+                    dt.getId(),
                     dt.getUsername(),
                     dt.getFullName(),
                     dt.getEmail(),

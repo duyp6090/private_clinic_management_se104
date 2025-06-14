@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -79,15 +80,13 @@ public class UserController {
         var optionalUser = userService.findByUsername(username);
         User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        
-
         List<String> user_roles = jwtTokenProvider.getRoleAuthoritiesFromToken(token);
-        
+
         String role = user_roles.getFirst().toString().substring(5);
         int roleId = userService.getRole_id(role);
         List<Object[]> rows = userService.findAllPermissionByUserNameAndUserRoleId(user.getUsername(), roleId);
-        List<ScreenPermission>permissions= new ArrayList<>();
-        for(Object[] row:rows){
+        List<ScreenPermission> permissions = new ArrayList<>();
+        for (Object[] row : rows) {
             permissions.add(ScreenPermission.fromRow(row));
         }
         System.out.println("Enter line 80");
@@ -98,10 +97,22 @@ public class UserController {
     }
 
     @PatchMapping("/api/user-update-info/{id}")
-    public ResponseEntity<UserInformationDTO> updateUserInfomation(@PathVariable int id, @RequestBody UserInformationDTO request) {
+    public ResponseEntity<UserInformationDTO> updateUserInfomation(@PathVariable int id,
+            @RequestBody UserInformationDTO request) {
         request.setId(id);
         userService.updateUserInfo(id, request);
         return ResponseEntity.ok(request);
 
+    }
+
+    @DeleteMapping("/api/delete-user/{id}")
+    public ResponseEntity<?> deleteUserInfo(@PathVariable int id) {
+        userService.deleteUser(id);
+        RestResponse<Object> response = new RestResponse<>();
+        response.setMessage("CALL API DELETE USER SUCCESS");
+        response.setStatusCode(204);
+        response.setData("Delete user successfully");
+
+        return ResponseEntity.ok(response);
     }
 }

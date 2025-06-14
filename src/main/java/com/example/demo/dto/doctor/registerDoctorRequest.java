@@ -23,6 +23,8 @@ import lombok.NoArgsConstructor;
  @AllArgsConstructor
 public class registerDoctorRequest {
 
+    private Long doctorId;
+
     @JsonProperty("username")
     public String userName;
     @JsonProperty("fullName")

@@ -6,6 +6,7 @@
 package com.example.demo.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  *
@@ -22,6 +23,7 @@ public class UserInformationDTO {
     private String email;
     private String password;
     private String address;
+    @JsonProperty("phoneNumber")
     private String phone;
 
     //doctor schema
@@ -30,6 +32,7 @@ public class UserInformationDTO {
     private String specialization;
 
     //supporter
+    @JsonProperty("staffTitle")
     private String title;
 
     

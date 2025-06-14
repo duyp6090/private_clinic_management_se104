@@ -3,8 +3,6 @@ package com.example.demo.service.service_implementation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import org.apache.coyote.RequestInfo;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -34,12 +32,13 @@ public class UserServiceImpl implements IUserService {
     private final PasswordEncoder passwordEncoder;
 
     // Constructor injection for userRepository and passwordEncoder
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,RoleRepository roleRepository, DoctorRepository doctorRepository,SupporterRepository supporterRepository) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
+            RoleRepository roleRepository, DoctorRepository doctorRepository, SupporterRepository supporterRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.doctorRepository = doctorRepository;
-        this.supporterRepository=supporterRepository;
+        this.supporterRepository = supporterRepository;
     }
 
     // Get one user by id
@@ -54,11 +53,11 @@ public class UserServiceImpl implements IUserService {
     public List<UserRoleDTO> getAllUsers() {
         List<UserRoleDTO> res = new ArrayList<>();
         List<User> users = this.userRepository.findAll();
-        for(User user:users){
-           List<String>roles =  userRepository.findAllRolesByUsername(user.getUsername());
-           res.add(new UserRoleDTO(user.getId(), user.getUsername(), roles));
+        for (User user : users) {
+            List<String> roles = userRepository.findAllRolesByUsername(user.getUsername());
+            res.add(new UserRoleDTO(user.getId(), user.getUsername(), roles));
         }
-        
+
         System.out.println("Enter line 55");
         return res;
     }
@@ -92,23 +91,27 @@ public class UserServiceImpl implements IUserService {
     @Override
     public boolean authenticate(String name, String password) {
         Optional<User> userOptional = userRepository.findByUsername(name);
-        
+
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             System.out.print(user.getPassword());
             boolean isPasswordMatch = passwordEncoder.matches(password, user.getPassword());
-            
+
             return isPasswordMatch;
         } else {
             System.out.println("HUHUH");
         }
-        
+
         return true;
     }
+
     // Delete a user by id
     @Override
     public void deleteUser(long id) {
-        this.userRepository.deleteById(id);
+        if (!userRepository.existsById(id)) {
+            throw new EntityNotFoundException("User not found");
+        }
+        userRepository.deleteById(id);
     }
 
     // Check if a username already exists in the database
@@ -124,28 +127,32 @@ public class UserServiceImpl implements IUserService {
         Optional<User> user = userRepository.findByEmail(email);
         return user.isPresent();
     }
+
     @Override
-    public List<String>getUserRolesByUserName(String username){
+    public List<String> getUserRolesByUserName(String username) {
         var user_roles = userRepository.findAllRolesByUsername(username);
         return user_roles;
     }
+
     @Override
-    public List<String>getRolesByUserId(Long user_id){
+    public List<String> getRolesByUserId(Long user_id) {
         var user_roles = userRepository.findAllRolesByUserId(user_id);
         return user_roles;
     }
+
     @Override
-    public Optional<User> findByUsername(String username){
+    public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
     @Override
-    public List<String> findAllRolesByUserName(String username){
+    public List<String> findAllRolesByUserName(String username) {
         return userRepository.findAllRolesByUsername(username);
     }
 
     // @Override
     // public List<String> findAllPermissionsByUserName(String username) {
-    //     return userRepository.findAllPermissionsByUserId(username);
+    // return userRepository.findAllPermissionsByUserId(username);
     // }
 
     @Override
@@ -159,7 +166,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Boolean assignRoleToUser(String username,List<Integer>roleIdList) {
+    public Boolean assignRoleToUser(String username, List<String> roleNameList) {
         // Fetch the user by username
         Optional<User> optionalUser = userRepository.findByUsername(username);
         System.out.println("Assign role to user service impl");
@@ -167,11 +174,13 @@ public class UserServiceImpl implements IUserService {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
         User user = optionalUser.get();
-        System.out.println(user);
+
         user.getUserRoles().clear();
-        for (Integer roleId : roleIdList) {
-            Role role = roleRepository.findById(roleId)
-                            .orElseThrow(() -> new RuntimeException("Role not found: "+roleId));
+        for (String roleName : roleNameList) {
+            Role role = roleRepository.findByRoleName(roleName);
+            if (role == null) {
+                throw new RuntimeException("Role not found: " + roleName);
+            }
             User_Role newLink = new User_Role(user, role);
             user.getUserRoles().add(newLink);
         }
@@ -192,7 +201,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Boolean revokeRoleFromUser(String username, int roleId) { 
+    public Boolean revokeRoleFromUser(String username, int roleId) {
         Optional<User> optionalUser = userRepository.findByUsername(username);
         System.out.println("Assign role to user service impl");
         if (!optionalUser.isPresent()) {
@@ -249,6 +258,5 @@ public class UserServiceImpl implements IUserService {
 
         return true;
     }
-
 
 }
