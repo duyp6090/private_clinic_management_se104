@@ -167,8 +167,8 @@ public class UserServiceImpl implements IUserService {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
         User user = optionalUser.get();
-
-        user.getRoles().clear(); 
+        System.out.println(user);
+        user.getUserRoles().clear();
         for (Integer roleId : roleIdList) {
             Role role = roleRepository.findById(roleId)
                             .orElseThrow(() -> new RuntimeException("Role not found: "+roleId));
