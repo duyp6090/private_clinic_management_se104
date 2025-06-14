@@ -40,6 +40,7 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/api/auth/signup","/api/public/**", "/api/auth/login", "/api/auth/refresh", "/api/auth/newaccess"
+                                            ,"/api/admin/**"
                                             ,"/api/user-update-info/**")
                     .permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")

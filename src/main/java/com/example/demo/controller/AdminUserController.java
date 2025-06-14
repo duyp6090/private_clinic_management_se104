@@ -66,7 +66,7 @@ public class AdminUserController {
         this.roleService = roleService;
     }
 
-    @PreAuthorize("hasAuthority('PERMISSION_CREATE_USER')")
+    //@PreAuthorize("hasAuthority('PERMISSION_CREATE_USER')")
     @PostMapping("/register-doctor")
     public ResponseEntity<RestResponse<Object>> registerDoctor(@RequestBody registerDoctorRequest request) {
         if (userService.existsByUsername(request.userName)) {
@@ -214,7 +214,7 @@ public class AdminUserController {
     }
 
     // Create a new user
-    @PreAuthorize("hasRole('ADMIN') and hasAuthority('CREATE_USER')")
+    // @PreAuthorize("hasRole('ADMIN') and hasAuthority('CREATE_USER')")
     @PostMapping("/create")
     // Get information from the request body
     public ResponseEntity<User> createUser(@RequestBody User sendUser) {
