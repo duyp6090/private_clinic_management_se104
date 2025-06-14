@@ -11,6 +11,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
@@ -48,18 +49,24 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public RestResponse<LoginResponse> login(String username, String password) {
         try {
-
+            // Check if user exists explicitly
+            if (userService.findByUsername(username).isEmpty()) {
+                return new RestResponse<>(HttpStatus.UNAUTHORIZED.value(), "Invalid username", "User not found");
+            }
+    
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password));
-            List<String>available_roles = userService.findAllRolesByUserName(username);
+    
+            List<String> available_roles = userService.findAllRolesByUserName(username);
             String access_token = jwtTokenProvider.generateTempToken(username, available_roles);
-
-            LoginResponse authResponse = new LoginResponse(access_token,username,available_roles);
+    
+            LoginResponse authResponse = new LoginResponse(access_token, username, available_roles);
             return new RestResponse<>(HttpStatus.OK.value(), authResponse);
-
+    
+        } catch (BadCredentialsException e) {
+            return new RestResponse<>(HttpStatus.UNAUTHORIZED.value(), "Invalid username or password", "Authentication failed");
         } catch (Exception e) {
-            System.out.println("Authentication error: " + e.getMessage());
-            return new RestResponse<>(HttpStatus.UNAUTHORIZED.value(), "Invalid credentials", "Authentication failed");
+            return new RestResponse<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Login error", e.getMessage());
         }
     }
 
