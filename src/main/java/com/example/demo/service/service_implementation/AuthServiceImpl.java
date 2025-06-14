@@ -24,6 +24,9 @@ import com.example.demo.dto.response.ScreenPermission;
 import com.example.demo.security.jwtUtils;
 import com.example.demo.service.IAuthService;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+
 @Service
 public class AuthServiceImpl implements IAuthService {
 
@@ -71,7 +74,7 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public RestResponse<AuthResponse> regainAccessToken(String oldToken,List<String>roles,List<String>permissions) {
+    public RestResponse<AuthResponse> regainAccessToken(String oldToken,List<String>roles) {
         try {
             Optional<RefreshToken> optionalRefreshToken = refreshTokenService.findByToken(oldToken);
             System.out.println("Regain access token");
@@ -95,23 +98,33 @@ public class AuthServiceImpl implements IAuthService {
     }
 
     @Override
-    public RestResponse<AuthResponse> getNewRefreshToken(String oldToken,String accessToken) {
+    public RestResponse<AuthResponse> getNewRefreshToken(String oldRefreshToken, String accessToken) {
         try {
-            System.out.println(oldToken);
-            RefreshToken newRefreshToken = refreshTokenService.createRefreshTokenByExistingToken(oldToken);
-
-            //get user permissions
-            List<String> permissions = jwtTokenProvider.getPermissionsAuthoritiesFromToken(accessToken);
-
-            List<String> roles = jwtTokenProvider.getRoleAuthoritiesFromToken(accessToken);
-
-            String newAccessToken = jwtTokenProvider.generateAccessToken(newRefreshToken.getUser().getName(), roles);
+            System.out.println("Old Refresh Token: " + oldRefreshToken);
+    
+            // Validate and generate new refresh token by existing refresh token
+            RefreshToken newRefreshToken = refreshTokenService.createRefreshTokenByExistingToken(oldRefreshToken);
+    
+            // Extract username from the refresh token's associated user
+            String username = newRefreshToken.getUser().getName();
+    
+            // Fetch user's roles (or permissions) - adapt as needed
+            List<String> roles = userService.findAllRolesByUserName(username);
+    
+            // Generate new access token with roles
+            String newAccessToken = jwtTokenProvider.generateAccessToken(username, roles);
+    
+            // Build and return response with new tokens
             AuthResponse authResponse = new AuthResponse(newAccessToken, newRefreshToken.getToken());
             return new RestResponse<>(HttpStatus.OK.value(), authResponse);
+    
         } catch (Exception e) {
-            return new RestResponse<>(HttpStatus.FORBIDDEN.value(), "Invalid or expired refresh token", "Token error");
+            // Return forbidden if invalid/expired refresh token or any error
+            return new RestResponse<>(HttpStatus.FORBIDDEN.value(), "Invalid or expired refresh token", "Refresh token is expired or revoked");
         }
     }
+    
+
 
     @Override
     public RestResponse<Void> logout(String refreshToken) {
