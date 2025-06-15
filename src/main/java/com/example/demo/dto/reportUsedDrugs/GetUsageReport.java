@@ -1,5 +1,7 @@
 package com.example.demo.dto.reportUsedDrugs;
 
+import java.time.Year;
+
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -9,7 +11,7 @@ public class GetUsageReport {
     private Integer month;
 
     @NotNull(message = "year is required")
-    private Integer year;
+    private Year year;
 
     private String drugName;
 
@@ -32,11 +34,11 @@ public class GetUsageReport {
         this.month = month;
     }
 
-    public Integer getYear() {
+    public Year getYear() {
         return year;
     }
 
-    public void setYear(Integer year) {
+    public void setYear(Year year) {
         this.year = year;
     }
 

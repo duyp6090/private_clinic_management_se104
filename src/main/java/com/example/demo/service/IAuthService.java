@@ -22,7 +22,7 @@ public interface IAuthService {
     RestResponse<LoginResponse> login(String username, String password);
     RestResponse<LoginWithPermissionResponse>loginWithPermission(String userName,String roleName);
 
-    RestResponse<AuthResponse> regainAccessToken(String oldToken,List<String>roles,List<String>permissions);
+    RestResponse<AuthResponse> regainAccessToken(String oldToken,List<String> roles);
 
     RestResponse<AuthResponse> getNewRefreshToken(String oldToken,String accessToken);
 

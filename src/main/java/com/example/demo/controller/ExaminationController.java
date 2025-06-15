@@ -7,10 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.domain.Examination;
 import com.example.demo.dto.common.ResultPaginationDTO;
 import com.example.demo.dto.examination.requestExamination.GetBillExamination;
 import com.example.demo.dto.examination.requestExamination.GetPatientExamination;
@@ -58,6 +60,13 @@ public class ExaminationController {
     public ResponseExaminationRecord getRecordExamination(
             @PathVariable(name = "examinationId") Long examinationId) {
         ResponseExaminationRecord result = this.examinationImpl.getRecordExamination(examinationId);
+        return result;
+    }
+
+    @PostMapping("/create-examination/{id}")
+    public Examination createExamination(
+            @PathVariable("id") Long id) {
+        Examination result = this.examinationImpl.createExamination(id);
         return result;
     }
 

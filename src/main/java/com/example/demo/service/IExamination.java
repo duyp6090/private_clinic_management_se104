@@ -29,12 +29,12 @@ public interface IExamination {
     // Get record examination detail
     ResponseExaminationRecord getRecordExamination(Long examinationId);
 
+    // Create examination by patient id
+    Examination createExamination(Long patientId);
+
     // Update examination detail
     String updateExamination(UpdateExamination updateExamination, Long examinationId);
 
     // Update record examination detail
     String updateDrugRecordExamination(List<UpdateListDrugsRecord> updateListDrugsRecord, Long examinationId);
-
-    // Create examination record
-    Examination createExamination(Examination examination);
 }
