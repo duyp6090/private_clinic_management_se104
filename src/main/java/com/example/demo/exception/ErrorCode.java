@@ -41,7 +41,19 @@ public enum ErrorCode {
     GENDER_NOT_NULL(400, "gender cannot be null"),
     ADDRESS_NOT_BLANK(400, "address cannot be blank"),
     ADDRESS_NOT_NULL(400, "address cannot be null"),
-    YEAR_OF_BIRTH_NOT_NULL(400, "yearOfBirth cannot be null"),;
+    YEAR_OF_BIRTH_NOT_NULL(400, "yearOfBirth cannot be null"),
+
+    // EXAMINATION
+    EXAMINATION_DATE_NOT_NULL(400, "examinationDate cannot be null"),
+    QUANTITY_NOT_NULL(400, "quantity cannot be null"),
+    QUANTITY_INVALID(400, "Quantity must be greater than 0"),
+    DRUG_ID_NOT_NULL(400, "drugId cannot be null"),
+
+    // COMMON
+    SORT_INVALID(400, "Sort parameter is invalid"),
+    PAGE_INVALID(400, "Page must be greater than or equal to 1"),
+    SIZE_ELEMENT_INVALID(400, "Size must be greater than or equal to 1"),
+    ;
 
     private final int code;
     private final String message;
