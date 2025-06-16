@@ -46,13 +46,13 @@ public enum ErrorCode {
     // EXAMINATION
     EXAMINATION_DATE_NOT_NULL(400, "examinationDate cannot be null"),
     QUANTITY_NOT_NULL(400, "quantity cannot be null"),
-    QUANTITY_INVALID(400, "Quantity must be greater than 0"),
+    QUANTITY_INVALID(400, "quantity must be greater than 0"),
     DRUG_ID_NOT_NULL(400, "drugId cannot be null"),
 
     // COMMON
-    SORT_INVALID(400, "Sort parameter is invalid"),
-    PAGE_INVALID(400, "Page must be greater than or equal to 1"),
-    SIZE_ELEMENT_INVALID(400, "Size must be greater than or equal to 1"),
+    SORT_INVALID(400, "sort parameter is invalid"),
+    PAGE_INVALID(400, "page must be greater than or equal to 1"),
+    SIZE_ELEMENT_INVALID(400, "size must be greater than or equal to 1"),
     ;
 
     private final int code;
