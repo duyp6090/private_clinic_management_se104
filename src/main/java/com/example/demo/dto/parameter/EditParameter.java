@@ -5,13 +5,13 @@ import jakarta.validation.constraints.Min;
 public class EditParameter {
     // validate the number_patient_max is a number and not a string
 
-    @Min(value = 0, message = "number_patient_max must be a positive number")
+    @Min(value = 0, message = "NUMBER_PATIENTS_MAX")
     private Long numberPatientMax;
 
-    @Min(value = 0, message = "number_patient_min must be a positive number")
+    @Min(value = 0, message = "EXAM_FEE")
     private Double examFee;
 
-    @Min(value = 0, message = "number_patient_min must be a positive number")
+    @Min(value = 0, message = "DRUG_FEE_PERCENT")
     private Double drugFeePercent;
 
     public Long getNumberPatientMax() {

@@ -7,10 +7,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public class GetUsageReport {
-    @NotNull(message = "month is required")
+    @NotNull(message = "YEAR_NOT_NULL")
     private Integer month;
 
-    @NotNull(message = "year is required")
+    @NotNull(message = "MONTH_NOT_NULL")
     private Year year;
 
     private String drugName;
