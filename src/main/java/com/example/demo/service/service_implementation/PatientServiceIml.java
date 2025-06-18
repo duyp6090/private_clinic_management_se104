@@ -96,11 +96,11 @@ public class PatientServiceIml implements IPatientService {
 
     // Find patient by phone_number or residental_identity
     @Override
-    public Patients findByPhoneNumberOrResidentalIdentity(String phoneNumber, String residentalIdentity) {
-        Patients patient = this.patientsRepository
-                .findByPhoneNumberOrResidentalIdentity(phoneNumber, residentalIdentity)
-                .orElse(null);
-        if (patient != null) {
+    public List<Patients> findByPhoneNumberOrResidentalIdentity(String phoneNumber, String residentalIdentity) {
+        List<Patients> patients = this.patientsRepository
+                .findByPhoneNumberOrResidentalIdentity(phoneNumber, residentalIdentity);
+
+        for (Patients patient : patients) {
             String phoneNumberPatient = patient.getPhoneNumber();
             String residentalIdentityPatient = patient.getResidentalIdentity();
 
@@ -112,7 +112,7 @@ public class PatientServiceIml implements IPatientService {
                 throw new AppException(ErrorCode.RESIDENTAL_IDENTITY_EXISTS);
             }
         }
-        return patient;
+        return patients;
     }
 
     // Create and edit patient
@@ -130,5 +130,25 @@ public class PatientServiceIml implements IPatientService {
             throw new AppException(ErrorCode.NOT_FOUND);
         }
         this.patientsRepository.deleteByPatientId(id);
+    }
+
+    @Override
+    public boolean existsByPhoneNumberOrResidentalIdentity(String phoneNumber, String residentalIdentity, Long id) {
+        if (phoneNumber != null) {
+            Patients existPhoneNumber = this.patientsRepository.findByPhoneNumber(phoneNumber).orElse(null);
+            if (existPhoneNumber != null && Long.valueOf(existPhoneNumber.getPatientId()).equals(id)) {
+                throw new AppException(ErrorCode.PHONE_NUMBER_EXISTS);
+            }
+        }
+
+        if (residentalIdentity != null) {
+            Patients existResidentalIdentity = this.patientsRepository.findByResidentalIdentity(residentalIdentity)
+                    .orElse(null);
+            if (existResidentalIdentity != null && Long.valueOf(existResidentalIdentity.getPatientId()).equals(id)) {
+                throw new AppException(ErrorCode.RESIDENTAL_IDENTITY_EXISTS);
+            }
+        }
+
+        return true;
     }
 }

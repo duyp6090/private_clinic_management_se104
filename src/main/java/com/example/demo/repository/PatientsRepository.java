@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -29,12 +30,18 @@ public interface PatientsRepository extends JpaRepository<Patients, Long> {
                             SELECT p FROM Patients p
                             WHERE p.phoneNumber = :phoneNumber OR p.residentalIdentity = :residentalIdentity
                         """)
-        public Optional<Patients> findByPhoneNumberOrResidentalIdentity(@Param("phoneNumber") String phoneNumber,
+        public List<Patients> findByPhoneNumberOrResidentalIdentity(@Param("phoneNumber") String phoneNumber,
                         @Param("residentalIdentity") String residentalIdentity);
 
         // Check exist patient by id
         public boolean existsByPatientId(Long id);
 
+        // Check exist patient by phone_number or residental_identity
+        public Optional<Patients> findByPhoneNumber(String phoneNumber);
+
+        public Optional<Patients> findByResidentalIdentity(String residentalIdentity);
+
         // Delete Patient
         public void deleteByPatientId(Long id);
+
 }

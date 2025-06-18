@@ -72,11 +72,11 @@ public class PatientsController {
         System.out.println("Max patient each day: " + examinations.size());
 
         // Check if patient already exists
-        Patients newPatient = this.patientServiceIml
+        this.patientServiceIml
                 .findByPhoneNumberOrResidentalIdentity(patient.getPhoneNumber(), patient.getResidentalIdentity());
 
         // Create new patient
-        newPatient = new Patients();
+        Patients newPatient = new Patients();
         newPatient.setFullName(patient.getFullName());
         newPatient.setGender(patient.isGender());
         newPatient.setAddress(patient.getAddress());
@@ -108,9 +108,9 @@ public class PatientsController {
             patient.setYearOfBirth(editPatientDTO.getYearOfBirth());
         }
 
-        // Validate phone number and residental identity
-        this.patientServiceIml.findByPhoneNumberOrResidentalIdentity(editPatientDTO.getPhoneNumber(),
-                editPatientDTO.getResidentalIdentity());
+        // Validate phone number and residential identity
+        this.patientServiceIml.existsByPhoneNumberOrResidentalIdentity(
+                editPatientDTO.getPhoneNumber(), editPatientDTO.getResidentalIdentity(), id);
 
         if (editPatientDTO.getPhoneNumber() != null) {
             patient.setPhoneNumber(editPatientDTO.getPhoneNumber());
