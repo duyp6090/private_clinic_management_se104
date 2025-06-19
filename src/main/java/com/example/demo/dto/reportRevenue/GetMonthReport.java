@@ -7,20 +7,20 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 public class GetMonthReport {
-    @Min(value = 1, message = "Month must be greater than or equal to 1")
-    @Max(value = 12, message = "Month must be less than or equal to 12")
-    @NotNull(message = "Month is required")
+    @Min(value = 1, message = "MONTH_INVALID")
+    @Max(value = 12, message = "MONTH_INVALID")
+    @NotNull(message = "YEAR_NOT_NULL")
     private int month;
 
-    @Min(value = 2000, message = "Year must be greater than or equal to 2000")
-    @Max(value = 2100, message = "Year must be less than or equal to 2100")
-    @NotNull(message = "Year is required")
+    @Min(value = 2000, message = "YEAR_INVALID")
+    @Max(value = 2100, message = "YEAR_INVALID")
+    @NotNull(message = "MONTH_NOT_NULL")
     private Year year;
 
-    @Min(value = 1, message = "Page must be greater than or equal to 1")
+    @Min(value = 1, message = "PAGE_INVALID")
     private int page = 1;
 
-    @Min(value = 1, message = "Size must be greater than or equal to 1")
+    @Min(value = 1, message = "SIZE_ELEMENT_INVALID")
     private int size = 10;
 
     public int getMonth() {

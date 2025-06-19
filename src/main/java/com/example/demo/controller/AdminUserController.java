@@ -37,11 +37,14 @@ import com.example.demo.dto.response.ScreenPermission;
 import com.example.demo.dto.role.RoleWithPermissionDTO;
 import com.example.demo.dto.supporter.registerSupporterRequest;
 import com.example.demo.dto.user.UserRoleDTO;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.IDoctorService;
 import com.example.demo.service.IRoleService;
 import com.example.demo.service.ISupporterService;
 import com.example.demo.service.IUserService;
 import com.example.demo.service.service_implementation.UserServiceImpl;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  *
@@ -49,6 +52,7 @@ import com.example.demo.service.service_implementation.UserServiceImpl;
  */
 @RestController
 @RequestMapping("/api/admin")
+@RequiredArgsConstructor
 // @PreAuthorize("hasRole('ADMIN')")
 public class AdminUserController {
     private final IUserService userService;
@@ -56,23 +60,23 @@ public class AdminUserController {
     private final IRoleService roleService;
     private final ISupporterService supporterService;
     private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
-    public AdminUserController(UserServiceImpl userService, IDoctorService doctorService,
-            ISupporterService supporterService, IRoleService roleService, PasswordEncoder passwordEncoder) {
-        this.userService = userService;
-        this.doctorService = doctorService;
-        this.supporterService = supporterService;
-        this.passwordEncoder = passwordEncoder;
-        this.roleService = roleService;
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasAuthority('PERMISSION_CREATE_USER')")
     @PostMapping("/register-doctor")
     public ResponseEntity<RestResponse<Object>> registerDoctor(@RequestBody registerDoctorRequest request) {
         if (userService.existsByUsername(request.userName)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    RestResponse.error(HttpStatus.BAD_REQUEST.value(), "Username already taken",
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    RestResponse.error(HttpStatus.CONFLICT.value(), "Username already taken",
                             "Error: Username is already taken!"));
+        } else if (userService.existsByEmail(request.email)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    RestResponse.error(HttpStatus.CONFLICT.value(), "Email already taken",
+                            "Error: Email is already taken!"));
+        } else if (userRepository.existsByPhone(request.phoneNumber)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    RestResponse.error(HttpStatus.CONFLICT.value(), "Phone already taken",
+                            "Error: Phone is already taken!"));
         }
 
         Doctor doctor = new Doctor();
@@ -94,14 +98,20 @@ public class AdminUserController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register-supporter")
     public ResponseEntity<RestResponse<Object>> registerSupporter(@RequestBody registerSupporterRequest request) {
-        RestResponse<String> response = new RestResponse<>();
+        //RestResponse<String> response = new RestResponse<>();
         Supporter supporter = new Supporter();
         if (userService.existsByUsername(request.userName)) {
-            response.setStatusCode(HttpStatus.BAD_REQUEST.value());
-            response.setError("Username already taken");
-            response.setMessage("Error: Username is already taken!");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(RestResponse.success(HttpStatus.CREATED.value(), response));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    RestResponse.error(HttpStatus.CONFLICT.value(), "Username already taken",
+                            "Error: Username is already taken!"));
+        } else if (userService.existsByEmail(request.email)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    RestResponse.error(HttpStatus.CONFLICT.value(), "Email already taken",
+                            "Error: Email is already taken!"));
+        } else if (userRepository.existsByPhone(request.phoneNumber)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                    RestResponse.error(HttpStatus.CONFLICT.value(), "Phone already taken",
+                            "Error: Phone is already taken!"));
         }
         // Populate common user fields
         // populate fields inherited from User (or Staff, depending on your model)
@@ -217,7 +227,7 @@ public class AdminUserController {
     }
 
     // Create a new user
-    @PreAuthorize("hasRole('ADMIN') and hasAuthority('CREATE_USER')")
+    // @PreAuthorize("hasRole('ADMIN') and hasAuthority('CREATE_USER')")
     @PostMapping("/create")
     // Get information from the request body
     public ResponseEntity<User> createUser(@RequestBody User sendUser) {

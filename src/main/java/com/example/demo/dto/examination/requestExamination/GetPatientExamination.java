@@ -8,15 +8,15 @@ import jakarta.validation.constraints.Pattern;
 public class GetPatientExamination {
     private String fullName;
     private LocalDate examinationDate;
-    private Long drugId;
+    private Long diseaseId;
 
-    @Pattern(regexp = "^([a-zA-Z0-9_]+,(asc|desc))(\\|[a-zA-Z0-9_]+,(asc|desc))*$", message = "Sort must be in the format 'field,order'")
+    @Pattern(regexp = "^([a-zA-Z0-9_]+,(asc|desc))(\\|[a-zA-Z0-9_]+,(asc|desc))*$", message = "SORT_INVALID")
     private String sort;
 
-    @Min(value = 1, message = "Page must be greater than or equal to 1")
+    @Min(value = 1, message = "PAGE_INVALID")
     private Integer page = 1;
 
-    @Min(value = 1, message = "Size must be greater than or equal to 1")
+    @Min(value = 1, message = "SIZE_ELEMENT_INVALID")
     private Integer size = 10;
 
     public String getFullName() {
@@ -59,12 +59,12 @@ public class GetPatientExamination {
         this.examinationDate = examinationDate;
     }
 
-    public Long getDrugId() {
-        return drugId;
+    public Long getDiseaseId() {
+        return diseaseId;
     }
 
-    public void setDrugId(Long drugId) {
-        this.drugId = drugId;
+    public void setDiseaseId(Long diseaseId) {
+        this.diseaseId = diseaseId;
     }
 
 }

@@ -4,13 +4,13 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
 public class UpdateListDrugsRecord {
-    @NotNull(message = "quantity cannot be null")
-    @Min(value = 1, message = "quantity must be greater than 0")
+    @NotNull(message = "QUANTITY_NOT_NULL")
+    @Min(value = 1, message = "QUANTITY_INVALID")
     private Long quantity;
 
     private String note;
 
-    @NotNull(message = "drugId cannot be null")
+    @NotNull(message = "DRUG_ID_NOT_NULL")
     private Long drugId;
 
     public Long getDrugId() {

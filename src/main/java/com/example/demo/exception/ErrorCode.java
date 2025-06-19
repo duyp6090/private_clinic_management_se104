@@ -41,7 +41,34 @@ public enum ErrorCode {
     GENDER_NOT_NULL(400, "gender cannot be null"),
     ADDRESS_NOT_BLANK(400, "address cannot be blank"),
     ADDRESS_NOT_NULL(400, "address cannot be null"),
-    YEAR_OF_BIRTH_NOT_NULL(400, "yearOfBirth cannot be null"),;
+    YEAR_OF_BIRTH_NOT_NULL(400, "yearOfBirth cannot be null"),
+
+    // EXAMINATION
+    EXAMINATION_DATE_NOT_NULL(400, "examinationDate cannot be null"),
+    QUANTITY_NOT_NULL(400, "quantity cannot be null"),
+    QUANTITY_INVALID(400, "quantity must be greater than 0"),
+    DRUG_ID_NOT_NULL(400, "drugId cannot be null"),
+
+    // COMMON
+    SORT_INVALID(400, "sort parameter is invalid"),
+    PAGE_INVALID(400, "page must be greater than or equal to 1"),
+    SIZE_ELEMENT_INVALID(400, "size must be greater than or equal to 1"),
+
+    // REPORTS DRUGS USAGE & MONTH REPORT
+    YEAR_NOT_NULL(400, "year cannot be null"),
+    YEAR_INVALID(400, "year must be greater than or equal to 2000 and less than or equal to 2100"),
+    MONTH_INVALID(400, "month must be greater than or equal to 1 and less than or equal to 12"),
+    MONTH_NOT_NULL(400, "month cannot be null"),
+
+    // PARAMETERS
+    NUMBER_PATIENTS_MAX(400, "numberPatientMax must be a positive number"),
+    EXAM_FEE(400, "examFee must be a positive number"),
+    DRUG_FEE_PERCENT(400, "drugFeePercent must be a positive number"),
+
+
+    //USER
+    EMAIL_IDENTITY_EXISTS(409, "Email identity already exists"),
+    USERNAME_IDENTITY_EXISTS(409, "Username identity already exists");
 
     private final int code;
     private final String message;

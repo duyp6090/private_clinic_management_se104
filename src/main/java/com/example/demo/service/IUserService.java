@@ -8,6 +8,8 @@ package com.example.demo.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.example.demo.domain.User;
 import com.example.demo.dto.user.UserInformationDTO;
 import com.example.demo.dto.user.UserRoleDTO;
@@ -55,4 +57,5 @@ public interface IUserService {
     int getRole_id(String rolename);
 
     Boolean updateUserInfo(int id,UserInformationDTO requestUserInfo);
+    boolean existsByPhoneNumberOrUsernameOrEmail(String phoneNumber, String username, String email, Long id);
 }

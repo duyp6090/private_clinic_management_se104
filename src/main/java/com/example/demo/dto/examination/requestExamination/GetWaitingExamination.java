@@ -7,17 +7,17 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public class GetWaitingExamination {
-    @NotNull(message = "Examination date cannot be null")
+    @NotNull(message = "EXAMINATION_DATE_NOT_NULL")
     private LocalDate examinationDate;
     private Boolean gender;
 
-    @Pattern(regexp = "^([a-zA-Z0-9_]+,(asc|desc))(\\|[a-zA-Z0-9_]+,(asc|desc))*$", message = "Sort must be in the format 'field,order'")
+    @Pattern(regexp = "^([a-zA-Z0-9_]+,(asc|desc))(\\|[a-zA-Z0-9_]+,(asc|desc))*$", message = "SORT_INVALID")
     private String sort;
 
-    @Min(value = 1, message = "Page must be greater than or equal to 1")
+    @Min(value = 1, message = "PAGE_INVALID")
     private Integer page = 1;
 
-    @Min(value = 1, message = "Size must be greater than or equal to 1")
+    @Min(value = 1, message = "SIZE_ELEMENT_INVALID")
     private Integer size = 10;
 
     public Boolean getGender() {

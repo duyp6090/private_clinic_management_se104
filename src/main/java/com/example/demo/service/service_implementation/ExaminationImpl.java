@@ -378,6 +378,13 @@ public class ExaminationImpl implements IExamination {
         // Get parameter
         Parameter parameter = this.parameterRepository.findAll().get(0);
         double examFee = parameter.getExamFee();
+        long maxPatientEachDay = parameter.getNumberPatientMax();
+
+        LocalDate today = LocalDate.now();
+        List<Examination> examinations = this.getExaminationByIsExamAndExaminationDate(true, today);
+        if (examinations.size() == maxPatientEachDay) {
+            throw new AppException(ErrorCode.PATIENT_MAX);
+        }
 
         // Get patient by id
         Patients savedPatient = this.patientsRepository.findById(patientId).orElseThrow(
