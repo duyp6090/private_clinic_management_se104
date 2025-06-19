@@ -136,19 +136,20 @@ public class PatientServiceIml implements IPatientService {
     public boolean existsByPhoneNumberOrResidentalIdentity(String phoneNumber, String residentalIdentity, Long id) {
         if (phoneNumber != null) {
             Patients existPhoneNumber = this.patientsRepository.findByPhoneNumber(phoneNumber).orElse(null);
-            if (existPhoneNumber != null && Long.valueOf(existPhoneNumber.getPatientId()).equals(id)) {
+            if (existPhoneNumber != null && !Long.valueOf(existPhoneNumber.getPatientId()).equals(id)) {
                 throw new AppException(ErrorCode.PHONE_NUMBER_EXISTS);
+
             }
         }
 
         if (residentalIdentity != null) {
             Patients existResidentalIdentity = this.patientsRepository.findByResidentalIdentity(residentalIdentity)
                     .orElse(null);
-            if (existResidentalIdentity != null && Long.valueOf(existResidentalIdentity.getPatientId()).equals(id)) {
+            if (existResidentalIdentity != null
+                    && !Long.valueOf(existResidentalIdentity.getPatientId()).equals(id)) {
                 throw new AppException(ErrorCode.RESIDENTAL_IDENTITY_EXISTS);
             }
         }
-
         return true;
     }
 }
