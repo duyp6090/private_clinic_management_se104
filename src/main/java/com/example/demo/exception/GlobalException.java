@@ -49,7 +49,7 @@ public class GlobalException {
         // Set parameters
         restResponse.setStatusCode(errorCode.getCode());
         restResponse.setError("AppException");
-        restResponse.setMessage(errorCode.getMessage());
+        restResponse.setMessage(e.getMessage());
         restResponse.setData(null);
 
         // Return response

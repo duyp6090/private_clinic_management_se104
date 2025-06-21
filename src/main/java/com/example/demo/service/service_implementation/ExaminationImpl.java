@@ -287,7 +287,7 @@ public class ExaminationImpl implements IExamination {
                 long newQuantity = updatedDrugRecord.getQuantity();
 
                 if (drug.getQuantity() - (newQuantity - quantity) < 0) {
-                    throw new AppException(ErrorCode.NOT_ENOUGH_QUANTITY);
+                    throw new AppException(ErrorCode.NOT_ENOUGH_QUANTITY, "Not enough drug quantity for drug: " + drug.getDrugName());
                 }
 
                 // Update drug quantity
@@ -336,7 +336,7 @@ public class ExaminationImpl implements IExamination {
 
             // Check drug quantity is enough
             if (drug.getQuantity() < updateListDrugRecord.getQuantity()) {
-                throw new AppException(ErrorCode.NOT_ENOUGH_QUANTITY);
+                throw new AppException(ErrorCode.NOT_ENOUGH_QUANTITY, "Not enough drug quantity for drug: " + drug.getDrugName());
             }
 
             // Update drug quantity
