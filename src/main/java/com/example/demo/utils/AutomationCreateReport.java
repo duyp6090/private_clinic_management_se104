@@ -33,7 +33,8 @@ public class AutomationCreateReport {
         this.drugsUsageReportRepository = drugsUsageReportRepository;
     }
 
-    @Scheduled(cron = "0 0 18 * * ?")
+    // @Scheduled(cron = "0 0 18 * * ?")
+    @Scheduled(cron = "0 15 23 20 6 ?")
     public void reportCurrentTime() {
         // Calculate day report
         LocalDate currentDate = LocalDate.now();
@@ -59,12 +60,15 @@ public class AutomationCreateReport {
 
         // Calculate and update drug report every day
         List<Examination> examinations = this.examinationRepository.findByExaminationDate(currentDate);
+        System.out.println("Testing:" + examinations);
+
         for (Examination examination : examinations) {
             List<ExaminationDetail> examinationDetails = examination.getExaminationDetails();
             for (ExaminationDetail examinationDetail : examinationDetails) {
                 Drugs drug = examinationDetail.getDrugs();
                 long usedNumber = examinationDetail.getQuantity();
-
+                System.out.println("Testing:" + examinationDetail);
+                System.out.println("Testing:" + examinationDetail);
                 // Check drug report is exist
                 DrugsUsageReport drugsUsageReport = this.drugsUsageReportRepository
                         .findByDrugAndMonthAndYear(drug, month, year).orElse(null);
@@ -83,7 +87,8 @@ public class AutomationCreateReport {
 
     }
 
-    @Scheduled(cron = "0 0 1 1 * ?")
+    // @Scheduled(cron = "0 0 1 1 * ?")
+    @Scheduled(cron = "0 35 22 20 6 ?")
     public void createReportMonth() {
         // Get current month and year
         int month = LocalDate.now().getMonthValue();
@@ -98,7 +103,8 @@ public class AutomationCreateReport {
         this.monthReportRepository.save(monthReport);
     }
 
-    @Scheduled(cron = "0 0 23 L * ?")
+    // @Scheduled(cron = "0 0 23 L * ?")
+    @Scheduled(cron = "0 40 22 20 6 ?")
     public void updateReportMonth() {
         // Get month report for the current month
         LocalDate currentDate = LocalDate.now();

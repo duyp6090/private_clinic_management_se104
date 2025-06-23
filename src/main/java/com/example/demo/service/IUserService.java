@@ -57,4 +57,5 @@ public interface IUserService {
     int getRole_id(String rolename);
 
     Boolean updateUserInfo(int id,UserInformationDTO requestUserInfo);
+    boolean existsByPhoneNumberOrUsernameOrEmail(String phoneNumber, String username, String email, Long id);
 }

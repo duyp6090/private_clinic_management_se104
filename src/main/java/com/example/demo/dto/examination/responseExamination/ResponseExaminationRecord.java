@@ -3,6 +3,15 @@ package com.example.demo.dto.examination.responseExamination;
 import java.time.LocalDate;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ResponseExaminationRecord {
     private long examId;
     private String fullName;
@@ -10,17 +19,7 @@ public class ResponseExaminationRecord {
     private String symptoms;
     private String diseaseName;
     private List<ResponseDrugsRecord> examinationDetails;
-
-    public ResponseExaminationRecord(long examId, String fullName, LocalDate examinationDate, String symptoms,
-            String diseaseName,
-            List<ResponseDrugsRecord> examinationDetails) {
-        this.examId = examId;
-        this.fullName = fullName;
-        this.examinationDate = examinationDate;
-        this.symptoms = symptoms;
-        this.diseaseName = diseaseName;
-        this.examinationDetails = examinationDetails;
-    }
+    private Boolean isExam;
 
     public String getFullName() {
         return fullName;

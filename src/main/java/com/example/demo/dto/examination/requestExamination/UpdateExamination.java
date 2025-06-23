@@ -34,7 +34,7 @@ public class UpdateExamination {
         return isExam;
     }
 
-    public void setExam(boolean isExam) {
+    public void setIsExam(boolean isExam) {
         this.isExam = isExam;
     }
 

@@ -93,3 +93,22 @@ INSERT INTO tbl_user_role (user_id, role_id) VALUES
 (2, 2),  -- User 2 is User
 (3, 3),  -- User 3 is Manager
 (4, 4);  -- User 4 is Guest
+
+
+
+
+-- Mock
+
+INSERT INTO tbl_permissions (description, permission)
+VALUES 
+  ('staff page', 'staff'),
+  ('dashboard page', 'dashboard'),
+  ('admin page', 'admin'),
+  ('exams page', 'exams'),
+  ('waiting page', 'waiting'),
+  ('records page', 'records'),
+  ('permission to patients page', 'patients'),
+  ('drugs page', 'drugs'),
+  ('invoice page', 'invoice'),
+  ('report page', 'reports'),
+  ('setting page', 'integrations');
