@@ -11,12 +11,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.Doctor;
+import com.example.demo.domain.Patients;
 import com.example.demo.domain.Role;
 import com.example.demo.domain.Supporter;
 import com.example.demo.domain.User;
 import com.example.demo.domain.User_Role;
 import com.example.demo.dto.user.UserInformationDTO;
 import com.example.demo.dto.user.UserRoleDTO;
+import com.example.demo.exception.AppException;
+import com.example.demo.exception.ErrorCode;
 import com.example.demo.repository.DoctorRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.SupporterRepository;
@@ -223,8 +226,39 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
     }
 
     @Override
+    public boolean existsByPhoneNumberOrUsernameOrEmail(String phone, String username, String email, Long id) {
+        if (phone != null) {
+            User existPhoneNumber = this.userRepository.findByPhone(phone).orElse(null);
+            if (existPhoneNumber != null && !Long.valueOf(existPhoneNumber.getId()).equals(id)) {
+                throw new AppException(ErrorCode.PHONE_NUMBER_EXISTS);
+            }
+        }
+
+        if (username != null) {
+            User existUsername = this.userRepository.findByUsername(username)
+                    .orElse(null);
+            if (existUsername != null
+                    && !Long.valueOf(existUsername.getId()).equals(id)) {
+                throw new AppException(ErrorCode.USERNAME_IDENTITY_EXISTS);
+            }
+        }
+        if (email != null) {
+            User existEmail = this.userRepository.findByEmail(email)
+                    .orElse(null);
+            if (existEmail != null
+                    && !Long.valueOf(existEmail.getId()).equals(id)) {
+                throw new AppException(ErrorCode.EMAIL_IDENTITY_EXISTS);
+            }
+        }
+        return true;
+    }
+
+    @Override
     @Transactional
     public Boolean updateUserInfo(int id, UserInformationDTO requestUserInfo) {
+        this.existsByPhoneNumberOrUsernameOrEmail(requestUserInfo.getPhone(), requestUserInfo.getUsername(),
+                requestUserInfo.getEmail(), requestUserInfo.getId());
+
         Optional<User> optionalUser = userRepository.findById((long) id);
         if (optionalUser.isEmpty()) {
             throw new EntityNotFoundException("User not found with ID: " + id);
@@ -261,10 +295,11 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
 
         return true;
     }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
-                     .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         // Make sure user.getPassword() returns the encoded password
         return org.springframework.security.core.userdetails.User
