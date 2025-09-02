@@ -192,7 +192,7 @@ public class ExaminationImpl implements IExamination {
                     () -> new AppException(ErrorCode.NOT_FOUND));
             examination.setDisease(disease);
         }
-
+        System.out.println("is Exaxam: "+ updateExamination.isExam());
         examination.setExam(updateExamination.isExam() ? true : false);
 
         // Save examination record
@@ -227,6 +227,7 @@ public class ExaminationImpl implements IExamination {
         String diseaseName = examination.getDisease() == null ? null : examination.getDisease().getDiseaseName();
         LocalDate examinationDate = examination.getExaminationDate();
         String symptoms = examination.getSymptoms();
+        Boolean isExam = examination.isExam();
 
         // Create response examination record
         ResponseExaminationRecord responseExaminationRecord = new ResponseExaminationRecord(
@@ -235,7 +236,8 @@ public class ExaminationImpl implements IExamination {
                 examinationDate,
                 symptoms,
                 diseaseName,
-                listDrugsRecord);
+                listDrugsRecord,
+                isExam);
         return responseExaminationRecord;
     }
 

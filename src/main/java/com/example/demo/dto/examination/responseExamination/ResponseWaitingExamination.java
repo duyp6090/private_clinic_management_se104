@@ -2,25 +2,22 @@ package com.example.demo.dto.examination.responseExamination;
 
 import java.time.Year;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ResponseWaitingExamination {
     private long examId;
     private String fullName;
     private boolean gender;
     private Year yearOfBirth;
     private String address;
-
-    public ResponseWaitingExamination(
-            long examId,
-            String fullName,
-            boolean gender,
-            Year yearOfBirth,
-            String address) {
-        this.examId = examId;
-        this.fullName = fullName;
-        this.gender = gender;
-        this.yearOfBirth = yearOfBirth;
-        this.address = address;
-    }
+    private Boolean isExam;
 
     public String getFullName() {
         return fullName;

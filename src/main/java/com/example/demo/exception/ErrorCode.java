@@ -63,7 +63,12 @@ public enum ErrorCode {
     // PARAMETERS
     NUMBER_PATIENTS_MAX(400, "numberPatientMax must be a positive number"),
     EXAM_FEE(400, "examFee must be a positive number"),
-    DRUG_FEE_PERCENT(400, "drugFeePercent must be a positive number");
+    DRUG_FEE_PERCENT(400, "drugFeePercent must be a positive number"),
+
+
+    //USER
+    EMAIL_IDENTITY_EXISTS(409, "Email identity already exists"),
+    USERNAME_IDENTITY_EXISTS(409, "Username identity already exists");
 
     private final int code;
     private final String message;

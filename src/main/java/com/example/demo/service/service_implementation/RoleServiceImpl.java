@@ -77,7 +77,7 @@ public class RoleServiceImpl implements IRoleService {
     @Override
     @Transactional
     public void deleteRoleById(int id) {
-        rolePermissionRepository.deleteByRole_RoleId(id);
+        //rolePermissionRepository.deleteByRole_RoleId(id);
         roleRepository.deleteById(id);
     }
 
