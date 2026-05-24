@@ -133,6 +133,15 @@ public class PatientServiceIml implements IPatientService {
     }
 
     @Override
+    public void updatePatientLab(Double BMI, Double PIR, Integer race, Long patientId) {
+        Patients patient = getPatientByPatientId(patientId);
+        patient.setBMI(BMI);
+        patient.setPIR(PIR);
+        patient.setRace(race);
+        patientsRepository.save(patient);
+    }
+
+    @Override
     public boolean existsByPhoneNumberOrResidentalIdentity(String phoneNumber, String residentalIdentity, Long id) {
         if (phoneNumber != null) {
             Patients existPhoneNumber = this.patientsRepository.findByPhoneNumber(phoneNumber).orElse(null);

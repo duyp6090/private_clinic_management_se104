@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.Examination;
@@ -54,6 +56,20 @@ public class PatientsController {
     public Patients getPatientById(@PathVariable("id") Long id) {
         Patients patient = this.patientServiceIml.getPatientByPatientId(id);
         return patient;
+    }
+
+    @PatchMapping("/patient-lab/{patientId}")
+    public ResponseEntity<RestResponse<Object>> updatePatientLab(@RequestParam Double BMI, @RequestParam Double PIR,
+            @RequestParam Integer race,
+            @PathVariable Long patientId) {
+        patientServiceIml.updatePatientLab(BMI, PIR, race, patientId);
+
+        RestResponse<Object> response = new RestResponse<>();
+        response.setMessage("Call API successfully!");
+        response.setStatusCode(200);
+        response.setData("Update patient successfully!");
+        return ResponseEntity.ok(response);
+
     }
 
     @PostMapping("/add-patient")

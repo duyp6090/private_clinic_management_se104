@@ -26,4 +26,6 @@ public interface IPatientService {
 
     // Delete patient by id
     public void deletePatientByPatientId(Long id);
+
+    void updatePatientLab(Double BMI, Double PIR, Integer race, Long patientId);
 }
